@@ -28,27 +28,29 @@ namespace MazeClient.Scenes
 
         private void enterRoomBtn_Click(object sender, EventArgs e)
         {
-            if (hostTxtbox is not null && portTxtbox != null)
+            if (string.IsNullOrEmpty(hostTxtbox.Text) || string.IsNullOrEmpty(portTxtbox.Text))
             {
-                string messageString = string.Format("IP : {0}\nPORT: {1}", hostTxtbox.Text, portTxtbox.Text);
-                var result = MessageBox.Show(messageString + "\n접속 하시겠습니까?", "입장", MessageBoxButtons.OKCancel);
-
-                if (result == DialogResult.OK)
-                {
-                    if (hostTxtbox.Text.Equals("127.0.0.1") && int.Parse(portTxtbox.Text) == 8080)
-                    {
-                        Manager.server.ConnectServer();
-                        // 화면 바꾸기
-                        Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
-                    }
-                    else
-                    {
-                        MessageBox.Show("해당 호스트 정보가 존재하지 않습니다.");
-                    }
-                }
-            } 
-            else {
                 MessageBox.Show("입력 정보를 확인해주세요.");
+                return;
+            }
+
+            string messageString = string.Format("IP : {0}\nPORT: {1}", hostTxtbox.Text, portTxtbox.Text);
+            var result = MessageBox.Show(messageString + "\n접속 하시겠습니까?", "입장", MessageBoxButtons.OKCancel);
+
+            if (result == DialogResult.OK) // 서버 접속 로직 처리 필요
+            {
+                if (hostTxtbox.Text.Equals("127.0.0.1") && int.Parse(portTxtbox.Text) == 8080)
+                {
+                    MessageBox.Show(messageString + "접속 완료!");
+                    Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
+                    //Manager.server.ConnectServer();
+                    // 화면 바꾸기
+                    //Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
+                }
+                else
+                {
+                    MessageBox.Show("해당 호스트 정보가 존재하지 않습니다.");
+                }
             }
         }
     }

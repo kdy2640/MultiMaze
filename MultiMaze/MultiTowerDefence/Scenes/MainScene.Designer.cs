@@ -30,14 +30,14 @@
         {
             button1 = new Button();
             button2 = new Button();
-            label1 = new Label();
+            main_label = new Label();
             btn_enter = new Button();
             btm_makeroom = new Button();
             SuspendLayout();
             // 
             // button1
             // 
-            button1.Location = new Point(672, 113);
+            button1.Location = new Point(873, 82);
             button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
             button1.Size = new Size(149, 36);
@@ -58,15 +58,15 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
-            // label1
+            // main_label
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(442, 70);
-            label1.Name = "label1";
-            label1.Size = new Size(82, 25);
-            label1.TabIndex = 2;
-            label1.Text = "1번 화면";
-            label1.Click += label1_Click;
+            main_label.AutoSize = true;
+            main_label.Location = new Point(499, 69);
+            main_label.Name = "main_label";
+            main_label.Size = new Size(90, 25);
+            main_label.TabIndex = 2;
+            main_label.Text = "메인 화면";
+            main_label.Click += label1_Click;
             // 
             // btn_enter
             // 
@@ -87,6 +87,7 @@
             btm_makeroom.TabIndex = 4;
             btm_makeroom.Text = "방 만들기";
             btm_makeroom.UseVisualStyleBackColor = true;
+            btm_makeroom.Click += btm_makeroom_Click;
             // 
             // MainScene
             // 
@@ -95,7 +96,7 @@
             ClientSize = new Size(1093, 694);
             Controls.Add(btm_makeroom);
             Controls.Add(btn_enter);
-            Controls.Add(label1);
+            Controls.Add(main_label);
             Controls.Add(button2);
             Controls.Add(button1);
             Margin = new Padding(3, 4, 3, 4);
@@ -110,7 +111,7 @@
 
         private Button button1;
         private Button button2;
-        private Label label1;
+        private Label main_label;
         private Button btn_enter;
         private Button btm_makeroom;
     }

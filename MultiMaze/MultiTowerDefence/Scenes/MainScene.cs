@@ -41,7 +41,16 @@ namespace MazeClient
         private void button3_Click(object sender, EventArgs e)
         {
             GetRoomInfoScene modal = new GetRoomInfoScene();
-            modal.ShowDialog(); 
+            modal.ShowDialog();
+        }
+
+        private void btm_makeroom_Click(object sender, EventArgs e)
+        {
+            // 화면 바꾸기
+            Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
+
+            // 이 부분부터 서버와 통신 필요.
+            //Manager.server.ConnectServer();
         }
     }
 }
