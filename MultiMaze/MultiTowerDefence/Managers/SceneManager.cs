@@ -6,11 +6,18 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using MazeClient.Scenes;
+using MazeClient.Share;
 
 namespace MazeClient
 {
     class SceneManager
     {
+        GameManager Manager;
+
+        public SceneManager()
+        { 
+        }
         public Form GetSceneInstance(Define.GameState gameState)
         {
             Form newScene;
@@ -42,6 +49,8 @@ namespace MazeClient
         }
         public void ChangeGameState(Form sender, Define.GameState gameState)
         {
+            Manager = GameManager.Instance;
+            Manager.state = gameState;
             Form waitScene = GetSceneInstance(gameState);
             sender.Hide();
             waitScene.ShowDialog();

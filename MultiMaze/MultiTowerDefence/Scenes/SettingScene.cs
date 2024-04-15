@@ -9,6 +9,8 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MazeClient.Share;
+using System.Diagnostics;
 
 namespace MazeClient
 {
@@ -44,14 +46,19 @@ namespace MazeClient
 
         private void makeRoomBtn_Click(object sender, EventArgs e)
         {
+            // 서버 프로그램 실행
+            if(!Manager.server.StartServer()) MessageBox.Show("서버 연결 실패");
+
             // 이 부분부터 서버와 통신 필요.
-            var result = MessageBox.Show("서버 연결 성공?", "서버 연결", MessageBoxButtons.OKCancel);
+            var result = MessageBox.Show("서버 연결 성공", "서버 연결", MessageBoxButtons.OKCancel);
             if (result == DialogResult.OK)
             {
-                Manager.server.ConnectServer();
+                
+                Manager.server.ConnectServer(textBox1.Text, 20000);
 
                 Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
-            } else
+            }
+            else
             {
                 MessageBox.Show("서버 연결 실패");
                 return;
@@ -62,5 +69,6 @@ namespace MazeClient
         {
             Manager.scene.ChangeGameState(this, Define.GameState.MainScene);
         }
+
     }
 }

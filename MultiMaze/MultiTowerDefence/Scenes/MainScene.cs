@@ -1,5 +1,6 @@
-using MazeClient;
+ï»¿using MazeClient;
 using MazeClient.Scenes;
+using MazeClient.Share;
 
 
 namespace MazeClient
@@ -10,17 +11,17 @@ namespace MazeClient
         public MainScene()
         {
             InitializeComponent();
-            //Manager ÇÒ´ç
+            //Manager í• ë‹¹
             Manager = GameManager.Instance;
 
-            // ·ÎµùÀÌ³ª ¿¬°áÀº ºñµ¿±â¹æ½ÄÀ¸·Î ¹Ş¾Æ¾ßÇÔ. 
+            // ë¡œë”©, ì—°ê²°ì€ ë¹„ë™ê¸°ë¡œ
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Manager.server.ConnectServer();
-            // È­¸é ¹Ù²Ù±â
-            Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
+            Manager.server.ConnectServer("127.0.0.1",20000);
+            // í™”ë©´ ë°”ê¾¸ê¸°
+            // Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -41,15 +42,18 @@ namespace MazeClient
         private void button3_Click(object sender, EventArgs e)
         {
             GetRoomInfoScene modal = new GetRoomInfoScene();
-            modal.ShowDialog();
+            if (modal.ShowDialog() == DialogResult.OK)
+            {
+                Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
+            }
         }
 
         private void btm_makeroom_Click(object sender, EventArgs e)
         {
-            // È­¸é ¹Ù²Ù±â
+            // í™”ë©´ ë°”ê¾¸ê¸°
             Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
 
-            // ÀÌ ºÎºĞºÎÅÍ ¼­¹ö¿Í Åë½Å ÇÊ¿ä.
+            // ì´ ë¶€ë¶„ë¶€í„° ì„œë²„ í†µì‹ 
             //Manager.server.ConnectServer();
         }
     }

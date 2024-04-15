@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using MazeClient;
+using MazeClient.Share;
 
 namespace MazeClient.Scenes
 {
@@ -26,7 +26,7 @@ namespace MazeClient.Scenes
             this.Close();
         }
 
-        private void enterRoomBtn_Click(object sender, EventArgs e)
+        private async void enterRoomBtn_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(hostTxtbox.Text) || string.IsNullOrEmpty(portTxtbox.Text))
             {
@@ -39,17 +39,24 @@ namespace MazeClient.Scenes
 
             if (result == DialogResult.OK) // 서버 접속 로직 처리 필요
             {
-                if (hostTxtbox.Text.Equals("127.0.0.1") && int.Parse(portTxtbox.Text) == 8080)
+                //다른 아이피 사용
+                if (int.Parse(portTxtbox.Text) == 20000)
                 {
-                    MessageBox.Show(messageString + "접속 완료!");
-                    Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
-                    //Manager.server.ConnectServer();
-                    // 화면 바꾸기
-                    //Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
+                    bool serverResult = await Manager.server.ConnectServer(hostTxtbox.Text, int.Parse(portTxtbox.Text));
+                    if(serverResult)
+                    {
+                        MessageBox.Show(messageString + "접속 완료!");
+                        this.DialogResult = DialogResult.OK;
+                    }else
+                    {
+                        MessageBox.Show(messageString + "접속 실패!");
+                        this.DialogResult = DialogResult.Cancel;
+                    }
                 }
                 else
                 {
                     MessageBox.Show("해당 호스트 정보가 존재하지 않습니다.");
+                    this.DialogResult = DialogResult.Cancel;
                 }
             }
         }

@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace MazeClient.Share
 {
-    public class Define
+    public class MapSettingArgs
     {
-        public enum GameState
+        public enum AIAlgo
         {
-            MainScene, SettingScene, WaitScene, InGameScene, RoundOverScene, GameOverScene, None
+            BFS,DFS,Dijkstra,Astart
         }
-
-        public enum TempServerEventType
+        public enum MapSize
         {
-
+            Small,Medium,Big
         }
 
     }
