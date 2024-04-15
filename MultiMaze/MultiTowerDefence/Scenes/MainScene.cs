@@ -1,4 +1,6 @@
 using MazeClient;
+using MazeClient.Scenes;
+
 
 namespace MazeClient
 {
@@ -29,6 +31,26 @@ namespace MazeClient
         private void button2_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void MainScene_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            GetRoomInfoScene modal = new GetRoomInfoScene();
+            modal.ShowDialog();
+        }
+
+        private void btm_makeroom_Click(object sender, EventArgs e)
+        {
+            // 화면 바꾸기
+            Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
+
+            // 이 부분부터 서버와 통신 필요.
+            //Manager.server.ConnectServer();
         }
     }
 }
