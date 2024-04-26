@@ -16,11 +16,11 @@ namespace MazeClient.Share
         {
             Small,Medium,Big
         }
-        public int PlayerCount;
-        public int Round;
-        public AIAlgorithm ai;
-        public MapSize mapSize;
-
+        public int PlayerCount = 3;
+        public int Round = 3;
+        public AIAlgorithm ai =  AIAlgorithm.BFS;
+        public MapSize mapSize = MapSize.Medium;
+        
 
     }
 }
