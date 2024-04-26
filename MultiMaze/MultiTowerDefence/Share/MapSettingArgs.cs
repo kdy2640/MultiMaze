@@ -8,14 +8,19 @@ namespace MazeClient.Share
 {
     public class MapSettingArgs
     {
-        public enum AIAlgo
+        public enum AIAlgorithm
         {
-            BFS,DFS,Dijkstra,Astart
+            BFS,DFS,Astart
         }
         public enum MapSize
         {
             Small,Medium,Big
         }
+        public int PlayerCount;
+        public int Round;
+        public AIAlgorithm ai;
+        public MapSize mapSize;
+
 
     }
 }
