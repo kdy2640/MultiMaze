@@ -13,6 +13,7 @@ namespace MazeClient
 {
     public partial class WaitScene : Form
     {
+        int temp;
         GameManager Manager;
         public WaitScene()
         {
