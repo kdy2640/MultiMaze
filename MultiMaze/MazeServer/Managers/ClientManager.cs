@@ -11,7 +11,7 @@ namespace MazeServer
 {
     public class ClientManager
     {
-        public int MAX_PLAYER_NUM = ServerGameManager.MAX_PLAYER_NUM;
+        public int max_Player_Num = ServerGameManager.MAX_PLAYER_NUM;
         const int HEADER_BYTE = 6;
         public List<Player> PlayerList;
         ServerGameManager Manager;
@@ -26,19 +26,19 @@ namespace MazeServer
         #region 플레이어 대기
         public async Task WaitForPlayer()
         {
-            Manager = ServerGameManager.Instance;
+            Manager = ServerGameManager.Instance; 
             Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), 20000);
 
             serverSocket.Bind(endPoint);
-            serverSocket.Listen(MAX_PLAYER_NUM);
+            serverSocket.Listen(max_Player_Num);
 
-            while(PlayerList.Count < MAX_PLAYER_NUM )
+            while(PlayerList.Count < max_Player_Num )
             {
-                Socket clientSocket = await serverSocket.AcceptAsync();
+                Socket clientSocket = await serverSocket.AcceptAsync(); 
                 Player newPlayer = new Player(); newPlayer.clientSocket = clientSocket;
                 PlayerList.Add(newPlayer);
-
+                
 
                 // 클라이언트에게 플레이어 번호 부여
                 int playerNumber = PlayerList.Count;
@@ -64,7 +64,7 @@ namespace MazeServer
         /// <param name="serverEvent"></param>
         public void SendToAllPlayers(byte[] buffer, ServerEvent serverEvent)
         {
-            for (int i = 0; i < MAX_PLAYER_NUM; i++)
+            for (int i = 0; i < max_Player_Num; i++)
             {
                 SendToPlayer(buffer, serverEvent, i+1);
             }

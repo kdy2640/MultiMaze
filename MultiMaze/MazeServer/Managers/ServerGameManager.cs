@@ -16,8 +16,10 @@ namespace MazeServer
         public Define.GameState state = Define.GameState.InGameScene;
         public ClientManager client = new ClientManager();
         public Map map = new Map();
+        public int[] WinnerList;
 
-        public const int MAX_PLAYER_NUM = 3;
+        public const int MAX_PLAYER_NUM = 4;
+        public int Now_Player_Num;
 
         private ServerGameManager()
         { 

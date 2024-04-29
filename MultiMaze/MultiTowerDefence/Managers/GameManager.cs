@@ -18,7 +18,8 @@ namespace MazeClient
         public ResourceManager resource = new ResourceManager();
         public Map map = new Map();
 
-        public const int MAX_PLAYER_NUM = 3;
+        public const int MAX_PLAYER_NUM = 4;
+        public int Now_Player_Num = 3;
 
         public int PlayerCode; // 몇번 플레이어인지
         private GameManager()
