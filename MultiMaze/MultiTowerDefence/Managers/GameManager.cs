@@ -17,6 +17,7 @@ namespace MazeClient
         public ServerManager server = new ServerManager();
         public ResourceManager resource = new ResourceManager();
         public Map map = new Map();
+        public List<Point> path;
 
         public const int MAX_PLAYER_NUM = 4;
         public int Now_Player_Num = 3;
