@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MazeClient.Share
 {
-    public class MapSettingArgs
+    public class RoomSettingArgs
     {
         public enum AIAlgorithm
         {
@@ -20,7 +20,8 @@ namespace MazeClient.Share
         public int Round = 3;
         public AIAlgorithm ai =  AIAlgorithm.BFS;
         public MapSize mapSize = MapSize.Medium;
-        
+        public int seed = 50;
+
 
     }
 }
