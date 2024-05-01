@@ -28,10 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             label1 = new Label();
             panel1 = new Panel();
             pictureBox1 = new PictureBox();
             panel2 = new Panel();
+            timer1 = new System.Windows.Forms.Timer(components);
+            label2 = new Label();
+            label3 = new Label();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -39,7 +43,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(523, 9);
+            label1.Location = new Point(637, 619);
             label1.Name = "label1";
             label1.Size = new Size(265, 20);
             label1.TabIndex = 0;
@@ -49,7 +53,7 @@
             // panel1
             // 
             panel1.Controls.Add(pictureBox1);
-            panel1.Location = new Point(10, 30);
+            panel1.Location = new Point(10, 9);
             panel1.Margin = new Padding(0);
             panel1.Name = "panel1";
             panel1.Size = new Size(900, 600);
@@ -73,14 +77,41 @@
             panel2.Size = new Size(898, 125);
             panel2.TabIndex = 2;
             // 
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Interval = 70;
+            timer1.Tick += timer1_Tick;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(548, 619);
+            label2.Name = "label2";
+            label2.Size = new Size(50, 20);
+            label2.TabIndex = 3;
+            label2.Text = "label2";
+            label2.Click += label2_Click;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(492, 619);
+            label3.Name = "label3";
+            label3.Size = new Size(50, 20);
+            label3.TabIndex = 4;
+            label3.Text = "label3";
+            // 
             // InGameScene
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(914, 776);
+            Controls.Add(label3);
+            Controls.Add(label2);
             Controls.Add(panel2);
-            Controls.Add(panel1);
             Controls.Add(label1);
+            Controls.Add(panel1);
             Name = "InGameScene";
             Text = "InGameScene";
             Load += InGameScene_Load;
@@ -96,5 +127,8 @@
         private Panel panel1;
         private PictureBox pictureBox1;
         private Panel panel2;
+        private System.Windows.Forms.Timer timer1;
+        private Label label2;
+        private Label label3;
     }
 }

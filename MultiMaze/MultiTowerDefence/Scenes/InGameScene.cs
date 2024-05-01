@@ -23,19 +23,19 @@ namespace MazeClient.Scenes
         GameManager manager;// 매니저
         int PlayerCode; // 서버에서 부여하는 코드
         Point PlayerPos;
-        public Point ScreenStart = new Point(25, 25);  // 화면 시작 
-        public Point CameraPos = new Point(0, 0);  //카메라
-        public Point CameraLimit = new Point(0, 0);
+        List<PictureBox> PlayerList;  // 플레이어 PictureBox
 
-        private bool[,] map = new bool[0,0];
+        //AI 관련
+        public Algorithm algorithm = new Astar();
+
+        // Map 관련
+        private bool[,] map = new bool[0, 0];
+        private Point EndPoint = new Point();
         public InGameScene()
         {
             manager = GameManager.Instance;
 
             InitializeComponent();
-
-
-            
 
 
         }
@@ -47,58 +47,67 @@ namespace MazeClient.Scenes
         }
 
 
+        #region 게임 초기화
+        public Point ScreenStart = new Point(25, 25);  // 화면 시작 
+        public Point CameraPos = new Point(0, 0);  //카메라
+        public Point CameraLimit = new Point(0, 0);
+        private async void GameInitialize()
+        {
+            // 맵 초기화
+            MapInitialize();
 
-        List<PictureBox> PlayerList;  // 플레이어 이미지
-        List<Bitmap> Sprites; // sprites 모음
-        private void GameInitialize()
+
+            //콜백 함수 할당
+            manager.server.callbackFunctions.InGameSceneCallBack += InGameSceneCallBackFunction;
+
+            //플레이어 이미지 생성 및 정보 초기화
+            getAllPlayer();
+            AIInitialize();
+
+            // 폼 설정
+            FormInitialize();
+
+            //패널 초기화 
+            PanelInitialize();
+
+
+            //카메라 관련
+            CameraLimit.X = panel1.Width / 50;
+            CameraLimit.Y = panel1.Height / 50;
+            RenderPlayer();
+        }
+
+        private void MapInitialize()
         {
             // 미로 생성(임시)
             manager.map.MapInitialize();
             DrawMaze(manager.map.map);
             map = manager.map.map;
 
-            //패널 관련
+
+        }
+        private void PanelInitialize()
+        {
             panel1.Controls.Add(pictureBox1);
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
             this.Controls.Add(panel1);
             ScreenStart = new Point(panel1.Left, panel1.Top);
+            panel1.SendToBack();
+        }
 
-
-
-            ////////////////////
-            manager.resource.SpriteInitiator(this);
-            manager.resource.UpdateMap(this);
-            ///////////////////////
-            PlayerCode = manager.PlayerCode;// 서버 연결시 받은 플레이어 코드 
-            PlayerStartPointList = manager.map.PlayerStartPosList;
-            PlayerPos = PlayerStartPointList[PlayerCode - 1]; // 시작 위치 받아오기
-
-            //콜백 
-            manager.server.callbackFunctions.InGameSceneCallBack += InGameSceneCallBackFunction; 
-
-            getAllPlayer(); // 플레이어 이미지 생성
+        private void FormInitialize()
+        {
             this.Focus();
-            //플레이어 추가
-            for (int i = 0; i < GameManager.MAX_PLAYER_NUM; i++)
-            {
-                this.Controls.Add(PlayerList[i]); // 폼에 PictureBox 추가
-            }
-            player = PlayerList[PlayerCode - 1];
-            playerBrush = new SolidBrush(manager.map.PlayerColorList[PlayerCode - 1]);
-            //form 관련
             this.KeyPreview = true; // Form에서 키 이벤트를 미리 볼 수 있도록 설정
             this.KeyDown += MyForm_KeyDown; // KeyDown 이벤트 핸들러 추가
             this.DoubleBuffered = true; // 로딩 잘 되게
-
-            //카메라 관련
-            panel1.SendToBack();
-            CameraLimit.X = panel1.Width / 50;
-            CameraLimit.Y = panel1.Height / 50;
-            RenderPlayer();
         }
-        
         private void getAllPlayer()
         {
+            PlayerCode = manager.PlayerCode;// 서버 연결시 받은 플레이어 코드  
+            PlayerPos = manager.map.PlayerStartPosList[PlayerCode - 1]; // 시작 위치 받아오기
+
+            //Player PictureBox
             PlayerList = new List<PictureBox>();
             for (int i = 0; i < GameManager.MAX_PLAYER_NUM; i++)
             {
@@ -111,21 +120,73 @@ namespace MazeClient.Scenes
                 player.Top = manager.map.PlayerStartPosList[i].Y * cellSize + ScreenStart.Y;    // Paint 이벤트에 핸들러 추가
                 int LocalI = i;
                 player.Paint += (sender, e) =>
-                { 
+                {
                     e.Graphics.Clear(Color.White);
                     SolidBrush br = new SolidBrush(manager.map.PlayerColorList[LocalI]);
                     e.Graphics.FillEllipse(br, 0, 0, player.Width, player.Height);
 
-                }; 
+                };
                 player.SizeMode = PictureBoxSizeMode.StretchImage; // 이미지 크기 조정 
                 PlayerList.Add(player);
                 this.Controls.Add(player);
                 player.BringToFront();
             }
+            //AI PictureBOx
+            AiPlayer = new PictureBox();
+
+            AiPlayer.Width = cellSize;
+            AiPlayer.Height = cellSize;
+            AiPlayer.Left = 1 * cellSize + ScreenStart.X;
+            AiPlayer.Top = 1 * cellSize + ScreenStart.Y;    // Paint 이벤트에 핸들러 추가
+            AiPlayer.Paint += (sender, e) =>
+            {
+                e.Graphics.Clear(Color.White);
+                e.Graphics.FillEllipse(Brushes.Purple, 0, 0, player.Width, player.Height);
+
+            };
+            AiPlayer.SizeMode = PictureBoxSizeMode.StretchImage; // 이미지 크기 조정 
+            this.Controls.Add(AiPlayer);
+            player.BringToFront();
+
+
+            //플레이어 추가
+            for (int i = 0; i < GameManager.MAX_PLAYER_NUM; i++)
+            {
+                this.Controls.Add(PlayerList[i]); // 폼에 PictureBox 추가
+            }
+            player = PlayerList[PlayerCode - 1];
+            playerBrush = new SolidBrush(manager.map.PlayerColorList[PlayerCode - 1]);
 
         }
+        private void DrawMaze(bool[,] maze) //로직 테스트용
+        {
+            Bitmap bitmap = new Bitmap(maze.GetLength(0) * cellSize, maze.GetLength(1) * cellSize);
+            using (Graphics g = Graphics.FromImage(bitmap))
+            {
+                for (int i = 0; i < maze.GetLength(0); i++)
+                {
+                    for (int j = 0; j < maze.GetLength(1); j++)
+                    {
+                        if (maze[i, j] == false) //벽을 검은색으로 출력
+                        {
+                            g.FillRectangle(Brushes.Black, i * cellSize, j * cellSize, cellSize, cellSize);
+                        }
+                        else //길을 흰색으로 출력
+                        {
+                            g.FillRectangle(Brushes.White, i * cellSize, j * cellSize, cellSize, cellSize);
+                        }
 
-        #region PaintJump
+                    }
+                }
+            }
+            pictureBox1.Image = bitmap;
+        }
+        #endregion
+
+        #region 플레이어 입력 및 위치 렌더링
+
+
+        #region 점프시 색상 변경
 
         private void PaintJump(object sender, PaintEventArgs e)
         {
@@ -153,10 +214,11 @@ namespace MazeClient.Scenes
             player.Paint -= PaintJump;
             player.Paint += PaintLand;
         }
-        #endregion PaintJump
+        #endregion 
         //입력 이벤트핸들러
         bool noClip = false;
         bool isJump = false;
+        bool TickBooster = false;
         PictureBox player = new PictureBox();
         Brush playerBrush = Brushes.Wheat;
         private void MyForm_KeyDown(object sender, KeyEventArgs e)
@@ -166,7 +228,7 @@ namespace MazeClient.Scenes
             switch (e.KeyCode)
             {
                 case Keys.Up:
-                    PlayerPos.Y -= 1; 
+                    PlayerPos.Y -= 1;
                     break;
                 case Keys.Down:
                     PlayerPos.Y += 1;
@@ -180,23 +242,36 @@ namespace MazeClient.Scenes
                 case Keys.C:
                     noClip = !noClip;
                     break;
+                case Keys.T:
+                    {
+                        if(TickBooster)
+                        {
+                            timer1.Interval = 200;
+                        }
+                        else
+                        {
+                            timer1.Interval = 30;
+                        }
+                        TickBooster = !TickBooster;
+                        break;
+                    }
                 case Keys.X:
                     {
-                        if(isJump)
+                        if (isJump)
                         {
                             OnLand();
                         }
                         else
                         {
                             OnJump();
-                        } 
+                        }
                         break;
                     }
                 case Keys.Space:
                     manager.scene.ChangeGameState(this, Define.GameState.RoundOverScene);
                     break;
             }
-            if(isJump)
+            if (isJump)
             {
                 switch (e.KeyCode)
                 {
@@ -218,11 +293,11 @@ namespace MazeClient.Scenes
                         break;
                 }
             }
-            PlayerPos.X = Math.Clamp(PlayerPos.X,0, manager.map.mapSize-1);
-            PlayerPos.Y = Math.Clamp(PlayerPos.Y, 0, manager.map.mapSize-1);
+            PlayerPos.X = Math.Clamp(PlayerPos.X, 0, manager.map.mapSize - 1);
+            PlayerPos.Y = Math.Clamp(PlayerPos.Y, 0, manager.map.mapSize - 1);
 
             // 벽으로 이동했으면 복구
-            if (!noClip && map[PlayerPos.X,PlayerPos.Y] == false)
+            if (!noClip && map[PlayerPos.X, PlayerPos.Y] == false)
             {
                 PlayerPos = tempPos;
                 return;
@@ -233,58 +308,71 @@ namespace MazeClient.Scenes
 
             // 카메라 조정
             CameraPos = PlayerPos;
-            RenderPlayer(); 
+            RenderPlayer();
 
         }
 
-        //플레이어 위치 갱신
-        List<Point> PlayerStartPointList;
+        //플레이어 위치 갱신 
         public async void RenderPlayer()
         {
             // 카메라 먼저 움직임
             CameraPos.X = Math.Clamp(CameraPos.X, CameraLimit.X, manager.map.mapSize - CameraLimit.X);
             CameraPos.Y = Math.Clamp(CameraPos.Y, CameraLimit.Y, manager.map.mapSize - CameraLimit.Y);
             pictureBox1.Left = CameraLimit.X * cellSize - CameraPos.X * cellSize;
-            pictureBox1.Top = CameraLimit.Y * cellSize  - CameraPos.Y * cellSize;
+            pictureBox1.Top = CameraLimit.Y * cellSize - CameraPos.Y * cellSize;
 
             // 플레이어 렌더링
             for (int i = 0; i < GameManager.MAX_PLAYER_NUM; i++)
             {
                 //본인은 서버에 영향을 받지 않음
-                 if (PlayerCode - 1 == i)
-                { 
+                if (PlayerCode - 1 == i)
+                {
                     PlayerList[i].Left = ScreenStart.X + pictureBox1.Left + PlayerPos.X * cellSize;
-                    PlayerList[i].Top = ScreenStart.Y + pictureBox1.Top + PlayerPos.Y * cellSize; 
+                    PlayerList[i].Top = ScreenStart.Y + pictureBox1.Top + PlayerPos.Y * cellSize;
                     continue;
-                } 
-                PlayerList[i].Left = ScreenStart.X+ pictureBox1.Left + manager.map.PlayerPosList[i].X * cellSize;
-                PlayerList[i].Top = ScreenStart.Y +pictureBox1.Top + manager.map.PlayerPosList[i].Y * cellSize;
+                }
+                PlayerList[i].Left = ScreenStart.X + pictureBox1.Left + manager.map.PlayerPosList[i].X * cellSize;
+                PlayerList[i].Top = ScreenStart.Y + pictureBox1.Top + manager.map.PlayerPosList[i].Y * cellSize;
             }
             int temp = 0;
         }
-        private void DrawMaze(bool[,] maze) //로직 테스트용
-        {
-            Bitmap bitmap = new Bitmap(maze.GetLength(0) * cellSize, maze.GetLength(1) * cellSize);
-            using (Graphics g = Graphics.FromImage(bitmap))
-            {
-                for (int i = 0; i < maze.GetLength(0); i++)
-                {
-                    for (int j = 0; j < maze.GetLength(1); j++)
-                    {
-                        if (maze[i, j] == false) //벽을 검은색으로 출력
-                        {
-                            g.FillRectangle(Brushes.Black, i * cellSize, j * cellSize, cellSize, cellSize);
-                        }
-                        else //길을 흰색으로 출력
-                        {
-                            g.FillRectangle(Brushes.White, i * cellSize, j * cellSize, cellSize, cellSize);
-                        }
+        #endregion
 
-                    }
-                }
-            }
-            pictureBox1.Image = bitmap;
+        #region AI 관련
+
+        PictureBox AiPlayer = new PictureBox();
+        private Point AiPosition = new Point(1, 1);
+        private List<Point> AiPath = new List<Point>();
+        private int AiIndex = 0;
+        bool EndTrigger = false;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (EndTrigger == false)
+                UpdateAIPos();
         }
+        int Index = 0;
+        private void UpdateAIPos()
+        {
+            if (AiIndex < AiPath.Count)
+            {
+                AiPosition = AiPath[AiIndex++];
+                AiPlayer.Left = ScreenStart.X + pictureBox1.Left + AiPosition.X * cellSize;
+                AiPlayer.Top = ScreenStart.Y + pictureBox1.Top + AiPosition.Y * cellSize;
+
+                label2.Text = AiPosition.X.ToString() + ", " + AiPosition.Y.ToString();
+                label3.Text = (Index++).ToString();
+                    }
+            else
+            {
+                EndTrigger = true;
+            }
+        }
+        private void AIInitialize()
+        {
+            AiPath = algorithm.ToArray(new Point(1, 1), new Point(manager.map.mapSize - 3, manager.map.mapSize - 3));
+        }
+
+        #endregion AI 관련
 
         #region 파싱 delegate
 
@@ -304,6 +392,7 @@ namespace MazeClient.Scenes
             }
         }
         #endregion
+
         #region 서버 수신
         //플레이어들 위치정보 수신
         public async void GetAllPlayerPos(byte[] buffer)
@@ -330,6 +419,7 @@ namespace MazeClient.Scenes
 
 
         #endregion
+
         #region 서버 송신
         public async void SendPlayerPos(Point pos)
         {
@@ -346,11 +436,16 @@ namespace MazeClient.Scenes
         }
         #endregion
 
+        #region 사용하지 않는 함수
         private void label1_Click_1(object sender, EventArgs e)
         {
 
         }
 
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
         private void pictureBox1_Click(object sender, EventArgs e)
         {
 
@@ -365,6 +460,8 @@ namespace MazeClient.Scenes
         {
 
         }
+        #endregion
+
     }
     public class InGameSceneServerEvent : ServerEvent
     {
