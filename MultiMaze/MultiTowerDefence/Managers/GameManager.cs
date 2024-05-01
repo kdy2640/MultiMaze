@@ -14,8 +14,7 @@ namespace MazeClient
         private static GameManager? instance = null;
         public Define.GameState state = Define.GameState.MainScene;
         public SceneManager scene = new SceneManager();
-        public ServerManager server = new ServerManager();
-        public ResourceManager resource = new ResourceManager();
+        public ServerManager server = new ServerManager(); 
         public Map map = new Map();
         public List<Point> path;
 
