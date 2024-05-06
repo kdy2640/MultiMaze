@@ -149,12 +149,10 @@ namespace MazeClient.Share
     private int map_size_x;
     private int map_size_y;
     private const bool Wall = false;
-    private const bool Way = true;
-    private bool[,] map;
+    private const bool Way = true; 
 
-    public DFS(bool[,] inputMap)
-    {
-        map = inputMap;
+    public DFS()
+    { 
         map_size_x = map.GetLength(0);
         map_size_y = map.GetLength(1);
     }
