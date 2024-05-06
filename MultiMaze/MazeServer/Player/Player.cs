@@ -10,5 +10,6 @@ namespace MazeServer
     public class Player
     {
         public Socket clientSocket;
+        public int PlayerCode;
     }
 }
