@@ -145,14 +145,92 @@ namespace MazeClient.Share
         }
     }
     public class DFS : Algorithm
-    {
+{
+    private int map_size_x;
+    private int map_size_y;
+    private const bool Wall = false;
+    private const bool Way = true;
+    private bool[,] map;
 
-        public override List<Point> ToArray(Point start, Point end)
-        {
-            return null;
-            bool[,] temp = new bool[map.GetLength(0), map.GetLength(1)];
-        }
+    public DFS(bool[,] inputMap)
+    {
+        map = inputMap;
+        map_size_x = map.GetLength(0);
+        map_size_y = map.GetLength(1);
     }
+
+    public override List<Point> ToArray(Point start, Point end)
+    {
+        if (!IsWithinMapBounds(start) || !IsWithinMapBounds(end) || map[start.X, start.Y] == Wall || map[end.X, end.Y] == Wall)
+            return null;
+
+        return DepthFirstSearch(start, end);
+    }
+
+    private List<Point> DepthFirstSearch(Point start, Point end)
+    {
+        Stack<Point> stack = new Stack<Point>();
+        Dictionary<Point, Point> parentMap = new Dictionary<Point, Point>();
+        HashSet<Point> visited = new HashSet<Point>();
+
+        stack.Push(start);
+        visited.Add(start);
+
+        while (stack.Count > 0)
+        {
+            Point current = stack.Pop();
+
+            if (current.Equals(end))
+                return ConstructPath(parentMap, start, end);
+
+            foreach (Point neighbor in GetNeighbors(current))
+            {
+                if (!visited.Contains(neighbor) && map[neighbor.X, neighbor.Y] == Way)
+                {
+                    stack.Push(neighbor);
+                    visited.Add(neighbor);
+                    parentMap[neighbor] = current;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private List<Point> ConstructPath(Dictionary<Point, Point> parentMap, Point start, Point end)
+    {
+        List<Point> path = new List<Point>();
+        Point current = end;
+        while (!current.Equals(start))
+        {
+            path.Add(current);
+            current = parentMap[current];
+        }
+        path.Add(start);
+        path.Reverse(); 
+        return path;
+    }
+
+    private bool IsWithinMapBounds(Point point)
+    {
+        return point.X >= 0 && point.X < map_size_x && point.Y >= 0 && point.Y < map_size_y;
+    }
+
+    private IEnumerable<Point> GetNeighbors(Point point)
+    {
+        List<Point> neighbors = new List<Point>();
+        Point[] moves = { new Point(1, 0), new Point(0, 1), new Point(-1, 0), new Point(0, -1) }; // Right, Down, Left, Up
+
+        foreach (Point move in moves)
+        {
+            Point neighbor = new Point(point.X + move.X, point.Y + move.Y);
+            if (IsWithinMapBounds(neighbor))
+                neighbors.Add(neighbor);
+        }
+
+        return neighbors;
+    }
+}
 
     public class Astar : Algorithm
     {
