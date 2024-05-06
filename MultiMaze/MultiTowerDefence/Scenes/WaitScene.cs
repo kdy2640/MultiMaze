@@ -14,6 +14,8 @@ namespace MazeClient
         ServerManager serverManager;
         private bool _isHost = false;
         private bool _isPlayerReady = false;
+        private bool _isAllPlayerReady = true;
+        private int _playerCode = 0; // 플레이어 코드 추가
         private GameRoom gameroom = new GameRoom();
 
         public static class PlayerColors
@@ -28,42 +30,31 @@ namespace MazeClient
         {
             InitializeComponent();
             LoadPlayerColors();
-            InitializeAsync();
-            Manager = GameManager.Instance;
-            serverManager = new ServerManager();
+            Initialize();
         }
 
         private void LoadPlayerColors()
         {
-            // SpriteMap.png에서 받아오기(?)
+            //color dialog 이용해서 color 수정하기
         }
 
-        private async void InitializeAsync()
-        {
-            try
+        private void Initialize()
+        { 
+            Manager = GameManager.Instance;
+            _playerCode = Manager.PlayerCode;
+            if(_playerCode == 1)
             {
-                bool isConnected = await serverManager.ConnectServer("127.0.0.1", 20000);
-                if (isConnected)
-                {
-                    MessageBox.Show("호스트입니다.");
-                    _isHost = true;
-                }
-                else
-                {
-                    MessageBox.Show("호스트가 아닙니다.");
-                    _isHost = false;
-                }
-            }
-            catch (Exception ex)
+                _isHost = true;
+            }else
             {
-                MessageBox.Show($"호스트를 찾을수 없습니다.");
                 _isHost = false;
             }
         }
-
+        #region 버튼 이벤트
         private async void BtnStart_Click(object sender, EventArgs e)
         {
-            if (_isHost && _isPlayerReady)
+            //isAllPlayerReady 관련 상호작용 추가하기
+            if (_isHost && _isAllPlayerReady)
             {
                 MessageBox.Show("게임이 시작됩니다.");
                 Manager.scene.ChangeGameState(this, Define.GameState.InGameScene);
@@ -84,18 +75,28 @@ namespace MazeClient
         }
         private void BtnLeave_Click(object sender, EventArgs e)
         {
-            Player leavingPlayer = FindLeavingPlayer(); 
-            if (leavingPlayer != null)
-            {
-                gameroom.PlayerLeft(leavingPlayer); 
-                MessageBox.Show("플레이어가 떠났습니다.");
-            }
+            // 이상함 내가 나가는데 해야할건 나 나가요 메시지 보내주면 됨
+            //Player leavingPlayer = FindLeavingPlayer();
+            //if (leavingPlayer != null)
+            //{
+            //    gameroom.PlayerLeft(leavingPlayer);
+            //    MessageBox.Show("플레이어가 떠났습니다.");
+            //}
             Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
         }
+        private async void BtnSend_Click(object sender, EventArgs e)
+        {
+            SendMessage();
+
+        }
+        #endregion
+
+        #region 플레이어코드 동기화 쉽지 않음 - 나중에
+
 
         private Player FindLeavingPlayer()
         {
-            return gameroom.Players.FirstOrDefault(); 
+            return null; 
         }
         public class Player
         {
@@ -135,10 +136,10 @@ namespace MazeClient
         }
 
        
-        private async void BtnSend_Click(object sender, EventArgs e)
-        {
-            SendMessage();
-        }
+
+
+        #endregion
+
 
         // 채팅 (서버랑 연결 X)
         private async void SendMessage()
