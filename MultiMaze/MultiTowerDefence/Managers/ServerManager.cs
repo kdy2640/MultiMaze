@@ -68,7 +68,7 @@ namespace MazeClient
 
             return true;
         }
-        public async Task<bool> ReceiveWithTimeOut(ArraySegment<byte> buffer)
+        private async Task<bool> ReceiveWithTimeOut(ArraySegment<byte> buffer)
         {
             Task<int> receiveTask = ServerSocket.ReceiveAsync(buffer, SocketFlags.None); // 수신
             Task delayTask = Task.Delay(3000); // 기다림
@@ -132,14 +132,14 @@ namespace MazeClient
         /// 한번 작동하면 지속적으로 작동합니다. 씬이 바뀔시에 다시 호출해야합니다.
         /// </summary>
         /// <returns></returns>
-        public async Task ReceiveFromServer()
+        private async Task ReceiveFromServer()
         {
             byte[] headerBuffer = new byte[HEADER_BYTE]; // 헤더는 6바이트
             ReceiveArguments receiveArgs = new ReceiveArguments(ServerSocket, headerBuffer, 0, HEADER_BYTE, new ServerEvent()); // 인자 생성
             await ReceiveHeader(receiveArgs); // 비동기 헤더 수신
         }
         // 비동기 헤더 수신
-        public async Task ReceiveHeader(ReceiveArguments receiveArgs)
+        private async Task ReceiveHeader(ReceiveArguments receiveArgs)
         {
             try
             {
@@ -174,7 +174,7 @@ namespace MazeClient
             }
         }
 
-        public async Task ReceiveData(ReceiveArguments receiveArgs)
+        private async Task ReceiveData(ReceiveArguments receiveArgs)
         {
             try
             {
@@ -231,7 +231,7 @@ namespace MazeClient
             }
         } 
 
-        public void ReceiveCompleted(byte[] buffer, ServerEvent serverEvent)
+        private void ReceiveCompleted(byte[] buffer, ServerEvent serverEvent)
         {
             if (serverEvent.GameStatus != Manager.state) return;
             switch(serverEvent.GameStatus)
@@ -268,7 +268,7 @@ namespace MazeClient
 
         }
 
-        public void AddHeaderToBuffer(byte[] buffer, int gameStatus, int serverEventType, out byte[] resultBuffer)
+        private void AddHeaderToBuffer(byte[] buffer, int gameStatus, int serverEventType, out byte[] resultBuffer)
         {
 
             //직렬화
@@ -285,7 +285,7 @@ namespace MazeClient
 
         }
 
-        public void GetHeaderFromBuffer(byte[] headerBuffer,out int dataLength, out int gameStatus,  out int serverEventType)
+        private void GetHeaderFromBuffer(byte[] headerBuffer,out int dataLength, out int gameStatus,  out int serverEventType)
         {
             byte[] data = new byte[2];
             byte[] statusSize  = new byte[2];
