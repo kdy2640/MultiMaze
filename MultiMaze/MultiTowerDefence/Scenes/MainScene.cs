@@ -19,7 +19,7 @@ namespace MazeClient
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Manager.server.ConnectServer("127.0.0.1",20000);
+            Manager.server.ConnectServer("127.0.0.1", 20000);
             // 화면 바꾸기
             // Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
         }
@@ -55,6 +55,13 @@ namespace MazeClient
 
             // 이 부분부터 서버 통신
             //Manager.server.ConnectServer();
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            Form form = new AsyncTestScene();
+            form.ShowDialog();
+            Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
         }
     }
 }
