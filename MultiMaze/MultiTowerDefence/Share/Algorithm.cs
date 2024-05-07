@@ -144,89 +144,84 @@ namespace MazeClient.Share
             return Math.Abs(last.X - now.X) + Math.Abs(last.Y - now.Y);
         }
     }
-    public class DFS : Algorithm
+    
+public class DFS : Algorithm
 {
     private int map_size_x;
     private int map_size_y;
-    private const bool Wall = false;
-    private const bool Way = true; 
-
-    public DFS()
-    { 
-        map_size_x = map.GetLength(0);
-        map_size_y = map.GetLength(1);
-    }
+    private const bool WALL = false;
+    private const bool WAY = true;
 
     public override List<Point> ToArray(Point start, Point end)
     {
-        if (!IsWithinMapBounds(start) || !IsWithinMapBounds(end) || map[start.X, start.Y] == Wall || map[end.X, end.Y] == Wall)
-            return null;
+        map_size_x = map.GetLength(0);
+        map_size_y = map.GetLength(1);
 
-        return DepthFirstSearch(start, end);
+        return dfs(start, end);
     }
 
-    private List<Point> DepthFirstSearch(Point start, Point end)
+    private List<Point> dfs(Point start, Point end)
     {
         Stack<Point> stack = new Stack<Point>();
-        Dictionary<Point, Point> parentMap = new Dictionary<Point, Point>();
-        HashSet<Point> visited = new HashSet<Point>();
-
         stack.Push(start);
-        visited.Add(start);
+
+        Dictionary<Point, Point> parentMap = new Dictionary<Point, Point>(); 
 
         while (stack.Count > 0)
         {
             Point current = stack.Pop();
 
-            if (current.Equals(end))
-                return ConstructPath(parentMap, start, end);
+            // 도착점에 도달한 경우 경로를 재구성하여 반환
+            if (current == end)
+            {
+                return ShowPath(start, end, parentMap);
+            }
 
+            // 이웃한 노드들을 탐색하며 경로를 찾음
             foreach (Point neighbor in GetNeighbors(current))
             {
-                if (!visited.Contains(neighbor) && map[neighbor.X, neighbor.Y] == Way)
+                if (map[neighbor.X, neighbor.Y] == WAY && !parentMap.ContainsKey(neighbor))
                 {
                     stack.Push(neighbor);
-                    visited.Add(neighbor);
-                    parentMap[neighbor] = current;
+                    parentMap[neighbor] = current; // 이웃의 부모를 기록함
                 }
             }
         }
-
-        return null;
+        return new List<Point>();
     }
 
-    private List<Point> ConstructPath(Dictionary<Point, Point> parentMap, Point start, Point end)
+    private List<Point> ShowPath(Point start, Point end, Dictionary<Point, Point> parentMap)
     {
         List<Point> path = new List<Point>();
         Point current = end;
-        while (!current.Equals(start))
+
+        while (current != start)
         {
             path.Add(current);
             current = parentMap[current];
         }
-        path.Add(start);
-        path.Reverse(); 
-        return path;
-    }
 
-    private bool IsWithinMapBounds(Point point)
-    {
-        return point.X >= 0 && point.X < map_size_x && point.Y >= 0 && point.Y < map_size_y;
+        path.Add(start); // 시작점 추가
+        path.Reverse(); // 경로를 시작점부터 순서대로 정렬
+
+        return path;
     }
 
     private IEnumerable<Point> GetNeighbors(Point point)
     {
-        List<Point> neighbors = new List<Point>();
-        Point[] moves = { new Point(1, 0), new Point(0, 1), new Point(-1, 0), new Point(0, -1) }; // Right, Down, Left, Up
+        Point[] directions = { new Point(0, -1), new Point(0, 1), new Point(-1, 0), new Point(1, 0) }; // 상, 하, 좌, 우
 
-        foreach (Point move in moves)
+        foreach (Point direction in directions)
         {
-            Point neighbor = new Point(point.X + move.X, point.Y + move.Y);
-            if (IsWithinMapBounds(neighbor))
-                neighbors.Add(neighbor);
+            Point neighbor = new Point(point.X + direction.X, point.Y + direction.Y);
+            if (IfItIsInMap(neighbor))
+                yield return neighbor;
         }
+    }
 
-        return neighbors;
+    private bool IfItIsInMap(Point point)
+    {
+        return point.X >= 0 && point.X < map_size_x && point.Y >= 0 && point.Y < map_size_y;
     }
 }
 
