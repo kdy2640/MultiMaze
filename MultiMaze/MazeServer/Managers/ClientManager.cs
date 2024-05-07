@@ -196,7 +196,7 @@ namespace MazeServer
         #endregion
 
 
-        public void ReceiveCompleted(byte[] buffer, ServerEvent serverEvent,int playerCode)
+        private void ReceiveCompleted(byte[] buffer, ServerEvent serverEvent,int playerCode)
         {
             switch (serverEvent.GameStatus)
             {
@@ -223,7 +223,7 @@ namespace MazeServer
             }
         }
 
-        public void AddHeaderToBuffer(byte[] buffer, int gameStatus, int serverEventType, out byte[] resultBuffer)
+        private void AddHeaderToBuffer(byte[] buffer, int gameStatus, int serverEventType, out byte[] resultBuffer)
         {
 
             //직렬화
@@ -240,7 +240,7 @@ namespace MazeServer
 
         }
 
-        public void GetHeaderFromBuffer(byte[] headerBuffer, out int dataLength, out int gameStatus, out int serverEventType)
+        private void GetHeaderFromBuffer(byte[] headerBuffer, out int dataLength, out int gameStatus, out int serverEventType)
         {
             byte[] data = new byte[2];
             byte[] statusSize = new byte[2];
