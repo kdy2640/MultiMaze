@@ -28,25 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             pictureBox1 = new PictureBox();
+            timer1 = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
             // 
             pictureBox1.Image = Properties.Resources.loading_7528_256;
-            pictureBox1.Location = new Point(260, 69);
+            pictureBox1.Location = new Point(234, 55);
+            pictureBox1.Margin = new Padding(3, 2, 3, 2);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(265, 256);
+            pictureBox1.Size = new Size(266, 262);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
+            // timer1
+            //  
+            // 
             // LoadingScene
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(720, 360);
             Controls.Add(pictureBox1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "LoadingScene";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -56,5 +63,6 @@
         #endregion
 
         private PictureBox pictureBox1;
+        private System.Windows.Forms.Timer timer1;
     }
 }

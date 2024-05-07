@@ -15,22 +15,31 @@ namespace MazeClient.Scenes
 {
     public partial class LoadingScene : Form
     {
-        public static LoadingScene loadingScene;
-        public static bool is_end = false;
-
-        public LoadingScene()
+        public static LoadingScene loadingScene = new LoadingScene(); 
+        private static Form Parent = new Form();
+        private LoadingScene()
         {
-            InitializeComponent();
+            InitializeComponent(); 
+        } 
+        public static void StartLoading(Form sender)
+        {
+            Parent = sender as Form;
+            foreach(Control c in Parent.Controls)
+            {
+                c.Enabled = false;
+            }
+            loadingScene.Show(); 
+            
         }
 
-        public static async Task Loading(Action AsyncMethod)
+        public static void StopLoading()
         {
-            loadingScene = new LoadingScene();
-            Task t1 = Task.Run(() =>  AsyncMethod());
-
-            loadingScene.Show();
-            await t1;
-            loadingScene.Close();
+            foreach (Control c in Parent.Controls)
+            {
+                c.Enabled = false;
+            }
+            loadingScene.Hide();
         }
+         
     }
 }

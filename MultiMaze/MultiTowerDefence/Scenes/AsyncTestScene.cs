@@ -17,20 +17,13 @@ namespace MazeClient.Scenes
         public AsyncTestScene()
         {
             InitializeComponent();
-        }
-
-        private void test_function()
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                Thread.Sleep(1000);
-                label1.Text = i.ToString();
-            }
-        }
+        } 
 
         private async void button_Click(object sender, EventArgs e)
         {
-            await LoadingScene.Loading(() => test_function());
+            LoadingScene.StartLoading(this);
+            await Task.Delay(5000); // 로딩 시간 조정 
+            LoadingScene.StopLoading();
             MessageBox.Show("Done!");
             this.Close();
         }
