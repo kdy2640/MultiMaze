@@ -43,6 +43,7 @@ namespace MazeClient
             PicPlayer3 = new PictureBox();
             RtbChat = new RichTextBox();
             BtnSend = new Button();
+            inputTb = new TextBox();
             ((System.ComponentModel.ISupportInitialize)PicPlayer2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)PicPlayer1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)PicPlayer4).BeginInit();
@@ -184,7 +185,7 @@ namespace MazeClient
             // 
             // RtbChat
             // 
-            RtbChat.Location = new Point(575, 75);
+            RtbChat.Location = new Point(543, 79);
             RtbChat.Margin = new Padding(4);
             RtbChat.Name = "RtbChat";
             RtbChat.Size = new Size(292, 325);
@@ -193,20 +194,29 @@ namespace MazeClient
             // 
             // BtnSend
             // 
-            BtnSend.Location = new Point(771, 417);
+            BtnSend.Location = new Point(838, 418);
             BtnSend.Margin = new Padding(4);
             BtnSend.Name = "BtnSend";
-            BtnSend.Size = new Size(96, 31);
+            BtnSend.Size = new Size(84, 30);
             BtnSend.TabIndex = 8;
             BtnSend.Text = "전송";
             BtnSend.UseVisualStyleBackColor = true;
             BtnSend.Click += BtnSend_Click;
+            // 
+            // inputTb
+            // 
+            inputTb.Location = new Point(543, 421);
+            inputTb.Name = "inputTb";
+            inputTb.Size = new Size(288, 27);
+            inputTb.TabIndex = 9;
+            inputTb.KeyDown += inputTb_KeyDown;
             // 
             // WaitScene
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(950, 627);
+            Controls.Add(inputTb);
             Controls.Add(BtnSend);
             Controls.Add(RtbChat);
             Controls.Add(Player3);
@@ -248,5 +258,6 @@ namespace MazeClient
         private PictureBox PicPlayer3;
         private RichTextBox RtbChat;
         private Button BtnSend;
+        private TextBox inputTb;
     }
 }

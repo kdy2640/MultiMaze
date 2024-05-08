@@ -28,9 +28,9 @@ namespace MazeClient
         }
 
         private void LoadPlayerColors()
-        { 
+        {
         }
-         
+
 
         private void Initialize()
         {
@@ -39,7 +39,7 @@ namespace MazeClient
             _playerPictureBoxList[0] = PicPlayer1;
             _playerPictureBoxList[1] = PicPlayer2;
             _playerPictureBoxList[2] = PicPlayer3;
-            _playerPictureBoxList[3] = PicPlayer4; 
+            _playerPictureBoxList[3] = PicPlayer4;
             if (_playerCode == 1)
             {
                 _isHost = true;
@@ -139,16 +139,19 @@ namespace MazeClient
 
         #endregion
 
-
+         
         // 채팅 (서버랑 연결 X)
         private async void SendMessage()
         {
-            string message = RtbChat.Text.Trim();
+            string message = inputTb.Text.Trim();
             if (!string.IsNullOrEmpty(message))
             {
                 try
                 {
                     RtbChat.AppendText($"나: {message}\n");
+
+                    RtbChat.SelectionStart = RtbChat.Text.Length;
+                    RtbChat.ScrollToCaret();
                 }
                 catch (Exception ex)
                 {
@@ -156,21 +159,22 @@ namespace MazeClient
                 }
             }
         }
-        private void AddMessageToChat(string message)
-        {
-            RtbChat.AppendText(message + Environment.NewLine);
-
-            RtbChat.SelectionStart = RtbChat.Text.Length;
-            RtbChat.ScrollToCaret();
-            
-        }
 
         private void PicPlayer_Paint(object sender, PaintEventArgs e)
         {
             PictureBox pic = sender as PictureBox;
-            int index = pic.Name[9] - 49; 
+            int index = pic.Name[9] - 49;
             SolidBrush br = new SolidBrush(Manager.map.PlayerColorList[index]);
             e.Graphics.FillEllipse(br, pic.Width / 4, pic.Height / 4, pic.Width / 2, pic.Height / 2);
+        }
+
+        private void inputTb_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                BtnSend.PerformClick();
+                inputTb.Text = "";
+            }
         }
     }
 }
