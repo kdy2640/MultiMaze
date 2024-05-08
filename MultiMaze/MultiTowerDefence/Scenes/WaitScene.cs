@@ -28,9 +28,9 @@ namespace MazeClient
         }
 
         private void LoadPlayerColors()
-        { 
+        {
         }
-         
+
 
         private void Initialize()
         {
@@ -39,7 +39,7 @@ namespace MazeClient
             _playerPictureBoxList[0] = PicPlayer1;
             _playerPictureBoxList[1] = PicPlayer2;
             _playerPictureBoxList[2] = PicPlayer3;
-            _playerPictureBoxList[3] = PicPlayer4; 
+            _playerPictureBoxList[3] = PicPlayer4;
             if (_playerCode == 1)
             {
                 _isHost = true;
@@ -86,6 +86,15 @@ namespace MazeClient
         private async void BtnSend_Click(object sender, EventArgs e)
         {
             SendMessage();
+
+        }
+        private void BtnColor_Click(object sender, EventArgs e)
+        {
+            if(cld.ShowDialog()== DialogResult.OK)
+            {
+                Manager.map.PlayerColorList[_playerCode-1] = cld.Color;
+                _playerPictureBoxList[_playerCode-1].Invalidate();
+            }
 
         }
         #endregion
@@ -162,15 +171,17 @@ namespace MazeClient
 
             RtbChat.SelectionStart = RtbChat.Text.Length;
             RtbChat.ScrollToCaret();
-            
+
         }
 
         private void PicPlayer_Paint(object sender, PaintEventArgs e)
         {
             PictureBox pic = sender as PictureBox;
-            int index = pic.Name[9] - 49; 
+            int index = pic.Name[9] - 49;
             SolidBrush br = new SolidBrush(Manager.map.PlayerColorList[index]);
             e.Graphics.FillEllipse(br, pic.Width / 4, pic.Height / 4, pic.Width / 2, pic.Height / 2);
         }
+
+        
     }
 }
