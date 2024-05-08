@@ -31,7 +31,15 @@ namespace MazeClient
         {
         }
 
+        private void BtnColor_Click(object sender, EventArgs e)
+        {
+            if (cld.ShowDialog() == DialogResult.OK)
+            {
+                Manager.map.PlayerColorList[_playerCode - 1] = cld.Color;
+                _playerPictureBoxList[_playerCode - 1].Invalidate();
+            }
 
+        }
         private void Initialize()
         {
             Manager = GameManager.Instance;
