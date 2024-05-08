@@ -51,10 +51,9 @@ namespace MazeClient
             // 
             // button1
             // 
-            button1.Location = new Point(563, 43);
-            button1.Margin = new Padding(2);
+            button1.Location = new Point(761, 22);
             button1.Name = "button1";
-            button1.Size = new Size(124, 22);
+            button1.Size = new Size(159, 29);
             button1.TabIndex = 0;
             button1.Text = "4번 화면 이동";
             button1.UseVisualStyleBackColor = true;
@@ -63,18 +62,18 @@ namespace MazeClient
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(328, 9);
-            label1.Margin = new Padding(2, 0, 2, 0);
+            label1.Location = new Point(422, 12);
             label1.Name = "label1";
-            label1.Size = new Size(54, 15);
+            label1.Size = new Size(67, 20);
             label1.TabIndex = 2;
             label1.Text = "3번 화면";
             // 
             // BtnStart
             // 
-            BtnStart.Location = new Point(0, 342);
+            BtnStart.Location = new Point(0, 456);
+            BtnStart.Margin = new Padding(4);
             BtnStart.Name = "BtnStart";
-            BtnStart.Size = new Size(359, 127);
+            BtnStart.Size = new Size(462, 169);
             BtnStart.TabIndex = 3;
             BtnStart.Text = "Start";
             BtnStart.UseVisualStyleBackColor = true;
@@ -82,9 +81,10 @@ namespace MazeClient
             // 
             // BtnReady
             // 
-            BtnReady.Location = new Point(356, 342);
+            BtnReady.Location = new Point(458, 456);
+            BtnReady.Margin = new Padding(4);
             BtnReady.Name = "BtnReady";
-            BtnReady.Size = new Size(359, 69);
+            BtnReady.Size = new Size(462, 92);
             BtnReady.TabIndex = 3;
             BtnReady.Text = "준비";
             BtnReady.UseVisualStyleBackColor = true;
@@ -92,9 +92,10 @@ namespace MazeClient
             // 
             // BtnLeave
             // 
-            BtnLeave.Location = new Point(356, 405);
+            BtnLeave.Location = new Point(458, 540);
+            BtnLeave.Margin = new Padding(4);
             BtnLeave.Name = "BtnLeave";
-            BtnLeave.Size = new Size(359, 64);
+            BtnLeave.Size = new Size(462, 85);
             BtnLeave.TabIndex = 3;
             BtnLeave.Text = "나가기";
             BtnLeave.UseVisualStyleBackColor = true;
@@ -102,85 +103,100 @@ namespace MazeClient
             // 
             // PicPlayer2
             // 
-            PicPlayer2.Location = new Point(297, 56);
+            PicPlayer2.Location = new Point(379, 79);
+            PicPlayer2.Margin = new Padding(4);
             PicPlayer2.Name = "PicPlayer2";
-            PicPlayer2.Size = new Size(100, 86);
+            PicPlayer2.Size = new Size(110, 110);
             PicPlayer2.TabIndex = 4;
             PicPlayer2.TabStop = false;
+            PicPlayer2.Paint += PicPlayer_Paint;
             // 
             // Player1
             // 
             Player1.AutoSize = true;
-            Player1.Location = new Point(159, 145);
+            Player1.Location = new Point(180, 200);
+            Player1.Margin = new Padding(4, 0, 4, 0);
             Player1.Name = "Player1";
-            Player1.Size = new Size(46, 15);
+            Player1.Size = new Size(58, 20);
             Player1.TabIndex = 6;
             Player1.Text = "Player1";
             // 
             // Player2
             // 
             Player2.AutoSize = true;
-            Player2.Location = new Point(328, 145);
+            Player2.Location = new Point(380, 200);
+            Player2.Margin = new Padding(4, 0, 4, 0);
             Player2.Name = "Player2";
-            Player2.Size = new Size(46, 15);
+            Player2.Size = new Size(58, 20);
             Player2.TabIndex = 6;
             Player2.Text = "Player2";
             // 
             // Player4
             // 
             Player4.AutoSize = true;
-            Player4.Location = new Point(328, 262);
+            Player4.Location = new Point(380, 350);
+            Player4.Margin = new Padding(4, 0, 4, 0);
             Player4.Name = "Player4";
-            Player4.Size = new Size(46, 15);
+            Player4.Size = new Size(58, 20);
             Player4.TabIndex = 6;
             Player4.Text = "Player4";
             // 
             // PicPlayer1
             // 
-            PicPlayer1.Location = new Point(127, 56);
+            PicPlayer1.BackColor = SystemColors.Control;
+            PicPlayer1.Location = new Point(180, 79);
+            PicPlayer1.Margin = new Padding(4);
             PicPlayer1.Name = "PicPlayer1";
-            PicPlayer1.Size = new Size(100, 86);
+            PicPlayer1.Size = new Size(110, 110);
             PicPlayer1.TabIndex = 4;
             PicPlayer1.TabStop = false;
+            PicPlayer1.Paint += PicPlayer_Paint;
             // 
             // Player3
             // 
             Player3.AutoSize = true;
-            Player3.Location = new Point(159, 262);
+            Player3.Location = new Point(180, 350);
+            Player3.Margin = new Padding(4, 0, 4, 0);
             Player3.Name = "Player3";
-            Player3.Size = new Size(46, 15);
+            Player3.Size = new Size(58, 20);
             Player3.TabIndex = 6;
             Player3.Text = "Player3";
             // 
             // PicPlayer4
             // 
-            PicPlayer4.Location = new Point(297, 175);
+            PicPlayer4.Location = new Point(379, 233);
+            PicPlayer4.Margin = new Padding(4);
             PicPlayer4.Name = "PicPlayer4";
-            PicPlayer4.Size = new Size(100, 84);
+            PicPlayer4.Size = new Size(110, 110);
             PicPlayer4.TabIndex = 4;
             PicPlayer4.TabStop = false;
+            PicPlayer4.Paint += PicPlayer_Paint;
             // 
             // PicPlayer3
             // 
-            PicPlayer3.Location = new Point(127, 175);
+            PicPlayer3.Location = new Point(180, 233);
+            PicPlayer3.Margin = new Padding(4);
             PicPlayer3.Name = "PicPlayer3";
-            PicPlayer3.Size = new Size(100, 84);
+            PicPlayer3.Size = new Size(110, 110);
             PicPlayer3.TabIndex = 4;
             PicPlayer3.TabStop = false;
+            PicPlayer3.Paint += PicPlayer_Paint;
             // 
             // RtbChat
             // 
-            RtbChat.Location = new Point(447, 70);
+            RtbChat.Location = new Point(575, 75);
+            RtbChat.Margin = new Padding(4);
             RtbChat.Name = "RtbChat";
-            RtbChat.Size = new Size(228, 245);
+            RtbChat.Size = new Size(292, 325);
             RtbChat.TabIndex = 7;
             RtbChat.Text = "";
             // 
             // BtnSend
             // 
-            BtnSend.Location = new Point(600, 313);
+            BtnSend.Location = new Point(771, 417);
+            BtnSend.Margin = new Padding(4);
             BtnSend.Name = "BtnSend";
-            BtnSend.Size = new Size(75, 23);
+            BtnSend.Size = new Size(96, 31);
             BtnSend.TabIndex = 8;
             BtnSend.Text = "전송";
             BtnSend.UseVisualStyleBackColor = true;
@@ -188,9 +204,9 @@ namespace MazeClient
             // 
             // WaitScene
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(739, 470);
+            ClientSize = new Size(950, 627);
             Controls.Add(BtnSend);
             Controls.Add(RtbChat);
             Controls.Add(Player3);
@@ -206,7 +222,6 @@ namespace MazeClient
             Controls.Add(BtnStart);
             Controls.Add(label1);
             Controls.Add(button1);
-            Margin = new Padding(2);
             Name = "WaitScene";
             ((System.ComponentModel.ISupportInitialize)PicPlayer2).EndInit();
             ((System.ComponentModel.ISupportInitialize)PicPlayer1).EndInit();

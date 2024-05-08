@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Windows.Forms;
 using MazeClient.Share;
+using static MazeClient.WaitScene;
 
 namespace MazeClient
 {
@@ -17,14 +18,7 @@ namespace MazeClient
         private bool _isAllPlayerReady = true;
         private int _playerCode = 0; // 플레이어 코드 추가
         private GameRoom gameroom = new GameRoom();
-
-        public static class PlayerColors
-        {
-            public static Color PicPlayer1Color { get; set; } = Color.Red;
-            public static Color PicPlayer2Color { get; set; } = Color.Blue;
-            public static Color PicPlayer3Color { get; set; } = Color.Green;
-            public static Color PicPlayer4Color { get; set; } = Color.Purple;
-        }
+        private PictureBox[] _playerPictureBoxList = new PictureBox[4];
 
         public WaitScene()
         {
@@ -34,18 +28,23 @@ namespace MazeClient
         }
 
         private void LoadPlayerColors()
-        {
-            //color dialog 이용해서 color 수정하기
+        { 
         }
+         
 
         private void Initialize()
-        { 
+        {
             Manager = GameManager.Instance;
             _playerCode = Manager.PlayerCode;
-            if(_playerCode == 1)
+            _playerPictureBoxList[0] = PicPlayer1;
+            _playerPictureBoxList[1] = PicPlayer2;
+            _playerPictureBoxList[2] = PicPlayer3;
+            _playerPictureBoxList[3] = PicPlayer4; 
+            if (_playerCode == 1)
             {
                 _isHost = true;
-            }else
+            }
+            else
             {
                 _isHost = false;
             }
@@ -96,7 +95,7 @@ namespace MazeClient
 
         private Player FindLeavingPlayer()
         {
-            return null; 
+            return null;
         }
         public class Player
         {
@@ -135,7 +134,7 @@ namespace MazeClient
             Manager.scene.ChangeGameState(this, Define.GameState.InGameScene);
         }
 
-       
+
 
 
         #endregion
@@ -163,6 +162,15 @@ namespace MazeClient
 
             RtbChat.SelectionStart = RtbChat.Text.Length;
             RtbChat.ScrollToCaret();
+            
+        }
+
+        private void PicPlayer_Paint(object sender, PaintEventArgs e)
+        {
+            PictureBox pic = sender as PictureBox;
+            int index = pic.Name[9] - 49; 
+            SolidBrush br = new SolidBrush(Manager.map.PlayerColorList[index]);
+            e.Graphics.FillEllipse(br, pic.Width / 4, pic.Height / 4, pic.Width / 2, pic.Height / 2);
         }
     }
 }

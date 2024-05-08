@@ -21,7 +21,7 @@ namespace MazeClient
         public const int MAX_PLAYER_NUM = 4;
         public int Now_Player_Num = 3;
 
-        public int PlayerCode; // 몇번 플레이어인지
+        public int PlayerCode; // 몇번 플레이어인지 1번부터 시작
         private GameManager()
         {
         }
