@@ -43,6 +43,8 @@ namespace MazeClient
             PicPlayer3 = new PictureBox();
             RtbChat = new RichTextBox();
             BtnSend = new Button();
+            BtnColor = new Button();
+            cld = new ColorDialog();
             inputTb = new TextBox();
             ((System.ComponentModel.ISupportInitialize)PicPlayer2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)PicPlayer1).BeginInit();
@@ -203,6 +205,16 @@ namespace MazeClient
             BtnSend.UseVisualStyleBackColor = true;
             BtnSend.Click += BtnSend_Click;
             // 
+            // BtnColor
+            // 
+            BtnColor.Location = new Point(12, 417);
+            BtnColor.Name = "BtnColor";
+            BtnColor.Size = new Size(94, 29);
+            BtnColor.TabIndex = 9;
+            BtnColor.Text = "색 변경";
+            BtnColor.UseVisualStyleBackColor = true;
+            BtnColor.Click += BtnColor_Click;
+            // 
             // inputTb
             // 
             inputTb.Location = new Point(543, 421);
@@ -216,6 +228,7 @@ namespace MazeClient
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(950, 627);
+            Controls.Add(BtnColor);
             Controls.Add(inputTb);
             Controls.Add(BtnSend);
             Controls.Add(RtbChat);
@@ -258,6 +271,8 @@ namespace MazeClient
         private PictureBox PicPlayer3;
         private RichTextBox RtbChat;
         private Button BtnSend;
+        private Button BtnColor;
+        private ColorDialog cld;
         private TextBox inputTb;
     }
 }
