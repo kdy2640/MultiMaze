@@ -48,7 +48,7 @@
             ClientSize = new Size(800, 450);
             Controls.Add(button1);
             Name = "ServerScene";
-            Text = "Form1";
+            Text = "ServerScene";
             Load += ServerTempScene_Load;
             ResumeLayout(false);
         }

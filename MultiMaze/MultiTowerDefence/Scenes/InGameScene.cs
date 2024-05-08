@@ -26,8 +26,7 @@ namespace MazeClient.Scenes
         List<PictureBox> PlayerList;  // 플레이어 PictureBox
 
         //AI 관련
-        public Algorithm algorithm = new Astar();
-
+        public Algorithm algorithm = new DFS();
         // Map 관련
         private bool[,] map = new bool[0, 0];
         private Point EndPoint = new Point();
@@ -370,28 +369,11 @@ namespace MazeClient.Scenes
         private void AIInitialize()
         {
             AiPath = algorithm.ToArray(new Point(1, 1), new Point(manager.map.mapSize - 3, manager.map.mapSize - 3));
+            manager.path = AiPath;
         }
 
         #endregion AI 관련
 
-        #region 파싱 delegate
-
-        public void InGameSceneCallBackFunction(byte[] buffer, ServerEvent serverEvent)
-        {
-            //GameStatus 확인
-            if (serverEvent.GameStatus != Define.GameState.InGameScene) return;
-            switch (serverEvent.EventType)
-            {
-                case 0:
-                    break;
-                case 1:
-                    break;
-                case 2:
-                    GetAllPlayerPos(buffer);
-                    break;
-            }
-        }
-        #endregion
 
         #region 서버 수신
         //플레이어들 위치정보 수신
@@ -462,6 +444,24 @@ namespace MazeClient.Scenes
         }
         #endregion
 
+        #region 파싱 delegate
+
+        public void InGameSceneCallBackFunction(byte[] buffer, ServerEvent serverEvent)
+        {
+            //GameStatus 확인
+            if (serverEvent.GameStatus != Define.GameState.InGameScene) return;
+            switch (serverEvent.EventType)
+            {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    GetAllPlayerPos(buffer);
+                    break;
+            }
+        }
+        #endregion
     }
     public class InGameSceneServerEvent : ServerEvent
     {

@@ -23,6 +23,7 @@ namespace MazeClient.Scenes
         {
             LoadingScene.StartLoading(this);
             await Task.Delay(5000); // 로딩 시간 조정 
+            //작업
             LoadingScene.StopLoading();
             MessageBox.Show("Done!");
             this.Close();
