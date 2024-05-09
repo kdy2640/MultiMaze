@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             button1 = new Button();
+            logTextBox = new RichTextBox();
             SuspendLayout();
             // 
             // button1
@@ -41,11 +42,20 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
+            // logTextBox
+            // 
+            logTextBox.Location = new Point(65, 44);
+            logTextBox.Name = "logTextBox";
+            logTextBox.Size = new Size(352, 237);
+            logTextBox.TabIndex = 1;
+            logTextBox.Text = "";
+            // 
             // ServerScene
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(logTextBox);
             Controls.Add(button1);
             Name = "ServerScene";
             Text = "ServerScene";
@@ -56,5 +66,6 @@
         #endregion
 
         private Button button1;
+        private RichTextBox logTextBox;
     }
 }
