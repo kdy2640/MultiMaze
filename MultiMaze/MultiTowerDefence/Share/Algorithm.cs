@@ -148,88 +148,71 @@ namespace MazeClient.Share
 {
     private int map_size_x;
     private int map_size_y;
-    private const bool Wall = false;
-    private const bool Way = true; 
+    private const bool WALL = false;
+    private const bool WAY = true;
 
-    public DFS()
-    { 
-        map_size_x = map.GetLength(0);
-        map_size_y = map.GetLength(1);
-    }
-
-    public override List<Point> ToArray(Point start, Point end)
+    public override List<Point> ToArray(Point startingPoint, Point endingPoint)
     {
-        if (!IsWithinMapBounds(start) || !IsWithinMapBounds(end) || map[start.X, start.Y] == Wall || map[end.X, end.Y] == Wall)
+        this.map_size_x = map.GetLength(0);
+        this.map_size_y = map.GetLength(1);
+        if (!IsinMapBounds(startingPoint) || !IsinMapBounds(endingPoint) || !IsPath(startingPoint) || !IsPath(endingPoint))
             return null;
 
-        return DepthFirstSearch(start, end);
+        return dfs(startingPoint, endingPoint);
     }
 
-    private List<Point> DepthFirstSearch(Point start, Point end)
+    private List<Point> dfs(Point startingPoint, Point endingPoint)
     {
-        Stack<Point> stack = new Stack<Point>();
-        Dictionary<Point, Point> parentMap = new Dictionary<Point, Point>();
-        HashSet<Point> visited = new HashSet<Point>();
+        Stack<Point> explore = new Stack<Point>();
+        HashSet<Point> visitedPoints = new HashSet<Point>();
+        List<Point> visitedOrder = new List<Point>();
 
-        stack.Push(start);
-        visited.Add(start);
+        explore.Push(startingPoint);
+        visitedPoints.Add(startingPoint);
 
-        while (stack.Count > 0)
+        while (explore.Count > 0)
         {
-            Point current = stack.Pop();
+            Point currentPoint = explore.Pop();
 
-            if (current.Equals(end))
-                return ConstructPath(parentMap, start, end);
+            if (!visitedOrder.Contains(currentPoint))
+                visitedOrder.Add(currentPoint);
 
-            foreach (Point neighbor in GetNeighbors(current))
+            foreach (Point adjacent in FindNeighbors(currentPoint))
             {
-                if (!visited.Contains(neighbor) && map[neighbor.X, neighbor.Y] == Way)
+                if (IsPath(adjacent) && !visitedPoints.Contains(adjacent))
                 {
-                    stack.Push(neighbor);
-                    visited.Add(neighbor);
-                    parentMap[neighbor] = current;
+                    explore.Push(adjacent);
+                    visitedPoints.Add(adjacent);
                 }
             }
         }
 
-        return null;
+        return visitedOrder;
     }
 
-    private List<Point> ConstructPath(Dictionary<Point, Point> parentMap, Point start, Point end)
+    private bool IsinMapBounds(Point location)
     {
-        List<Point> path = new List<Point>();
-        Point current = end;
-        while (!current.Equals(start))
+        return location.X >= 0 && location.X < map_size_x && location.Y >= 0 && location.Y < map_size_y;
+    }
+
+    private bool IsPath(Point location)
+    {
+        // Accesses the external Map class's data
+        return map[location.X, location.Y] == WAY;
+    }
+
+    private IEnumerable<Point> FindNeighbors(Point location)
+    {
+        Point[] directions = { new Point(1, 0), new Point(0, 1), new Point(-1, 0), new Point(0, -1) }; // 상 하 좌 우
+
+        foreach (Point direction in directions)
         {
-            path.Add(current);
-            current = parentMap[current];
+            Point adjacent = new Point(location.X + direction.X, location.Y + direction.Y);
+            if (IsinMapBounds(adjacent))
+                yield return adjacent;
         }
-        path.Add(start);
-        path.Reverse(); 
-        return path;
-    }
-
-    private bool IsWithinMapBounds(Point point)
-    {
-        return point.X >= 0 && point.X < map_size_x && point.Y >= 0 && point.Y < map_size_y;
-    }
-
-    private IEnumerable<Point> GetNeighbors(Point point)
-    {
-        List<Point> neighbors = new List<Point>();
-        Point[] moves = { new Point(1, 0), new Point(0, 1), new Point(-1, 0), new Point(0, -1) }; // Right, Down, Left, Up
-
-        foreach (Point move in moves)
-        {
-            Point neighbor = new Point(point.X + move.X, point.Y + move.Y);
-            if (IsWithinMapBounds(neighbor))
-                neighbors.Add(neighbor);
-        }
-
-        return neighbors;
     }
 }
-
     public class Astar : Algorithm
     {
         int map_size_x;
