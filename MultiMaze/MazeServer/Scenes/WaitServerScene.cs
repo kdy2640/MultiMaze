@@ -73,7 +73,7 @@ namespace MazeServer.Scenes
             ServerEvent serverEvent = new ServerEvent(Define.GameState.WaitScene, 2);
             manager.client.SendToAllPlayers(sendbuffer, serverEvent);
         }
-        private void MakeMaze(int seed)
+        public void MakeMaze(int seed)
         {
             Random rand = new Random(seed);
             Point[] corners = new Point[4];
@@ -103,6 +103,7 @@ namespace MazeServer.Scenes
                 manager.map.PlayerStartPosList[i] = startPosArr[typeIndex];
                 manager.map.PlayerPosList[i] = startPosArr[typeIndex];
             }
+            manager.nowRound = 1;
         }
         private void SendArgs()
         {

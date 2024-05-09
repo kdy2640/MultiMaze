@@ -290,7 +290,8 @@ namespace MazeClient
         }
         Point[] corners = new Point[4];
         private async void GameInitialize(int seed)
-        { 
+        {
+            LoadingScene.StartLoading(this);
             //맵 생성
             Manager.map.MapInitialize(new RoomSettingArgs());
             int size = Manager.map.mapSize;
@@ -322,8 +323,10 @@ namespace MazeClient
                 Manager.map.PlayerStartPosList[i] = startPosArr[typeIndex];
                 Manager.map.PlayerPosList[i] = startPosArr[typeIndex];
             }
+            LoadingScene.StopLoading();
             await Task.Delay(10);
             // 신 전환
+            Manager.nowRound = 1;
             Manager.scene.ChangeGameState(this,Define.GameState.InGameScene);
         }
 

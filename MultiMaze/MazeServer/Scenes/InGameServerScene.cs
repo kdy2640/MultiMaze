@@ -1,5 +1,4 @@
-﻿using MazeClient.Scenes;
-using MazeClient;
+﻿using MazeClient.Scenes; 
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,13 +30,28 @@ namespace MazeServer.Scenes
                     SetPlayerPos(buffer, playerCode);
                     break;
                 case 1:
+                    EchoGameEnd(buffer);
                     break;
                 case 2:
                     break;
             }
         }
-
-        public async void SetPlayerPos(byte[] buffer,int playerCode)
+        private async void EchoGameEnd(byte[] buffer)
+        {
+            int playerCode = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(buffer));
+            if(playerCode == 0)
+            {
+                manager.ServerScene.SetLog("게임이 종료되었습니다. AI가 승리하였습니다.");
+            }else
+            { 
+                manager.ServerScene.SetLog($"게임이 종료되었습니다. {playerCode}번 플레이어가 승리하였습니다.");
+            }
+            manager.WinnerList[manager.nowRound - 1] = playerCode;
+            byte[] dataBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(playerCode));
+            ServerEvent serverEvent = new ServerEvent(Define.GameState.InGameScene,1);
+            manager.client.SendToAllPlayers(dataBuffer, serverEvent);
+        }
+        private async void SetPlayerPos(byte[] buffer,int playerCode)
         {
             byte[] xBuffer = new byte[2];
             byte[] yBuffer = new byte[2];
@@ -51,7 +65,7 @@ namespace MazeServer.Scenes
             manager.map.PlayerPosList[playerCode - 1] = new Point(xPos, yPos);
             SendAllPlayerPos();// 현재는 입력이 올때만 공유
         }
-        public async void SendAllPlayerPos()
+        private async void SendAllPlayerPos()
         {
             byte[] buffer = new byte[4 * ServerGameManager.MAX_PLAYER_NUM];
  

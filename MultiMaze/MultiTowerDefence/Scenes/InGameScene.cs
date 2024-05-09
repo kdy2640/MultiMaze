@@ -19,6 +19,7 @@ namespace MazeClient.Scenes
 {
     public partial class InGameScene : Form
     {
+        private bool isGameEnd = false;
         int cellSize = 25;
         GameManager manager;// 매니저
         int PlayerCode; // 서버에서 부여하는 코드
@@ -263,6 +264,7 @@ namespace MazeClient.Scenes
         Brush playerBrush = Brushes.Wheat;
         private void MyForm_KeyDown(object sender, KeyEventArgs e)
         {
+            if (isGameEnd == true) return;
             int len = cellSize;
             Point tempPos = PlayerPos;
             switch (e.KeyCode)
@@ -335,11 +337,16 @@ namespace MazeClient.Scenes
             }
             PlayerPos.X = Math.Clamp(PlayerPos.X, 0, manager.map.mapSize - 1);
             PlayerPos.Y = Math.Clamp(PlayerPos.Y, 0, manager.map.mapSize - 1);
-
+            
             // 벽으로 이동했으면 복구
             if (!noClip && map[PlayerPos.X, PlayerPos.Y] == false)
             {
                 PlayerPos = tempPos;
+                return;
+            }
+            if(PlayerPos == endPoint)
+            {
+                SendWinner(PlayerCode);
                 return;
             }
 
@@ -396,6 +403,10 @@ namespace MazeClient.Scenes
             { 
                 UpdateAIPos();
                 label4.Text = manager.server.ServerSocket.Connected.ToString();
+                if(AiPosition == endPoint)
+                {
+                    SendWinner(0);
+                }
             }
         }
         int Index = 0;
@@ -423,7 +434,22 @@ namespace MazeClient.Scenes
 
         #endregion AI 관련
 
-
+        #region 게임로직
+        private async void gameEnd(int playerCode)
+        {
+            manager.WinnerList[manager.nowRound - 1] = playerCode;
+            if(playerCode == 0)
+            {
+                MessageBox.Show($"AI가 승리하였습니다.");
+            }
+            else
+            {
+                MessageBox.Show($"{playerCode}번 플레이어가 승리하였습니다.");
+            }
+            await Task.Delay(30);
+            manager.scene.ChangeGameState(this, Define.GameState.RoundOverScene);
+        }
+        #endregion
         #region 서버 수신
         //플레이어들 위치정보 수신
         public async void GetAllPlayerPos(byte[] buffer)
@@ -448,11 +474,17 @@ namespace MazeClient.Scenes
             RenderPlayer();
         }
 
+        private void ReceiveEndPlayer(byte[] buffer)
+        {
+            int playerCode = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(buffer));
+
+            gameEnd(playerCode);
+        }
 
         #endregion
 
         #region 서버 송신
-        public async void SendPlayerPos(Point pos)
+        private async void SendPlayerPos(Point pos)
         {
             byte[] buffer = new byte[4];
             byte[] xBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)pos.X));
@@ -464,6 +496,15 @@ namespace MazeClient.Scenes
             InGameSceneServerEvent serverEvent = new InGameSceneServerEvent(InGameSceneServerEventType.PlayerMove);
             manager.server.SendToServerAsync(buffer, serverEvent);
 
+        }
+
+        private async void SendWinner(int playercode)
+        {
+            isGameEnd = true;
+            byte[] buffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(playercode));
+
+            InGameSceneServerEvent serverEvent = new InGameSceneServerEvent(InGameSceneServerEventType.GameEnd);
+            manager.server.SendToServerAsync(buffer, serverEvent);
         }
         #endregion
 
@@ -501,9 +542,10 @@ namespace MazeClient.Scenes
             if (serverEvent.GameStatus != Define.GameState.InGameScene) return;
             switch (serverEvent.EventType)
             {
-                case 0:
+                case 0: // PlayerMove
                     break;
-                case 1:
+                case 1: // GameEnd
+                    ReceiveEndPlayer(buffer);
                     break;
                 case 2:
                     GetAllPlayerPos(buffer);
@@ -516,7 +558,7 @@ namespace MazeClient.Scenes
     {
         public enum InGameSceneServerEventType
         {
-            PlayerMove, PlayerEnd, AllPlayerPos,None
+            PlayerMove, GameEnd, AllPlayerPos,None
         }
 
 
