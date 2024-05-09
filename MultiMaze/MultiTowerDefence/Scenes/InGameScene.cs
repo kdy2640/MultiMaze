@@ -24,12 +24,13 @@ namespace MazeClient.Scenes
         int PlayerCode; // 서버에서 부여하는 코드
         Point PlayerPos;
         List<PictureBox> PlayerList;  // 플레이어 PictureBox
-
+        PictureBox EndPointPictureBox;
         //AI 관련
         public Algorithm algorithm = new Astar();
         // Map 관련
         private bool[,] map = new bool[0, 0];
-        private Point EndPoint = new Point();
+        private Point endPoint = new Point();
+
         public InGameScene()
         {
             manager = GameManager.Instance;
@@ -78,8 +79,9 @@ namespace MazeClient.Scenes
             // 미로 생성(임시)
             DrawMaze(manager.map.map);
             map = manager.map.map;
+            endPoint = manager.map.endPoint;
 
-
+            getEndPoint();
         }
         private void PanelInitialize()
         {
@@ -170,17 +172,31 @@ namespace MazeClient.Scenes
             };
             AiPlayer.SizeMode = PictureBoxSizeMode.StretchImage; // 이미지 크기 조정 
             this.Controls.Add(AiPlayer);
-            player.BringToFront();
+            PlayerList[PlayerCode-1].BringToFront();
 
-
-            //플레이어 추가
-            for (int i = 0; i < GameManager.MAX_PLAYER_NUM; i++)
-            {
-                this.Controls.Add(PlayerList[i]); // 폼에 PictureBox 추가
-            }
+             
             player = PlayerList[PlayerCode - 1];
             playerBrush = new SolidBrush(manager.map.PlayerColorList[PlayerCode - 1]);
 
+        }
+        private void getEndPoint()
+        {
+            int portalSize = 8;
+            EndPointPictureBox = new PictureBox();
+            EndPointPictureBox.Width = cellSize;
+            EndPointPictureBox.Height = cellSize;
+            EndPointPictureBox.Left = endPoint.X * cellSize + ScreenStart.X;
+            EndPointPictureBox.Top = endPoint.Y * cellSize + ScreenStart.Y;    // Paint 이벤트에 핸들러 추가
+            EndPointPictureBox.Paint += (sender, e) =>
+            {
+                SolidBrush br = new SolidBrush(Color.Green);
+                e.Graphics.FillEllipse(br, 0, 0, EndPointPictureBox.Width, EndPointPictureBox.Height);
+                br = new SolidBrush(Color.Cyan);
+                e.Graphics.FillEllipse(br, portalSize/2, portalSize/2, EndPointPictureBox.Width- portalSize, EndPointPictureBox.Height- portalSize);
+            };
+            EndPointPictureBox.SizeMode = PictureBoxSizeMode.StretchImage; // 이미지 크기 조정 
+
+            this.Controls.Add(EndPointPictureBox);
         }
         private void DrawMaze(bool[,] maze) //로직 테스트용
         {
@@ -358,6 +374,11 @@ namespace MazeClient.Scenes
                 PlayerList[i].Left = ScreenStart.X + pictureBox1.Left + manager.map.PlayerPosList[i].X * cellSize;
                 PlayerList[i].Top = ScreenStart.Y + pictureBox1.Top + manager.map.PlayerPosList[i].Y * cellSize;
             }
+
+            // 목표지점 렌더링
+            EndPointPictureBox.Left = ScreenStart.X + pictureBox1.Left +endPoint.X * cellSize;
+            EndPointPictureBox.Top = ScreenStart.Y + pictureBox1.Top + endPoint.Y * cellSize;
+
             int temp = 0;
         }
         #endregion
