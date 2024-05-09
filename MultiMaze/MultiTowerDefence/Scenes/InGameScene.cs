@@ -26,7 +26,7 @@ namespace MazeClient.Scenes
         List<PictureBox> PlayerList;  // 플레이어 PictureBox
 
         //AI 관련
-        public Algorithm algorithm = new DFS();
+        public Algorithm algorithm = new Astar();
         // Map 관련
         private bool[,] map = new bool[0, 0];
         private Point EndPoint = new Point();
@@ -154,10 +154,19 @@ namespace MazeClient.Scenes
             AiPlayer.Left = 1 * cellSize + ScreenStart.X;
             AiPlayer.Top = 1 * cellSize + ScreenStart.Y;    // Paint 이벤트에 핸들러 추가
             AiPlayer.Paint += (sender, e) =>
-            {
+            { 
                 e.Graphics.Clear(Color.White);
-                e.Graphics.FillEllipse(Brushes.Purple, 0, 0, player.Width, player.Height);
 
+                // 사각형 꼭짓점
+                Point point1 = new Point(AiPlayer.Width / 2, 0); // 상
+                Point point3 = new Point(AiPlayer.Width / 2, AiPlayer.Height); // 하 
+                Point point2 = new Point(AiPlayer.Width, AiPlayer.Height / 2); // 우
+                Point point4 = new Point(0, AiPlayer.Height / 2); // 좌
+
+                Point[] points = { point1, point2, point3, point4 };
+
+                // 그리기
+                e.Graphics.FillPolygon(Brushes.Purple, points);
             };
             AiPlayer.SizeMode = PictureBoxSizeMode.StretchImage; // 이미지 크기 조정 
             this.Controls.Add(AiPlayer);
