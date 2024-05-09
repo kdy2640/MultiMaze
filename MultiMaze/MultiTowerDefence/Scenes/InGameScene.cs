@@ -34,15 +34,12 @@ namespace MazeClient.Scenes
         {
             manager = GameManager.Instance;
 
-            InitializeComponent();
-
-
+            InitializeComponent(); 
         }
 
         private void InGameScene_Load(object sender, EventArgs e)
         {
-
-            GameInitialize(); //맵 준비, 이동 준비
+             GameInitialize(); //맵 준비, 이동 준비
         }
 
 
@@ -79,7 +76,6 @@ namespace MazeClient.Scenes
         private void MapInitialize()
         {
             // 미로 생성(임시)
-            manager.map.MapInitialize();
             DrawMaze(manager.map.map);
             map = manager.map.map;
 
@@ -105,12 +101,16 @@ namespace MazeClient.Scenes
         {
             PlayerCode = manager.PlayerCode;// 서버 연결시 받은 플레이어 코드  
             PlayerPos = manager.map.PlayerStartPosList[PlayerCode - 1]; // 시작 위치 받아오기
+            for (int i = 0; i < 4; i++)
+            {
+                manager.map.PlayerPosList[i] = manager.map.PlayerStartPosList[i];
+            }
 
             //Player PictureBox
             PlayerList = new List<PictureBox>();
             for (int i = 0; i < GameManager.MAX_PLAYER_NUM; i++)
             {
-
+                
                 PictureBox player = new PictureBox();
 
                 player.Width = cellSize;
@@ -120,8 +120,24 @@ namespace MazeClient.Scenes
                 int LocalI = i;
                 player.Paint += (sender, e) =>
                 {
-                    e.Graphics.Clear(Color.White);
-                    SolidBrush br = new SolidBrush(manager.map.PlayerColorList[LocalI]);
+                    e.Graphics.Clear(Color.White); 
+                    SolidBrush br;
+                    if (manager.server.PlayerConnectArray[LocalI] == true)
+                    { 
+                        br = new SolidBrush(manager.map.PlayerColorList[LocalI]);
+                    }
+                    else
+                    {
+                        if (manager.map.map[manager.map.PlayerPosList[LocalI].X, manager.map.PlayerPosList[LocalI].Y] == true)
+                        {
+                            br = new SolidBrush(Color.White);
+                        }
+                        else
+                        {
+                            e.Graphics.Clear(Color.Black);
+                            br = new SolidBrush(Color.Black);
+                        }
+                    }
                     e.Graphics.FillEllipse(br, 0, 0, player.Width, player.Height);
 
                 };
@@ -306,7 +322,6 @@ namespace MazeClient.Scenes
             SendPlayerPos(PlayerPos);
 
             // 카메라 조정
-            CameraPos = PlayerPos;
             RenderPlayer();
 
         }
@@ -314,6 +329,7 @@ namespace MazeClient.Scenes
         //플레이어 위치 갱신 
         public async void RenderPlayer()
         {
+            CameraPos = PlayerPos;
             // 카메라 먼저 움직임
             CameraPos.X = Math.Clamp(CameraPos.X, CameraLimit.X, manager.map.mapSize - CameraLimit.X);
             CameraPos.Y = Math.Clamp(CameraPos.Y, CameraLimit.Y, manager.map.mapSize - CameraLimit.Y);
@@ -347,7 +363,10 @@ namespace MazeClient.Scenes
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (EndTrigger == false)
+            { 
                 UpdateAIPos();
+                label4.Text = manager.server.ServerSocket.Connected.ToString();
+            }
         }
         int Index = 0;
         private void UpdateAIPos()
@@ -368,7 +387,7 @@ namespace MazeClient.Scenes
         }
         private void AIInitialize()
         {
-            AiPath = algorithm.ToArray(new Point(1, 1), new Point(manager.map.mapSize - 3, manager.map.mapSize - 3));
+            AiPath = algorithm.ToArray(manager.map.startPoint, manager.map.endPoint);
             manager.path = AiPath;
         }
 
@@ -379,7 +398,7 @@ namespace MazeClient.Scenes
         //플레이어들 위치정보 수신
         public async void GetAllPlayerPos(byte[] buffer)
         {
-            for (int i = 0; i < GameManager.MAX_PLAYER_NUM; i++)
+            for (int i = 0;  i < GameManager.MAX_PLAYER_NUM; i++)
             {
                 if (PlayerCode - 1 == i) // 자기 정보는 필요 없음
                 {

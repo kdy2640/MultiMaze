@@ -15,12 +15,10 @@ namespace MazeClient.Share
         public enum MapSize
         {
             Small,Medium,Big
-        }
-        public int PlayerCount = 3;
+        } 
         public int Round = 3;
         public AIAlgorithm ai =  AIAlgorithm.BFS;
-        public MapSize mapSize = MapSize.Medium;
-        public int seed = 50;
+        public MapSize mapSize = MapSize.Medium; 
 
 
     }

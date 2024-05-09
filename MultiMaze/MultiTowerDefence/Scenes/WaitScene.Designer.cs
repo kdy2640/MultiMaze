@@ -106,7 +106,7 @@ namespace MazeClient
             // 
             // PicPlayer2
             // 
-            PicPlayer2.Location = new Point(379, 79);
+            PicPlayer2.Location = new Point(380, 80);
             PicPlayer2.Margin = new Padding(4);
             PicPlayer2.Name = "PicPlayer2";
             PicPlayer2.Size = new Size(110, 110);
@@ -137,7 +137,7 @@ namespace MazeClient
             // Player4
             // 
             Player4.AutoSize = true;
-            Player4.Location = new Point(380, 350);
+            Player4.Location = new Point(380, 360);
             Player4.Margin = new Padding(4, 0, 4, 0);
             Player4.Name = "Player4";
             Player4.Size = new Size(58, 20);
@@ -147,7 +147,7 @@ namespace MazeClient
             // PicPlayer1
             // 
             PicPlayer1.BackColor = SystemColors.Control;
-            PicPlayer1.Location = new Point(180, 79);
+            PicPlayer1.Location = new Point(180, 80);
             PicPlayer1.Margin = new Padding(4);
             PicPlayer1.Name = "PicPlayer1";
             PicPlayer1.Size = new Size(110, 110);
@@ -158,7 +158,7 @@ namespace MazeClient
             // Player3
             // 
             Player3.AutoSize = true;
-            Player3.Location = new Point(180, 350);
+            Player3.Location = new Point(180, 360);
             Player3.Margin = new Padding(4, 0, 4, 0);
             Player3.Name = "Player3";
             Player3.Size = new Size(58, 20);
@@ -167,7 +167,7 @@ namespace MazeClient
             // 
             // PicPlayer4
             // 
-            PicPlayer4.Location = new Point(379, 233);
+            PicPlayer4.Location = new Point(380, 240);
             PicPlayer4.Margin = new Padding(4);
             PicPlayer4.Name = "PicPlayer4";
             PicPlayer4.Size = new Size(110, 110);
@@ -177,7 +177,7 @@ namespace MazeClient
             // 
             // PicPlayer3
             // 
-            PicPlayer3.Location = new Point(180, 233);
+            PicPlayer3.Location = new Point(180, 240);
             PicPlayer3.Margin = new Padding(4);
             PicPlayer3.Name = "PicPlayer3";
             PicPlayer3.Size = new Size(110, 110);
@@ -246,6 +246,8 @@ namespace MazeClient
             Controls.Add(label1);
             Controls.Add(button1);
             Name = "WaitScene";
+            Text = "WaitScene";
+            Load += WaitScene_Load;
             ((System.ComponentModel.ISupportInitialize)PicPlayer2).EndInit();
             ((System.ComponentModel.ISupportInitialize)PicPlayer1).EndInit();
             ((System.ComponentModel.ISupportInitialize)PicPlayer4).EndInit();
