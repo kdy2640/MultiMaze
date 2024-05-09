@@ -11,5 +11,6 @@ namespace MazeServer
     {
         public Socket clientSocket;
         public int PlayerCode;
+        public bool isExist;
     }
 }

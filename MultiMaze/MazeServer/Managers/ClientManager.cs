@@ -13,16 +13,28 @@ namespace MazeServer
     {
         public int max_Player_Num = ServerGameManager.MAX_PLAYER_NUM;
         const int HEADER_BYTE = 6;
-        public List<Player> PlayerList;
+         
+        //읽기전용
+        public int Now_Player_Num = 0;
+        public Player[] PlayerArray = new Player[4];
+        public int HostPlayerNum = 1;
+
         ServerGameManager Manager;
         public ReceiveCallback callbackFunctions;
-
+        public DisconnectedRecallFunction disconnectedRecallFunction;
+        public delegate void DisconnectedRecallFunction(int playerCode);
         public delegate void ReceiveCompleteFunction(byte[] buffer, ServerEvent serverEvent,int sender);
         public ClientManager()
-        {
-            PlayerList = new List<Player>();
+        { 
             callbackFunctions = new ReceiveCallback();
+            for (int i = 0; i < 4; i++)
+            {
+                PlayerArray[i] = new Player();
+                PlayerArray[i].isExist = false;
+            }
         }
+
+
         #region 플레이어 대기
         public async Task WaitForPlayer()
         {
@@ -33,15 +45,29 @@ namespace MazeServer
             serverSocket.Bind(endPoint);
             serverSocket.Listen(max_Player_Num);
 
-            while(PlayerList.Count < max_Player_Num )
+            while(true )
             {
                 Socket clientSocket = await serverSocket.AcceptAsync(); 
-                Player newPlayer = new Player(); newPlayer.clientSocket = clientSocket;
-                PlayerList.Add(newPlayer);
-                
+                if(Now_Player_Num >= max_Player_Num)
+                {
+                    continue;   
+                }
+                Player newPlayer = new Player(); newPlayer.clientSocket = clientSocket; newPlayer.isExist = true;
+                int blankIndex = 0;
+                for (int i = 0; i < 4; i++)
+                {
+                    if (PlayerArray[i].isExist == false)
+                    {
+                        blankIndex = i; break;  
+                    }
+                }
+                PlayerArray[blankIndex] = newPlayer;
+                Now_Player_Num++;
 
+
+                Manager.ServerScene.SetLog($"{blankIndex + 1}번 플레이어와 연결되었습니다.");
                 // 클라이언트에게 플레이어 번호 부여
-                int playerNumber = PlayerList.Count;
+                int playerNumber = blankIndex + 1;
                 byte[] buffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)playerNumber));
                 await clientSocket.SendAsync(new ArraySegment<byte>(buffer));
 
@@ -53,7 +79,24 @@ namespace MazeServer
 
 
         }
-
+        
+        private void removePlayer(int playercode)
+        {
+            PlayerArray[playercode - 1].isExist = false;
+            if(playercode == HostPlayerNum)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if(PlayerArray[i].isExist == true)
+                    {
+                        HostPlayerNum = i + 1;
+                        break;
+                    }
+                }
+            }
+            disconnectedRecallFunction.Invoke(playercode);
+            Now_Player_Num--;
+        }
         #endregion
 
         #region 플레이어 송신
@@ -66,6 +109,7 @@ namespace MazeServer
         {
             for (int i = 0; i < max_Player_Num; i++)
             {
+                if (PlayerArray[i].isExist == false) { continue; }
                 SendToPlayer(buffer, serverEvent, i+1);
             }
         }
@@ -77,7 +121,8 @@ namespace MazeServer
         /// <param name="playerNumber"></param>
         public async Task SendToPlayer(byte[] buffer, ServerEvent serverEvent, int playerNumber)
         {
-            Socket clientSocket = PlayerList[playerNumber - 1].clientSocket;
+            if (PlayerArray[playerNumber - 1].isExist == false) { return; }
+            Socket clientSocket = PlayerArray[playerNumber - 1].clientSocket;
             try
             {
                 // 헤더 생성
@@ -89,6 +134,8 @@ namespace MazeServer
 
                 // 비동기 송신
                 int bytesSent = await clientSocket.SendAsync(headerSegment, SocketFlags.None);
+
+                Manager.ServerScene.SetLog($"{playerNumber}번 플레이어에게 데이터 전송 완료 비트 수 : {bytesSent} ");
             }
             catch (Exception ex)
             {
@@ -98,7 +145,7 @@ namespace MazeServer
         #endregion
 
         #region 플레이어 수신
-        public class ReceiveArguments
+        private class ReceiveArguments
         {
             public Socket Socket; // 서버 소켓
             public byte[] Buffer; // 헤더 버퍼
@@ -117,14 +164,14 @@ namespace MazeServer
             }
         }
         // receive는 연결 이후에 계속 반복되므로 직접적으로 사용하지 않습니다.
-        public async void ReceiveFromPlayer(Socket clientSocket, int playerCode)
+        private async void ReceiveFromPlayer(Socket clientSocket, int playerCode)
         {
             byte[] headerBuffer = new byte[HEADER_BYTE]; // 헤더는 6바이트
             ReceiveArguments receiveArgs = new ReceiveArguments(clientSocket, headerBuffer, 0, HEADER_BYTE, new ServerEvent(), playerCode); // 인자 생성
             await ReceiveHeader(receiveArgs); // 비동기 헤더 수신
         }
         // 비동기 헤더 수신
-        public async Task ReceiveHeader(ReceiveArguments receiveArgs)
+        private async Task ReceiveHeader(ReceiveArguments receiveArgs)
         {
             try
             {
@@ -154,12 +201,12 @@ namespace MazeServer
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Exception Occur: {ex.Message}");
-
+                Manager.ServerScene.SetLog($"{receiveArgs.PlayerCode}번 플레이어의 연결이 끊어졌습니다. : {ex.Message}");
+                removePlayer(receiveArgs.PlayerCode);
             }
         }
 
-        public async Task ReceiveData(ReceiveArguments receiveArgs)
+        private async Task ReceiveData(ReceiveArguments receiveArgs)
         {
             try
             {
@@ -189,14 +236,14 @@ namespace MazeServer
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Exception Occur: {ex.Message}");
-
+                Manager.ServerScene.SetLog($"{receiveArgs.PlayerCode}번 플레이어의 연결이 끊어졌습니다. : {ex.Message}");
+                removePlayer(receiveArgs.PlayerCode);
             }
         }
         #endregion
 
-
-        private void ReceiveCompleted(byte[] buffer, ServerEvent serverEvent,int playerCode)
+        #region 해더생성 및 파싱
+        private void ReceiveCompleted(byte[] buffer, ServerEvent serverEvent, int playerCode)
         {
             switch (serverEvent.GameStatus)
             {
@@ -265,6 +312,8 @@ namespace MazeServer
             public ReceiveCompleteFunction? RoundOverSceneCallBack;
             public ReceiveCompleteFunction? GameOverSceneCallBack;
         }
+        #endregion
+
 
     }
 }

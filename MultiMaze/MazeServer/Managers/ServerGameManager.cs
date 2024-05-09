@@ -13,13 +13,14 @@ namespace MazeServer
     internal class ServerGameManager
     {
         private static ServerGameManager? instance = null;
+        public ServerScene ServerScene;
         public Define.GameState state = Define.GameState.InGameScene;
         public ClientManager client = new ClientManager();
         public Map map = new Map();
-        public int[] WinnerList;
+        public int[] WinnerList = new int[5];
+        public int[] SeedList = new int[5];
 
-        public const int MAX_PLAYER_NUM = 4;
-        public int Now_Player_Num;
+        public const int MAX_PLAYER_NUM = 4; 
 
         private ServerGameManager()
         { 
@@ -37,5 +38,7 @@ namespace MazeServer
                 return instance;
             }
         }
+
+
     }
 }

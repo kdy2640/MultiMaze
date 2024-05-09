@@ -14,21 +14,39 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Threading;
 using System.Diagnostics;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static MazeClient.WaitScene;
 
 namespace MazeClient
 {
     class ServerManager
     {
         GameManager Manager;
-        Socket ServerSocket;
+        public Socket ServerSocket;
         public ReceiveCallback callbackFunctions;
         string ServerIP = "127.0.0.1";
+
         const int HEADER_BYTE = 6;
+        //읽기전용
+        public int Now_Player_Num
+        {
+            get
+            {
+                int count = 0; 
+                for (int i = 0; i < 4; i++)
+                {
+                    if (PlayerConnectArray[i] == true) count++;
+                }
+                return count;
+            } 
+        }
+        public bool[] PlayerConnectArray { get; set; }
+         
+
         public delegate void ReceiveCompleteFunction(byte[] buffer, ServerEvent serverEvent);
         public ServerManager()
         {
             ServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            callbackFunctions = new ReceiveCallback();
+            callbackFunctions = new ReceiveCallback(); PlayerConnectArray = new bool[4];
 
         }
         #region 서버 연결
@@ -62,6 +80,7 @@ namespace MazeClient
             Manager.PlayerCode = playerNumber;
 
             MessageBox.Show($"연결 성공: 플레이어 번호는 {playerNumber} 입니다.");
+            PlayerConnectArray[playerNumber - 1] = true;
 
             // 지속적으로 수신
             ReceiveFromServer();
@@ -144,7 +163,7 @@ namespace MazeClient
             try
             {
                 // 바이트 까지 데이터 수신
-                while (receiveArgs.ReceiveCount < receiveArgs.MaxSize)
+                 while (receiveArgs.ReceiveCount < receiveArgs.MaxSize)
                 {
                     // 세그먼트 생성
                     ArraySegment<byte> bufferSegment = new ArraySegment<byte>(receiveArgs.Buffer, receiveArgs.ReceiveCount, receiveArgs.MaxSize -receiveArgs.ReceiveCount);
@@ -191,10 +210,9 @@ namespace MazeClient
                     receiveArgs.ReceiveCount += receivedBytes;
 
                 }
+                 
+                ReceiveCompleted(receiveArgs.Buffer, receiveArgs.ServerEvent); 
 
-
-                // 데이터 수신 완료 후 콜백 함수 호출
-                ReceiveCompleted(receiveArgs.Buffer, receiveArgs.ServerEvent);
 
                 // 헤더 재수신 준비
                 byte[] headerBuffer = new byte[6];
@@ -231,7 +249,7 @@ namespace MazeClient
             }
         } 
 
-        private void ReceiveCompleted(byte[] buffer, ServerEvent serverEvent)
+        private async void ReceiveCompleted(byte[] buffer, ServerEvent serverEvent)
         {
             if (serverEvent.GameStatus != Manager.state) return;
             switch(serverEvent.GameStatus)
