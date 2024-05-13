@@ -14,7 +14,7 @@ namespace MazeServer.Scenes
         public RoundOverServerScene()
         {
             manager = ServerGameManager.Instance;
-            manager.client.callbackFunctions.InGameSceneCallBack += RoundOverSceneCallBackFunction;
+            manager.client.callbackFunctions.RoundOverSceneCallBack += RoundOverSceneCallBackFunction;
         }
         public void RoundOverSceneCallBackFunction(byte[] buffer, ServerEvent serverEvent, int playerCode)
         {

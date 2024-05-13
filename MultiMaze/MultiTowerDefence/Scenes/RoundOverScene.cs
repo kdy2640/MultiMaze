@@ -33,7 +33,6 @@ namespace MazeClient
             Manager = GameManager.Instance;
             Manager.server.callbackFunctions.RoundOverSceneCallBack += RoundOverSceneCallBackFunction;
 
-            this.Paint += new PaintEventHandler(WinnerPath_Draw);
             this.DoubleBuffered = true; // 로딩 잘 되게 합니다.
 
             getWinnerPath();
@@ -140,13 +139,13 @@ namespace MazeClient
             // 서버이벤트
             RoundOverSceneEvent serverEvent = new RoundOverSceneEvent(RoundOverSceneEvent.RoundOverSceneServerEventType.Path);
             // 송신
-            Manager.server.SendToServerAsync(buffer, serverEvent);  
+            Manager.server.SendToServerAsync(buffer, serverEvent);
         }
         #endregion
         #region 서버 수신
-        private void receiveWinnerPath(byte[] buffer)
+        private async void receiveWinnerPath(byte[] buffer)
         {
-            List<Point> path = new List<Point>();
+            List<Point> newpath = new List<Point>();
              
             byte[] xBuffer = new byte[2];
             byte[] yBuffer = new byte[2];
@@ -156,15 +155,13 @@ namespace MazeClient
                 Array.Copy(buffer, 4*i, xBuffer, 0, 2);
                 Array.Copy(buffer, 4*i+2, yBuffer,  0, 2);
 
-                int x = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(xBuffer, 0));
-                int y = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(yBuffer, 0));
-                path.Add(new Point(x, y));
+                int x = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(xBuffer, 0));
+                int y = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(yBuffer, 0));
+                newpath.Add(new Point(x, y));
             }
-
+            path = newpath;
             Manager.path = path; 
-            
-            map = Manager.map.map;
-            path = Manager.path;
+            map = Manager.map.map; 
             cellSize = 4;
             mazeHeight = map.GetLength(0);
             mazeWidth = map.GetLength(1);
@@ -180,6 +177,9 @@ namespace MazeClient
                 Winner.Text += Manager.WinnerList[Manager.nowRound - 1].ToString() + "번 플레이어";
             }
             Time.Text += ((float)Manager.winnerTime / 20f).ToString() + " 초";
+            await Task.Delay(30);
+            this.Paint += new PaintEventHandler(WinnerPath_Draw);
+            this.Invalidate();
         }
         #endregion
     }

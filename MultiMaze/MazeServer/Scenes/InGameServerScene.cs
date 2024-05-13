@@ -38,7 +38,32 @@ namespace MazeServer.Scenes
         }
         private async void EchoGameEnd(byte[] buffer)
         {
-            int playerCode = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(buffer));
+            byte[] codeBuffer = new byte[4];
+            byte[] timeBuffer = new byte[4];
+            byte[] pathBuffer = new byte[buffer.Length - 8];
+
+            Array.Copy(buffer,0,codeBuffer,0,4);
+            Array.Copy(buffer,4,timeBuffer,0,4);
+            Array.Copy(buffer,8,pathBuffer,0,pathBuffer.Length);
+
+
+            List<Point> path = new List<Point>();
+
+            byte[] xBuffer = new byte[2];
+            byte[] yBuffer = new byte[2];
+            int len = pathBuffer.Length / 4;
+            for (int i = 0; i < len; i++)
+            {
+                Array.Copy(pathBuffer, 4 * i, xBuffer, 0, 2);
+                Array.Copy(pathBuffer, 4 * i + 2, yBuffer, 0, 2);
+
+                int x = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(xBuffer, 0));
+                int y = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(yBuffer, 0));
+                path.Add(new Point(x, y));
+            }
+
+            int time = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(timeBuffer));
+            int playerCode = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(codeBuffer));
             if(playerCode == 0)
             {
                 manager.ServerScene.SetLog("게임이 종료되었습니다. AI가 승리하였습니다.");
@@ -46,10 +71,13 @@ namespace MazeServer.Scenes
             { 
                 manager.ServerScene.SetLog($"게임이 종료되었습니다. {playerCode}번 플레이어가 승리하였습니다.");
             }
+            // 승리유지
             manager.WinnerList[manager.nowRound - 1] = playerCode;
+            manager.WinnerTimeList[manager.nowRound - 1] = time;
+            manager.WinnerPathList[manager.nowRound - 1] = path;
             byte[] dataBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(playerCode));
             ServerEvent serverEvent = new ServerEvent(Define.GameState.InGameScene,1);
-            manager.client.SendToAllPlayers(dataBuffer, serverEvent);
+            manager.client.SendToAllPlayers(buffer, serverEvent);
         }
         private async void SetPlayerPos(byte[] buffer,int playerCode)
         {
