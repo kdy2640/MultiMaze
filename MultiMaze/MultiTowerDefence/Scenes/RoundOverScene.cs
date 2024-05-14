@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +16,7 @@ namespace MazeClient
 {
     public partial class RoundOverScene : Form
     {
-        GameManager Manager;
-
+        GameManager Manager; 
         bool[,] map;
         List<Point> path;
         int cellSize = 4;

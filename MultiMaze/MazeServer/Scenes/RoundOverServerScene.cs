@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading.Tasks;  
+using MazeClient.Share;
+using System.Net;
 
 namespace MazeServer.Scenes
 {
@@ -34,7 +36,7 @@ namespace MazeServer.Scenes
 
             byte[] buffer = new byte[path.Count * 4];
             byte[] xbuffer = new byte[2];
-            byte[] ybuffer = new byte[2];
+            byte[] ybuffer = new byte[2]; 
             for (int i = 0; i < path.Count; i++)
             {
                 xbuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)path[i].X));
