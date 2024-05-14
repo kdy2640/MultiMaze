@@ -14,7 +14,7 @@ namespace MazeClient
     class SceneManager
     {
         GameManager Manager;
-
+        public BaseScene baseScene;
         public SceneManager()
         { 
         }
@@ -54,9 +54,21 @@ namespace MazeClient
             Form waitScene = GetSceneInstance(gameState);
             sender.Hide();
             waitScene.Top = sender.Top;
-            waitScene.Left = sender.Left; 
+            waitScene.Left = sender.Left;
+
+            waitScene.FormClosing += Scene_FormClosing;
+            BaseScene.formCount += 1;
+
             waitScene.Show();
             sender.Close();
+        }
+        public void Scene_FormClosing(object sender, FormClosingEventArgs e)
+        { 
+            BaseScene.formCount -= 1;
+            baseScene.CountUpdate();
+        }
+        private void Scene_FormClosed(object sender, FormClosedEventArgs e)
+        {
         }
     }
 }
