@@ -68,12 +68,17 @@ namespace MazeServer.Scenes
         {
             int seed = new Random().Next();
             manager.map.seed = seed;
-            MakeMaze(seed);
+            setMazeBeforeGameStart(seed,1);
             byte[] sendbuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((int)seed));
             ServerEvent serverEvent = new ServerEvent(Define.GameState.WaitScene, 2);
             manager.client.SendToAllPlayers(sendbuffer, serverEvent);
         }
-        public void MakeMaze(int seed)
+        /// <summary>
+        /// nowRound는 1부터 입니다.
+        /// </summary>
+        /// <param name="seed"></param>
+        /// <param name="nowRound"></param>
+        public void setMazeBeforeGameStart(int seed, int nowRound)
         {
             Random rand = new Random(seed);
             Point[] corners = new Point[4];
@@ -103,7 +108,8 @@ namespace MazeServer.Scenes
                 manager.map.PlayerStartPosList[i] = startPosArr[typeIndex];
                 manager.map.PlayerPosList[i] = startPosArr[typeIndex];
             }
-            manager.nowRound = 1;
+            manager.nowRound = nowRound;
+            manager.SeedList[manager.nowRound - 1] = seed;
         }
         private void SendArgs()
         {

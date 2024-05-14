@@ -285,6 +285,7 @@ namespace MazeClient
         private async void ReceiveSeed(byte[] buffer)
         {
             int seed = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(buffer));
+            Manager.map.seed = seed;
 
             GameInitialize(seed);
         }
