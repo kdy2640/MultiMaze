@@ -114,6 +114,8 @@
             Controls.Add(panel1);
             Name = "InGameScene";
             Text = "InGameScene";
+            FormClosing += InGameScene_FormClosing;
+            FormClosed += InGameScene_FormClosed;
             Load += InGameScene_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();

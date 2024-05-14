@@ -37,12 +37,12 @@ namespace MazeClient.Scenes
         {
             manager = GameManager.Instance;
 
-            InitializeComponent(); 
+            InitializeComponent();
         }
 
         private void InGameScene_Load(object sender, EventArgs e)
         {
-             GameInitialize(); //맵 준비, 이동 준비
+            GameInitialize(); //맵 준비, 이동 준비
         }
 
 
@@ -115,7 +115,7 @@ namespace MazeClient.Scenes
             PlayerList = new List<PictureBox>();
             for (int i = 0; i < GameManager.MAX_PLAYER_NUM; i++)
             {
-                
+
                 PictureBox player = new PictureBox();
 
                 player.Width = cellSize;
@@ -125,10 +125,10 @@ namespace MazeClient.Scenes
                 int LocalI = i;
                 player.Paint += (sender, e) =>
                 {
-                    e.Graphics.Clear(Color.White); 
+                    e.Graphics.Clear(Color.White);
                     SolidBrush br;
                     if (manager.server.PlayerConnectArray[LocalI] == true)
-                    { 
+                    {
                         br = new SolidBrush(manager.map.PlayerColorList[LocalI]);
                     }
                     else
@@ -151,6 +151,11 @@ namespace MazeClient.Scenes
                 this.Controls.Add(player);
                 player.BringToFront();
                 path.Add(manager.map.PlayerPosList[PlayerCode - 1]);
+
+                if (manager.server.PlayerConnectArray[LocalI] == false)
+                {
+                    player.SendToBack();
+                }
             }
             //AI PictureBOx
             AiPlayer = new PictureBox();
@@ -160,7 +165,7 @@ namespace MazeClient.Scenes
             AiPlayer.Left = 1 * cellSize + ScreenStart.X;
             AiPlayer.Top = 1 * cellSize + ScreenStart.Y;    // Paint 이벤트에 핸들러 추가
             AiPlayer.Paint += (sender, e) =>
-            { 
+            {
                 e.Graphics.Clear(Color.White);
 
                 // 사각형 꼭짓점
@@ -176,9 +181,9 @@ namespace MazeClient.Scenes
             };
             AiPlayer.SizeMode = PictureBoxSizeMode.StretchImage; // 이미지 크기 조정 
             this.Controls.Add(AiPlayer);
-            PlayerList[PlayerCode-1].BringToFront();
+            PlayerList[PlayerCode - 1].BringToFront();
 
-             
+
             player = PlayerList[PlayerCode - 1];
             playerBrush = new SolidBrush(manager.map.PlayerColorList[PlayerCode - 1]);
 
@@ -196,7 +201,7 @@ namespace MazeClient.Scenes
                 SolidBrush br = new SolidBrush(Color.Green);
                 e.Graphics.FillEllipse(br, 0, 0, EndPointPictureBox.Width, EndPointPictureBox.Height);
                 br = new SolidBrush(Color.Cyan);
-                e.Graphics.FillEllipse(br, portalSize/2, portalSize/2, EndPointPictureBox.Width- portalSize, EndPointPictureBox.Height- portalSize);
+                e.Graphics.FillEllipse(br, portalSize / 2, portalSize / 2, EndPointPictureBox.Width - portalSize, EndPointPictureBox.Height - portalSize);
             };
             EndPointPictureBox.SizeMode = PictureBoxSizeMode.StretchImage; // 이미지 크기 조정 
 
@@ -289,13 +294,13 @@ namespace MazeClient.Scenes
                     break;
                 case Keys.T:
                     {
-                        if(TickBooster)
+                        if (TickBooster)
                         {
                             timer1.Interval = 200;
                         }
                         else
                         {
-                            timer1.Interval = 30;
+                            timer1.Interval = 10;
                         }
                         TickBooster = !TickBooster;
                         break;
@@ -311,7 +316,7 @@ namespace MazeClient.Scenes
                             OnJump();
                         }
                         break;
-                    } 
+                    }
             }
             if (isJump)
             {
@@ -337,14 +342,14 @@ namespace MazeClient.Scenes
             }
             PlayerPos.X = Math.Clamp(PlayerPos.X, 0, manager.map.mapSize - 1);
             PlayerPos.Y = Math.Clamp(PlayerPos.Y, 0, manager.map.mapSize - 1);
-            
+
             // 벽으로 이동했으면 복구
             if (!noClip && map[PlayerPos.X, PlayerPos.Y] == false)
             {
                 PlayerPos = tempPos;
                 return;
             }
-            if(PlayerPos == endPoint)
+            if (PlayerPos == endPoint)
             {
                 SendWinner(PlayerCode);
                 return;
@@ -383,7 +388,7 @@ namespace MazeClient.Scenes
             }
 
             // 목표지점 렌더링
-            EndPointPictureBox.Left = ScreenStart.X + pictureBox1.Left +endPoint.X * cellSize;
+            EndPointPictureBox.Left = ScreenStart.X + pictureBox1.Left + endPoint.X * cellSize;
             EndPointPictureBox.Top = ScreenStart.Y + pictureBox1.Top + endPoint.Y * cellSize;
 
             int temp = 0;
@@ -400,13 +405,15 @@ namespace MazeClient.Scenes
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (EndTrigger == false)
-            { 
+            {
                 UpdateAIPos();
                 label4.Text = manager.server.ServerSocket.Connected.ToString();
-                if(AiPosition == endPoint)
+                if (AiPosition == endPoint)
                 {
+                    EndTrigger = true;
                     SendWinner(0);
                 }
+
             }
         }
         int Index = 0;
@@ -420,7 +427,7 @@ namespace MazeClient.Scenes
 
                 label2.Text = AiPosition.X.ToString() + ", " + AiPosition.Y.ToString();
                 label3.Text = (Index++).ToString();
-                    }
+            }
             else
             {
                 EndTrigger = true;
@@ -437,9 +444,13 @@ namespace MazeClient.Scenes
         #region 게임로직
         private async void gameEnd(int playerCode)
         {
-            manager.WinnerList[manager.nowRound - 1] = playerCode;
-            await Task.Delay(30);
-            manager.scene.ChangeGameState(this, Define.GameState.RoundOverScene);
+            if(isGameEnd == false)
+            {
+                isGameEnd = true;
+                manager.WinnerList[manager.nowRound - 1] = playerCode;
+                await Task.Delay(30);
+                manager.scene.ChangeGameState(this, Define.GameState.RoundOverScene);
+            }
         }
         #endregion
 
@@ -447,7 +458,7 @@ namespace MazeClient.Scenes
         //플레이어들 위치정보 수신
         public async void GetAllPlayerPos(byte[] buffer)
         {
-            for (int i = 0;  i < GameManager.MAX_PLAYER_NUM; i++)
+            for (int i = 0; i < GameManager.MAX_PLAYER_NUM; i++)
             {
                 if (PlayerCode - 1 == i) // 자기 정보는 필요 없음
                 {
@@ -501,10 +512,13 @@ namespace MazeClient.Scenes
         }
 
         private async void SendWinner(int playercode)
-        {
-            isGameEnd = true;
-            manager.path =  path;
+        { 
+            manager.path = path;
             List<Point> newPath = manager.path;
+            if (playercode == 0)
+            {
+                newPath = manager.AiPath;
+            }
             byte[] Codebuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(playercode));
             byte[] timeBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(Index));
             byte[] xbuffer = new byte[2];
@@ -522,10 +536,10 @@ namespace MazeClient.Scenes
                 xbuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)newPath[i].X));
                 ybuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)newPath[i].Y));
 
-                Array.Copy(xbuffer, 0, buffer, 8+ 4 * i, 2);
+                Array.Copy(xbuffer, 0, buffer, 8 + 4 * i, 2);
                 Array.Copy(ybuffer, 0, buffer, 8 + 4 * i + 2, 2);
             }
-             
+
 
             manager.server.SendToServerAsync(buffer, serverEvent);
         }
@@ -576,6 +590,16 @@ namespace MazeClient.Scenes
             }
         }
         #endregion
+
+        private void InGameScene_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
+        }
+
+        private void InGameScene_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+        }
     }
     public class InGameSceneServerEvent : ServerEvent
     {
