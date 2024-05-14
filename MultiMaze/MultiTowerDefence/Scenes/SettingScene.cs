@@ -9,6 +9,8 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MazeClient.Share;
+using System.Diagnostics;
 
 namespace MazeClient
 {
@@ -42,25 +44,26 @@ namespace MazeClient
             throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
-        private void makeRoomBtn_Click(object sender, EventArgs e)
+        private async void makeRoomBtn_Click(object sender, EventArgs e)
         {
-            // 이 부분부터 서버와 통신 필요.
-            var result = MessageBox.Show("서버 연결 성공?", "서버 연결", MessageBoxButtons.OKCancel);
-            if (result == DialogResult.OK)
-            {
-                Manager.server.ConnectServer();
+            // 서버 프로그램 실행
+            if(!Manager.server.StartServer()) MessageBox.Show("서버 실행 실패");
 
-                Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
-            } else
+
+            bool connectResult = await Manager.server.ConnectServer("127.0.0.1", 20000);
+            if(connectResult == false)
             {
                 MessageBox.Show("서버 연결 실패");
                 return;
             }
+            Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
+
         }
 
         private void cancelMakeRoomBtn_Click(object sender, EventArgs e)
         {
             Manager.scene.ChangeGameState(this, Define.GameState.MainScene);
         }
+
     }
 }

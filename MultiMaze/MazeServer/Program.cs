@@ -14,8 +14,9 @@ namespace MazeServer
         {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
+            ServerGameManager serverGameManager = ServerGameManager.Instance;
             ApplicationConfiguration.Initialize();
-            Application.Run(new ServerTempScene());
+            Application.Run(new ServerScene());
         }
 
     }

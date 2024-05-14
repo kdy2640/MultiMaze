@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MazeClient
+namespace MazeServer.Scenes
 {
-    internal class ResourceManager
+    internal class GameOverServerScene
     {
     }
 }

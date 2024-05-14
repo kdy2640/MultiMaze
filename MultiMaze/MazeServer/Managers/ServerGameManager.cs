@@ -1,35 +1,30 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Data;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using MazeClient.Share;
 
-namespace MazeClient
+namespace MazeServer
 {
-
-    class GameManager
+    internal class ServerGameManager
     {
-        private static GameManager? instance = null;
-        public Define.GameState state = Define.GameState.MainScene;
-        public SceneManager scene = new SceneManager();
-        public ServerManager server = new ServerManager(); 
+        private static ServerGameManager? instance = null;
+        public ServerScene ServerScene;
+        public Define.GameState state = Define.GameState.InGameScene;
+        public ClientManager client = new ClientManager();
         public Map map = new Map();
         /// <summary>
         /// 1~4는 플레이어 코드이고 0은 AI 우승입니다.
         /// AI 우승시 서버 상호작용 없이 각 클라이언트의 GameManager.AiPath에서 AI 경로를 가져와서 표시합니다.
         /// </summary>
         public int[] WinnerList = new int[5];
-        /// <summary>
-        /// 플레이어 본인의 경로를 저장합니다.
-        /// </summary>
-        public List<Point> path;
-        /// <summary>
-        /// 각 라운드마다 AI의 경로를 저장합니다.
-        /// </summary>
-        public List<Point> AiPath;
-        public int winnerTime = 0;
+        public int[] WinnerTimeList = new int[5];
+        public int[] SeedList = new int[5];
+        public List<Point>[] WinnerPathList = new List<Point>[5];
 
         public const int MAX_PLAYER_NUM = 4;
         /// <summary>
@@ -37,27 +32,27 @@ namespace MazeClient
         /// </summary>
         public int nowRound = 0;
 
-        public int PlayerCode; // 몇번 플레이어인지 1번부터 시작
-        private GameManager()
+        private ServerGameManager()
         {
+            for (int i = 0; i < 5; i++)
+            {
+                WinnerPathList[i] = new List<Point>();
+            }
         }
 
         // GameManager의 인스턴스를 반환하는 public static 메서드
-        public static GameManager Instance
+        public static ServerGameManager Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = new GameManager();
+                    instance = new ServerGameManager();
                 }
                 return instance;
             }
         }
 
 
-
-
     }
-
 }

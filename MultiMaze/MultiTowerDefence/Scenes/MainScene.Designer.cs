@@ -33,6 +33,7 @@
             main_label = new Label();
             btn_enter = new Button();
             btm_makeroom = new Button();
+            button3 = new Button();
             SuspendLayout();
             // 
             // button1
@@ -71,9 +72,10 @@
             // btn_enter
             // 
             btn_enter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btn_enter.Location = new Point(218, 285);
+            btn_enter.Location = new Point(222, 285);
+            btn_enter.Margin = new Padding(3, 2, 3, 2);
             btn_enter.Name = "btn_enter";
-            btn_enter.Size = new Size(155, 131);
+            btn_enter.Size = new Size(156, 131);
             btn_enter.TabIndex = 3;
             btn_enter.Text = "방 입장";
             btn_enter.UseVisualStyleBackColor = true;
@@ -82,18 +84,30 @@
             // btm_makeroom
             // 
             btm_makeroom.Location = new Point(704, 285);
+            btm_makeroom.Margin = new Padding(3, 2, 3, 2);
             btm_makeroom.Name = "btm_makeroom";
-            btm_makeroom.Size = new Size(155, 131);
+            btm_makeroom.Size = new Size(156, 131);
             btm_makeroom.TabIndex = 4;
             btm_makeroom.Text = "방 만들기";
             btm_makeroom.UseVisualStyleBackColor = true;
             btm_makeroom.Click += btm_makeroom_Click;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(143, 73);
+            button3.Name = "button3";
+            button3.Size = new Size(161, 34);
+            button3.TabIndex = 5;
+            button3.Text = "로딩창 테스트 ";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click_1;
             // 
             // MainScene
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1093, 694);
+            Controls.Add(button3);
             Controls.Add(btm_makeroom);
             Controls.Add(btn_enter);
             Controls.Add(main_label);
@@ -114,5 +128,6 @@
         private Label main_label;
         private Button btn_enter;
         private Button btm_makeroom;
+        private Button button3;
     }
 }

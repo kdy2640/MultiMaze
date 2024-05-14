@@ -1,6 +1,6 @@
 ﻿namespace MazeServer
 {
-    partial class ServerTempScene
+    partial class ServerScene
     {
         /// <summary>
         ///  Required designer variable.
@@ -29,11 +29,12 @@
         private void InitializeComponent()
         {
             button1 = new Button();
+            logTextBox = new RichTextBox();
             SuspendLayout();
             // 
             // button1
             // 
-            button1.Location = new Point(687, 349);
+            button1.Location = new Point(646, 345);
             button1.Name = "button1";
             button1.Size = new Size(94, 29);
             button1.TabIndex = 0;
@@ -41,19 +42,30 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // Form1
+            // logTextBox
+            // 
+            logTextBox.Location = new Point(65, 44);
+            logTextBox.Name = "logTextBox";
+            logTextBox.Size = new Size(352, 237);
+            logTextBox.TabIndex = 1;
+            logTextBox.Text = "";
+            // 
+            // ServerScene
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(logTextBox);
             Controls.Add(button1);
-            Name = "Form1";
-            Text = "Form1";
+            Name = "ServerScene";
+            Text = "ServerScene";
+            Load += ServerTempScene_Load;
             ResumeLayout(false);
         }
 
         #endregion
 
         private Button button1;
+        private RichTextBox logTextBox;
     }
 }
