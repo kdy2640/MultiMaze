@@ -31,6 +31,7 @@ namespace MazeClient.Scenes
         // Map 관련
         private bool[,] map = new bool[0, 0];
         private Point endPoint = new Point();
+        private List<Point> path = new List<Point>();
 
         public InGameScene()
         {
@@ -148,6 +149,7 @@ namespace MazeClient.Scenes
                 PlayerList.Add(player);
                 this.Controls.Add(player);
                 player.BringToFront();
+                path.Add(manager.map.PlayerPosList[PlayerCode - 1]);
             }
             //AI PictureBOx
             AiPlayer = new PictureBox();
@@ -349,7 +351,7 @@ namespace MazeClient.Scenes
                 SendWinner(PlayerCode);
                 return;
             }
-
+            path.Add(PlayerPos);
             // 서버에 전송
             SendPlayerPos(PlayerPos);
 
@@ -429,7 +431,7 @@ namespace MazeClient.Scenes
         private void AIInitialize()
         {
             AiPath = algorithm.ToArray(manager.map.startPoint, manager.map.endPoint);
-            manager.path = AiPath;
+            manager.AiPath = AiPath;
         }
 
         #endregion AI 관련
@@ -450,6 +452,7 @@ namespace MazeClient.Scenes
             manager.scene.ChangeGameState(this, Define.GameState.RoundOverScene);
         }
         #endregion
+
         #region 서버 수신
         //플레이어들 위치정보 수신
         public async void GetAllPlayerPos(byte[] buffer)
@@ -476,8 +479,17 @@ namespace MazeClient.Scenes
 
         private void ReceiveEndPlayer(byte[] buffer)
         {
-            int playerCode = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(buffer));
+            byte[] codeBuffer = new byte[4];
+            byte[] timeBuffer = new byte[4];
 
+            Array.Copy(buffer, 0, codeBuffer, 0, 4);
+            Array.Copy(buffer, 4, timeBuffer, 0, 4);
+
+
+            int time = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(timeBuffer));
+            int playerCode = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(codeBuffer));
+
+            manager.winnerTime = time;
             gameEnd(playerCode);
         }
 
@@ -501,9 +513,30 @@ namespace MazeClient.Scenes
         private async void SendWinner(int playercode)
         {
             isGameEnd = true;
-            byte[] buffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(playercode));
+            manager.path =  path;
+            List<Point> newPath = manager.path;
+            byte[] Codebuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(playercode));
+            byte[] timeBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(Index));
+            byte[] xbuffer = new byte[2];
+            byte[] ybuffer = new byte[2];
+            byte[] buffer = new byte[newPath.Count * 4 + 8];
+
+            Array.Copy(Codebuffer, 0, buffer, 0, 4);
+            Array.Copy(timeBuffer, 0, buffer, 4, 4);
 
             InGameSceneServerEvent serverEvent = new InGameSceneServerEvent(InGameSceneServerEventType.GameEnd);
+
+
+            for (int i = 0; i < newPath.Count; i++)
+            {
+                xbuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)newPath[i].X));
+                ybuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)newPath[i].Y));
+
+                Array.Copy(xbuffer, 0, buffer, 8+ 4 * i, 2);
+                Array.Copy(ybuffer, 0, buffer, 8 + 4 * i + 2, 2);
+            }
+             
+
             manager.server.SendToServerAsync(buffer, serverEvent);
         }
         #endregion

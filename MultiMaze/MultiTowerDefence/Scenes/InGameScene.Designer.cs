@@ -67,6 +67,7 @@
             pictureBox1.Margin = new Padding(0);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(758, 337);
+            pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             pictureBox1.Click += pictureBox1_Click;
@@ -81,7 +82,7 @@
             // timer1
             // 
             timer1.Enabled = true;
-            timer1.Interval = 70;
+            timer1.Interval = 50;
             timer1.Tick += timer1_Tick;
             // 
             // label2
@@ -127,6 +128,7 @@
             Text = "InGameScene";
             Load += InGameScene_Load;
             panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();

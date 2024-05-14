@@ -1,6 +1,8 @@
-﻿using System;
+﻿using MazeClient.Share;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;  
 using MazeClient.Share;
@@ -29,13 +31,13 @@ namespace MazeServer.Scenes
                     break;
             }
         }
-
+ 
         private void receiveRequestPath(int playerCode)
         {
             List<Point> path = manager.WinnerPathList[manager.nowRound - 1];
 
             byte[] buffer = new byte[path.Count * 4];
-            byte[] xbuffer = new byte[2];
+            byte[] xbuffer = new byte[2]; 
             byte[] ybuffer = new byte[2]; 
             for (int i = 0; i < path.Count; i++)
             {

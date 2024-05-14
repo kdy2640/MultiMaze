@@ -59,9 +59,9 @@
             Winner.Location = new Point(117, 428);
             Winner.Margin = new Padding(4, 0, 4, 0);
             Winner.Name = "Winner";
-            Winner.Size = new Size(42, 20);
+            Winner.Size = new Size(52, 20);
             Winner.TabIndex = 8;
-            Winner.Text = "승자:";
+            Winner.Text = "승자 : ";
             Winner.Click += label2_Click;
             // 
             // WinnerName
@@ -79,9 +79,9 @@
             Time.Location = new Point(117, 461);
             Time.Margin = new Padding(4, 0, 4, 0);
             Time.Name = "Time";
-            Time.Size = new Size(72, 20);
+            Time.Size = new Size(82, 20);
             Time.TabIndex = 10;
-            Time.Text = "소요시간:";
+            Time.Text = "소요시간 : ";
             // 
             // TimeValue
             // 
@@ -121,6 +121,7 @@
             Start.TabIndex = 14;
             Start.Text = "시작";
             Start.UseVisualStyleBackColor = true;
+            Start.Click += Start_Click;
             // 
             // NextTime
             // 
