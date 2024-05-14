@@ -281,10 +281,11 @@ namespace MazeClient
 
 
         // 서버 연결 끊기
-        public void CloseServer()
+        public void LeaveServer()
         {
-
+            ServerSocket.Close();
         }
+
 
         private void AddHeaderToBuffer(byte[] buffer, int gameStatus, int serverEventType, out byte[] resultBuffer)
         {
