@@ -53,7 +53,9 @@ namespace MazeClient
             Manager.state = gameState;
             Form waitScene = GetSceneInstance(gameState);
             sender.Hide();
-            waitScene.ShowDialog();
+            waitScene.Top = sender.Top;
+            waitScene.Left = sender.Left; 
+            waitScene.Show();
             sender.Close();
         }
     }
