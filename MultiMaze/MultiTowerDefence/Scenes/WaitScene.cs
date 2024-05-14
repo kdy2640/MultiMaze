@@ -44,6 +44,7 @@ namespace MazeClient
             Manager = GameManager.Instance;
             Manager.nowRound++;
             _playerCode = Manager.PlayerCode;
+            Manager.server.callbackFunctions.WaitSceneCallBack = null;
             Manager.server.callbackFunctions.WaitSceneCallBack += WaitSceneCallBackFunction;
 
             args.playerArray[_playerCode - 1] = 1;
@@ -108,14 +109,8 @@ namespace MazeClient
         }
         private void BtnLeave_Click(object sender, EventArgs e)
         {
-            // 이상함 내가 나가는데 해야할건 나 나가요 메시지 보내주면 됨
-            //Player leavingPlayer = FindLeavingPlayer();
-            //if (leavingPlayer != null)
-            //{
-            //    gameroom.PlayerLeft(leavingPlayer);
-            //    MessageBox.Show("플레이어가 떠났습니다.");
-            //}
-            Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
+            Manager.server.LeaveServer();
+            Manager.scene.ChangeGameState(this, Define.GameState.MainScene);
         }
         private async void BtnSend_Click(object sender, EventArgs e)
         {

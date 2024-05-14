@@ -28,7 +28,6 @@ namespace MazeClient
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
             roundLabel = new Label();
             BtnStart = new Button();
             BtnReady = new Button();
@@ -51,16 +50,6 @@ namespace MazeClient
             ((System.ComponentModel.ISupportInitialize)PicPlayer4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)PicPlayer3).BeginInit();
             SuspendLayout();
-            // 
-            // button1
-            // 
-            button1.Location = new Point(761, 22);
-            button1.Name = "button1";
-            button1.Size = new Size(159, 29);
-            button1.TabIndex = 0;
-            button1.Text = "4번 화면 이동";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
             // 
             // roundLabel
             // 
@@ -244,7 +233,6 @@ namespace MazeClient
             Controls.Add(BtnReady);
             Controls.Add(BtnStart);
             Controls.Add(roundLabel);
-            Controls.Add(button1);
             Name = "WaitScene";
             Text = "WaitScene";
             Load += WaitScene_Load;
@@ -257,8 +245,6 @@ namespace MazeClient
         }
 
         #endregion
-
-        private Button button1;
         private Label roundLabel;
         private Button BtnStart;
         private Button BtnReady;

@@ -16,7 +16,7 @@ namespace MazeClient
 {
     public partial class RoundOverScene : Form
     {
-        GameManager Manager; 
+        GameManager Manager;
         bool[,] map;
         List<Point> path;
         int cellSize = 4;
@@ -30,9 +30,10 @@ namespace MazeClient
         {
             InitializeComponent();
             Manager = GameManager.Instance;
-            Manager.server.callbackFunctions.RoundOverSceneCallBack += RoundOverSceneCallBackFunction; 
+            Manager.server.callbackFunctions.RoundOverSceneCallBack = null;
+            Manager.server.callbackFunctions.RoundOverSceneCallBack += RoundOverSceneCallBackFunction;
             this.DoubleBuffered = true; // 로딩 잘 되게 합니다.
-            getWinnerPath(); 
+            getWinnerPath();
         }
 
         int count = 0;
@@ -120,7 +121,7 @@ namespace MazeClient
                     //함수
                     break;
                 case 1: // None 
-                    break; 
+                    break;
             }
         }
         #region 서버 송신
@@ -141,14 +142,14 @@ namespace MazeClient
         private async void receiveWinnerPath(byte[] buffer)
         {
             List<Point> newpath = new List<Point>();
-             
+
             byte[] xBuffer = new byte[2];
             byte[] yBuffer = new byte[2];
             int len = buffer.Length / 4;
             for (int i = 0; i < len; i++)
             {
-                Array.Copy(buffer, 4*i, xBuffer, 0, 2);
-                Array.Copy(buffer, 4*i+2, yBuffer,  0, 2);
+                Array.Copy(buffer, 4 * i, xBuffer, 0, 2);
+                Array.Copy(buffer, 4 * i + 2, yBuffer, 0, 2);
 
                 int x = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(xBuffer, 0));
                 int y = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(yBuffer, 0));
@@ -156,8 +157,8 @@ namespace MazeClient
             }
 
             path = newpath;
-            Manager.path = path; 
-            map = Manager.map.map; 
+            Manager.path = path;
+            map = Manager.map.map;
             cellSize = 4;
             mazeHeight = map.GetLength(0);
             mazeWidth = map.GetLength(1);
@@ -173,14 +174,34 @@ namespace MazeClient
                 Winner.Text += Manager.WinnerList[Manager.nowRound - 1].ToString() + "번 플레이어";
             }
             Time.Text += ((float)Manager.winnerTime / 20f).ToString() + " 초";
-            roundLabel.Text = Manager.nowRound.ToString() + " 라운드 종료"; 
+            if(Manager.nowRound == Manager.map.RoomArgs.Round)
+            {
+                nextRoundButton.Text = "최종결과 보러가기";
+            }else
+            { 
+                nextRoundButton.Text = "다음 라운드로 이동";
+            }
+            roundLabel.Text = Manager.nowRound.ToString() + " 라운드 종료";
 
             await Task.Delay(30);
             this.Paint += new PaintEventHandler(WinnerPath_Draw);
             this.Invalidate();
-        } 
-         
-        #endregion 
+        }
+
+        #endregion
+
+        private void nextRoundButton_Click(object sender, EventArgs e)
+        {
+            if(Manager.nowRound == Manager.map.RoomArgs.Round)
+            {
+                Manager.scene.ChangeGameState(this, Define.GameState.GameOverScene);
+            }
+            else
+            {
+                Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
+            }
+
+        }
     }
 
     public class RoundOverSceneEvent : ServerEvent

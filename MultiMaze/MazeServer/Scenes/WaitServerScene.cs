@@ -20,6 +20,8 @@ namespace MazeServer.Scenes
         public WaitServerScene()
         {
             manager = ServerGameManager.Instance;
+            manager.client.callbackFunctions.WaitSceneCallBack = null;
+            manager.client.disconnectedRecallFunction = null;
             manager.client.callbackFunctions.WaitSceneCallBack += WaitSceneCallBackFunction;
             manager.client.disconnectedRecallFunction += resetDisconnectedPlayer;
             for (int i = 0; i < 4; i++)

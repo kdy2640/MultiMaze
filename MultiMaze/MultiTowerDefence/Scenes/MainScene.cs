@@ -44,6 +44,7 @@ namespace MazeClient
             GetRoomInfoScene modal = new GetRoomInfoScene();
             if (modal.ShowDialog() == DialogResult.OK)
             {
+                Manager.nowRound = 0;
                 Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
             }
         }

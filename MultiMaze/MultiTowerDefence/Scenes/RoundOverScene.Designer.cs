@@ -40,9 +40,9 @@
             NextTime = new Label();
             Countdown = new Label();
             timerCountdown = new System.Windows.Forms.Timer(components);
-            button1 = new Button();
             drawTimer = new System.Windows.Forms.Timer(components);
             roundLabel = new Label();
+            nextRoundButton = new Button();
             SuspendLayout();
             // 
             // label1
@@ -148,16 +148,6 @@
             // 
             timerCountdown.Tick += timerCountdown_Tick;
             // 
-            // button1
-            // 
-            button1.Location = new Point(662, 15);
-            button1.Name = "button1";
-            button1.Size = new Size(163, 29);
-            button1.TabIndex = 5;
-            button1.Text = "6번 화면 이동";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
             // drawTimer
             // 
             drawTimer.Interval = 10;
@@ -172,11 +162,22 @@
             roundLabel.TabIndex = 17;
             roundLabel.Text = "라운드 종료";
             // 
+            // nextRoundButton
+            // 
+            nextRoundButton.Location = new Point(651, 337);
+            nextRoundButton.Name = "nextRoundButton";
+            nextRoundButton.Size = new Size(174, 29);
+            nextRoundButton.TabIndex = 18;
+            nextRoundButton.Text = "다음 라운드로 이동";
+            nextRoundButton.UseVisualStyleBackColor = true;
+            nextRoundButton.Click += nextRoundButton_Click;
+            // 
             // RoundOverScene
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(913, 569);
+            Controls.Add(nextRoundButton);
             Controls.Add(roundLabel);
             Controls.Add(Countdown);
             Controls.Add(NextTime);
@@ -188,7 +189,6 @@
             Controls.Add(WinnerName);
             Controls.Add(Winner);
             Controls.Add(label1);
-            Controls.Add(button1);
             Name = "RoundOverScene";
             Text = "RoundOver";
             Load += RoundOverScene_Load;
@@ -209,8 +209,8 @@
         private Label NextTime;
         private Label Countdown;
         private System.Windows.Forms.Timer timerCountdown;
-        private Button button1;
         private System.Windows.Forms.Timer drawTimer;
         private Label roundLabel;
+        private Button nextRoundButton;
     }
 }

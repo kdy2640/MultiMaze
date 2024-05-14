@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            label1 = new Label();
             panel1 = new Panel();
             pictureBox1 = new PictureBox();
             panel2 = new Panel();
@@ -40,16 +39,6 @@
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(637, 619);
-            label1.Name = "label1";
-            label1.Size = new Size(265, 20);
-            label1.TabIndex = 0;
-            label1.Text = "4번 화면 space를 눌러 다음 화면으로 ";
-            label1.Click += label1_Click_1;
             // 
             // panel1
             // 
@@ -122,7 +111,6 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(panel2);
-            Controls.Add(label1);
             Controls.Add(panel1);
             Name = "InGameScene";
             Text = "InGameScene";
@@ -135,8 +123,6 @@
         }
 
         #endregion
-
-        private Label label1;
         private Panel panel1;
         private PictureBox pictureBox1;
         private Panel panel2;

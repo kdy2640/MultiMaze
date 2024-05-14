@@ -57,6 +57,7 @@ namespace MazeClient.Scenes
 
 
             //콜백 함수 할당
+            manager.server.callbackFunctions.InGameSceneCallBack = null;
             manager.server.callbackFunctions.InGameSceneCallBack += InGameSceneCallBackFunction;
 
             //플레이어 이미지 생성 및 정보 초기화
@@ -310,10 +311,7 @@ namespace MazeClient.Scenes
                             OnJump();
                         }
                         break;
-                    }
-                case Keys.Space:
-                    manager.scene.ChangeGameState(this, Define.GameState.RoundOverScene);
-                    break;
+                    } 
             }
             if (isJump)
             {
@@ -440,14 +438,6 @@ namespace MazeClient.Scenes
         private async void gameEnd(int playerCode)
         {
             manager.WinnerList[manager.nowRound - 1] = playerCode;
-            if(playerCode == 0)
-            {
-                MessageBox.Show($"AI가 승리하였습니다.");
-            }
-            else
-            {
-                MessageBox.Show($"{playerCode}번 플레이어가 승리하였습니다.");
-            }
             await Task.Delay(30);
             manager.scene.ChangeGameState(this, Define.GameState.RoundOverScene);
         }
