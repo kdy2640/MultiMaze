@@ -258,8 +258,9 @@ namespace MazeClient
             {
                 state = WaitSceneServerEvent.playerState.Ready;
             }
-            byte[] buffer = new byte[5];
+            byte[] buffer = new byte[7];
             byte[] stateBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)state));
+            byte[] roundBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)Manager.nowRound));
             byte[] colorBuffer = new byte[3];
             colorBuffer[0] = color.R;
             colorBuffer[1] = color.G;
@@ -267,6 +268,7 @@ namespace MazeClient
 
             Array.Copy(colorBuffer, 0, buffer, 0, 3);
             Array.Copy(stateBuffer, 0, buffer, 3, 2);
+            Array.Copy(roundBuffer, 0, buffer, 5, 2);
 
             WaitSceneServerEvent serverEvent = new WaitSceneServerEvent(WaitSceneServerEvent.WaitSceneServerEventType.Arguments);
             Manager.server.SendToServerAsync(buffer, serverEvent);

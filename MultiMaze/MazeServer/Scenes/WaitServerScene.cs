@@ -52,16 +52,20 @@ namespace MazeServer.Scenes
         {
             byte[] colorBuffer = new byte[3];
             byte[] stateBuffer = new byte[2];
+            byte[] roundBuffer = new byte[2];
 
             Array.Copy(buffer, 0, colorBuffer, 0, 3);
             Array.Copy(buffer, 3, stateBuffer, 0, 2);
+            Array.Copy(buffer, 5, roundBuffer, 0, 2);
 
             short state = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(stateBuffer));
             Color color = Color.FromArgb(colorBuffer[0], colorBuffer[1], colorBuffer[2]);
+            short round = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(roundBuffer));
 
             args.playerArray[playerCode - 1] = state;
             args.playerColorArray[playerCode - 1] = color;
             manager.map.PlayerColorList[playerCode - 1] = color;
+            manager.nowRound = round;
              
             SendArgs();
         }
@@ -70,17 +74,16 @@ namespace MazeServer.Scenes
         {
             int seed = new Random().Next();
             manager.map.seed = seed;
-            setMazeBeforeGameStart(seed,1);
+            setMazeBeforeGameStart(seed );
             byte[] sendbuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((int)seed));
             ServerEvent serverEvent = new ServerEvent(Define.GameState.WaitScene, 2);
             manager.client.SendToAllPlayers(sendbuffer, serverEvent);
+            manager.ServerScene.SetLog($"{manager.nowRound} 라운드 시작");
         }
-        /// <summary>
-        /// nowRound는 1부터 입니다.
+        /// <summary> 
         /// </summary>
-        /// <param name="seed"></param>
-        /// <param name="nowRound"></param>
-        public void setMazeBeforeGameStart(int seed, int nowRound)
+        /// <param name="seed"></param> 
+        public void setMazeBeforeGameStart(int seed)
         {
             Random rand = new Random(seed);
             Point[] corners = new Point[4];
@@ -109,8 +112,7 @@ namespace MazeServer.Scenes
                 int typeIndex = rand.Next(3);
                 manager.map.PlayerStartPosList[i] = startPosArr[typeIndex];
                 manager.map.PlayerPosList[i] = startPosArr[typeIndex];
-            }
-            manager.nowRound = nowRound;
+            } 
             manager.SeedList[manager.nowRound - 1] = seed;
         }
         private void SendArgs()
