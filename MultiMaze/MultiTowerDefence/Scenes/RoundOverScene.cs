@@ -154,6 +154,7 @@ namespace MazeClient
                 int y = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(yBuffer, 0));
                 newpath.Add(new Point(x, y));
             }
+
             path = newpath;
             Manager.path = path; 
             map = Manager.map.map; 
@@ -172,6 +173,8 @@ namespace MazeClient
                 Winner.Text += Manager.WinnerList[Manager.nowRound - 1].ToString() + "번 플레이어";
             }
             Time.Text += ((float)Manager.winnerTime / 20f).ToString() + " 초";
+            roundLabel.Text = Manager.nowRound.ToString() + " 라운드 종료"; 
+
             await Task.Delay(30);
             this.Paint += new PaintEventHandler(WinnerPath_Draw);
             this.Invalidate();

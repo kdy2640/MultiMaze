@@ -29,7 +29,7 @@ namespace MazeClient
         private void InitializeComponent()
         {
             button1 = new Button();
-            label1 = new Label();
+            roundLabel = new Label();
             BtnStart = new Button();
             BtnReady = new Button();
             BtnLeave = new Button();
@@ -62,14 +62,14 @@ namespace MazeClient
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // label1
+            // roundLabel
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(422, 12);
-            label1.Name = "label1";
-            label1.Size = new Size(67, 20);
-            label1.TabIndex = 2;
-            label1.Text = "3번 화면";
+            roundLabel.AutoSize = true;
+            roundLabel.Location = new Point(422, 12);
+            roundLabel.Name = "roundLabel";
+            roundLabel.Size = new Size(89, 20);
+            roundLabel.TabIndex = 2;
+            roundLabel.Text = "라운드 대기";
             // 
             // BtnStart
             // 
@@ -243,7 +243,7 @@ namespace MazeClient
             Controls.Add(BtnLeave);
             Controls.Add(BtnReady);
             Controls.Add(BtnStart);
-            Controls.Add(label1);
+            Controls.Add(roundLabel);
             Controls.Add(button1);
             Name = "WaitScene";
             Text = "WaitScene";
@@ -259,7 +259,7 @@ namespace MazeClient
         #endregion
 
         private Button button1;
-        private Label label1;
+        private Label roundLabel;
         private Button BtnStart;
         private Button BtnReady;
         private Button BtnLeave;

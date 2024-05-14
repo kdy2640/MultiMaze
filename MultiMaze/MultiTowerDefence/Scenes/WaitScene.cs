@@ -42,6 +42,7 @@ namespace MazeClient
         private void Initialize()
         {
             Manager = GameManager.Instance;
+            Manager.nowRound++;
             _playerCode = Manager.PlayerCode;
             Manager.server.callbackFunctions.WaitSceneCallBack += WaitSceneCallBackFunction;
 
@@ -51,7 +52,9 @@ namespace MazeClient
             _playerPictureBoxList[0] = PicPlayer1;
             _playerPictureBoxList[1] = PicPlayer2;
             _playerPictureBoxList[2] = PicPlayer3;
-            _playerPictureBoxList[3] = PicPlayer4; 
+            _playerPictureBoxList[3] = PicPlayer4;
+
+            roundLabel.Text = Manager.nowRound.ToString() + " 라운드 대기";
 
             SendToServerArgs();
         }
@@ -327,7 +330,6 @@ namespace MazeClient
             LoadingScene.StopLoading();
             await Task.Delay(10);
             // 신 전환
-            Manager.nowRound = 1;
             Manager.scene.ChangeGameState(this,Define.GameState.InGameScene);
         }
 

@@ -42,6 +42,7 @@
             timerCountdown = new System.Windows.Forms.Timer(components);
             button1 = new Button();
             drawTimer = new System.Windows.Forms.Timer(components);
+            roundLabel = new Label();
             SuspendLayout();
             // 
             // label1
@@ -162,11 +163,21 @@
             drawTimer.Interval = 10;
             drawTimer.Tick += drawTimer_Tick;
             // 
+            // roundLabel
+            // 
+            roundLabel.AutoSize = true;
+            roundLabel.Location = new Point(694, 72);
+            roundLabel.Name = "roundLabel";
+            roundLabel.Size = new Size(89, 20);
+            roundLabel.TabIndex = 17;
+            roundLabel.Text = "라운드 종료";
+            // 
             // RoundOverScene
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(913, 569);
+            Controls.Add(roundLabel);
             Controls.Add(Countdown);
             Controls.Add(NextTime);
             Controls.Add(Start);
@@ -200,5 +211,6 @@
         private System.Windows.Forms.Timer timerCountdown;
         private Button button1;
         private System.Windows.Forms.Timer drawTimer;
+        private Label roundLabel;
     }
 }
