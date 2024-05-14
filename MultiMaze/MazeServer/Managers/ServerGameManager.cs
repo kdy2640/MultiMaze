@@ -22,7 +22,9 @@ namespace MazeServer
         /// AI 우승시 서버 상호작용 없이 각 클라이언트의 GameManager.AiPath에서 AI 경로를 가져와서 표시합니다.
         /// </summary>
         public int[] WinnerList = new int[5];
+        public int[] WinnerTimeList = new int[5];
         public int[] SeedList = new int[5];
+        public List<Point>[] WinnerPathList = new List<Point>[5];
 
         public const int MAX_PLAYER_NUM = 4;
         /// <summary>
@@ -31,7 +33,11 @@ namespace MazeServer
         public int nowRound = 0;
 
         private ServerGameManager()
-        { 
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                WinnerPathList[i] = new List<Point>();
+            }
         }
 
         // GameManager의 인스턴스를 반환하는 public static 메서드
