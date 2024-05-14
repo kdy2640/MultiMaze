@@ -135,7 +135,6 @@ namespace MazeServer
                 // 비동기 송신
                 int bytesSent = await clientSocket.SendAsync(headerSegment, SocketFlags.None);
 
-                Manager.ServerScene.SetLog($"{playerNumber}번 플레이어에게 데이터 전송 완료 비트 수 : {bytesSent} ");
             }
             catch (Exception ex)
             {
