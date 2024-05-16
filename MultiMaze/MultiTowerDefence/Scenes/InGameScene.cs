@@ -69,14 +69,13 @@ namespace MazeClient.Scenes
 
             //패널 초기화 
             PanelInitialize();
-
-
+            // 스코어보드 초기화
+            ScoreBoardInitialize();
             //카메라 관련
             CameraLimit.X = panel1.Width / 50;
             CameraLimit.Y = panel1.Height / 50;
             RenderPlayer();
         }
-
         private void MapInitialize()
         {
             // 미로 생성(임시)
@@ -95,6 +94,80 @@ namespace MazeClient.Scenes
             panel1.SendToBack();
         }
 
+        private void ScoreBoardInitialize()
+        {
+            panel2.Controls.Add(ScoreBoard);
+            ScoreBoard.CellPainting += ScoreBoard_CellPainting;
+            ScoreBoard.RowTemplate.Height = 50;
+
+            //AI 열
+            ScoreBoard.Rows.Add();
+            ScoreBoard.Rows[0].Cells[0].Value = "AI";
+            for (int i = 0; i < 5; i++)
+            {
+
+            }
+            //플레이어 열
+            for (int i = 0; i < 4; i++)
+            {
+                ScoreBoard.Rows.Add();
+                ScoreBoard.Rows[i + 1].Cells[0].Value = "Player" + (i + 1).ToString();
+                if (manager.server.PlayerConnectArray[i] == false)
+                {
+                    ScoreBoard.Rows[i + 1].Cells[0].Value = "X";
+                } 
+                if (i + 1 == PlayerCode)
+                {
+                    ScoreBoard.Rows[i + 1].Cells[0].Value += " (당신)";
+                }
+            }
+            for (int i = 0; i < manager.nowRound - 1; i++)
+            {
+                ScoreBoard.Rows[manager.WinnerList[i]].Cells[i + 2].Value = "승리";
+            }
+
+        }
+        private void ScoreBoard_CellPainting(object? sender, DataGridViewCellPaintingEventArgs e)
+        {
+            int margin = 4;
+            Rectangle rect = new Rectangle(e.CellBounds.X + e.CellBounds.Width / 2 - e.CellBounds.Height / 2 + margin/2 , e.CellBounds.Y + margin / 2, e.CellBounds.Height - margin , e.CellBounds.Height - margin) ;
+
+            //두번째 열의 모든 행
+            if (e.ColumnIndex == 1 && e.RowIndex >= 0)
+            {
+                e.Paint(e.CellBounds, DataGridViewPaintParts.All & ~DataGridViewPaintParts.ContentForeground);
+
+                if (e.RowIndex == 0)
+                {
+
+                    // 사각형 꼭짓점
+                    Point point1 = new Point(e.CellBounds.X + e.CellBounds.Width / 2, e.CellBounds.Y + margin); // 상
+                    Point point3 = new Point(e.CellBounds.X + e.CellBounds.Width / 2, e.CellBounds.Y + e.CellBounds.Height - margin); // 하 
+                    Point point2 = new Point(e.CellBounds.X + e.CellBounds.Width / 2 + e.CellBounds.Height / 2 - margin, e.CellBounds.Y + e.CellBounds.Height / 2); // 우
+                    Point point4 = new Point(e.CellBounds.X + e.CellBounds.Width / 2 - e.CellBounds.Height / 2 + margin, e.CellBounds.Y + e.CellBounds.Height / 2); // 좌
+
+                    Point[] points = { point1, point2, point3, point4 };
+
+                    // 그리기
+                    e.Graphics.FillPolygon(Brushes.Purple, points);
+                }
+                else
+                {
+                    SolidBrush br;
+                    int LocalI = e.RowIndex - 1;
+                    if (manager.server.PlayerConnectArray[LocalI] == true)
+                    {
+                        br = new SolidBrush(manager.map.PlayerColorList[LocalI]);
+                        e.Graphics.FillEllipse(br, rect);
+                    }
+                    else
+                    {
+                        br = new SolidBrush(Form.DefaultBackColor); 
+                    }
+                }
+                e.Handled = true; // 이벤트 처리 완료 표시
+            }
+        }
         private void FormInitialize()
         {
             this.Focus();
@@ -133,15 +206,7 @@ namespace MazeClient.Scenes
                     }
                     else
                     {
-                        if (manager.map.map[manager.map.PlayerPosList[LocalI].X, manager.map.PlayerPosList[LocalI].Y] == true)
-                        {
-                            br = new SolidBrush(Color.White);
-                        }
-                        else
-                        {
-                            e.Graphics.Clear(Color.Black);
-                            br = new SolidBrush(Color.Black);
-                        }
+                        br = new SolidBrush(Color.White);
                     }
                     e.Graphics.FillEllipse(br, 0, 0, player.Width, player.Height);
 
@@ -407,7 +472,6 @@ namespace MazeClient.Scenes
             if (EndTrigger == false)
             {
                 UpdateAIPos();
-                label4.Text = manager.server.ServerSocket.Connected.ToString();
                 if (AiPosition == endPoint)
                 {
                     EndTrigger = true;
@@ -416,7 +480,6 @@ namespace MazeClient.Scenes
 
             }
         }
-        int Index = 0;
         private void UpdateAIPos()
         {
             if (AiIndex < AiPath.Count)
@@ -424,9 +487,6 @@ namespace MazeClient.Scenes
                 AiPosition = AiPath[AiIndex++];
                 AiPlayer.Left = ScreenStart.X + pictureBox1.Left + AiPosition.X * cellSize;
                 AiPlayer.Top = ScreenStart.Y + pictureBox1.Top + AiPosition.Y * cellSize;
-
-                label2.Text = AiPosition.X.ToString() + ", " + AiPosition.Y.ToString();
-                label3.Text = (Index++).ToString();
             }
             else
             {
@@ -444,7 +504,7 @@ namespace MazeClient.Scenes
         #region 게임로직
         private async void gameEnd(int playerCode)
         {
-            if(isGameEnd == false)
+            if (isGameEnd == false)
             {
                 isGameEnd = true;
                 manager.WinnerList[manager.nowRound - 1] = playerCode;
@@ -512,7 +572,7 @@ namespace MazeClient.Scenes
         }
 
         private async void SendWinner(int playercode)
-        { 
+        {
             manager.path = path;
             List<Point> newPath = manager.path;
             if (playercode == 0)
@@ -520,7 +580,7 @@ namespace MazeClient.Scenes
                 newPath = manager.AiPath;
             }
             byte[] Codebuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(playercode));
-            byte[] timeBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(Index));
+            byte[] timeBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(AiIndex));
             byte[] xbuffer = new byte[2];
             byte[] ybuffer = new byte[2];
             byte[] buffer = new byte[newPath.Count * 4 + 8];
@@ -599,6 +659,11 @@ namespace MazeClient.Scenes
         private void InGameScene_FormClosing(object sender, FormClosingEventArgs e)
         {
 
+        }
+
+        private void ScoreBoard_SelectionChanged(object sender, EventArgs e)
+        {
+            ScoreBoard.CurrentCell = null;
         }
     }
     public class InGameSceneServerEvent : ServerEvent
