@@ -53,13 +53,13 @@ namespace MazeClient
             Manager.state = gameState;
             Form waitScene = GetSceneInstance(gameState);
             sender.Hide();
-            waitScene.Top = sender.Top;
-            waitScene.Left = sender.Left;
 
             waitScene.FormClosing += Scene_FormClosing;
             BaseScene.formCount += 1;
 
             waitScene.Show();
+            waitScene.Top = sender.Top;
+            waitScene.Left = sender.Left;
             sender.Close();
         }
         public void Scene_FormClosing(object sender, FormClosingEventArgs e)
