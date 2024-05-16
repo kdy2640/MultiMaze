@@ -43,9 +43,9 @@ namespace MazeServer
             logTextBox.AppendText(log + "\n");
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public void button1_Click(object sender, EventArgs e)
         {
-
+            Close();
         }
 
         private void ServerTempScene_Load(object sender, EventArgs e)
