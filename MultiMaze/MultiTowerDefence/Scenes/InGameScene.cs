@@ -92,6 +92,10 @@ namespace MazeClient.Scenes
             this.Controls.Add(panel1);
             ScreenStart = new Point(panel1.Left, panel1.Top);
             panel1.SendToBack();
+             
+            jumpLabel.BringToFront(); 
+            jumpLabel.BackColor = Color.Transparent;
+            jumpBar.Maximum = JUMPDELAY;
         }
 
         private void ScoreBoardInitialize()
@@ -302,6 +306,8 @@ namespace MazeClient.Scenes
 
         #region 점프시 색상 변경
 
+        bool canJump = true;
+        int jumpIndex = 0;
         private void PaintJump(object sender, PaintEventArgs e)
         {
             e.Graphics.FillRectangle(playerBrush, 0, 0, player.Width, player.Height);
@@ -314,11 +320,16 @@ namespace MazeClient.Scenes
         }
         public void OnJump()
         {
-            player.Width += 1;
-            player.Height += 1;
-            isJump = true;
-            player.Paint -= PaintLand;
-            player.Paint += PaintJump;
+            if(canJump)
+            {
+                player.Width += 1;
+                player.Height += 1;
+                isJump = true;
+                player.Paint -= PaintLand;
+                player.Paint += PaintJump;
+                canJump = false;
+                jumpIndex = AiIndex;
+            } 
         }
         public void OnLand()
         {
@@ -410,10 +421,11 @@ namespace MazeClient.Scenes
 
             // 벽으로 이동했으면 복구
             if (!noClip && map[PlayerPos.X, PlayerPos.Y] == false)
-            {
+            { 
                 PlayerPos = tempPos;
                 return;
             }
+            jumpIndex -= JUMPCHARGE;
             if (PlayerPos == endPoint)
             {
                 SendWinner(PlayerCode);
@@ -467,6 +479,8 @@ namespace MazeClient.Scenes
         private List<Point> AiPath = new List<Point>();
         private int AiIndex = 0;
         bool EndTrigger = false;
+        const int JUMPDELAY = 10 * 20;
+        const int JUMPCHARGE = 3;
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (EndTrigger == false)
@@ -477,7 +491,21 @@ namespace MazeClient.Scenes
                     EndTrigger = true;
                     SendWinner(0);
                 }
-
+                if(canJump)
+                {
+                    jumpBar.Value = JUMPDELAY;
+                    jumpLabel.Text = "점프 가능";
+                }
+                else
+                {
+                    jumpBar.BackColor = Form.DefaultBackColor;
+                    jumpBar.Value = Math.Clamp(AiIndex - jumpIndex,0, JUMPDELAY);
+                    if (AiIndex - jumpIndex > JUMPDELAY - 2)
+                    {
+                        canJump = true;
+                    }
+                    jumpLabel.Text = "점프 대기중";
+                }
             }
         }
         private void UpdateAIPos()

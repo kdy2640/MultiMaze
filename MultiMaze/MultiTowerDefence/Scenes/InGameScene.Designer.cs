@@ -29,17 +29,18 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             panel1 = new Panel();
+            jumpLabel = new Label();
+            jumpBar = new ProgressBar();
             pictureBox1 = new PictureBox();
             panel2 = new Panel();
             ScoreBoard = new DataGridView();
-            timer1 = new System.Windows.Forms.Timer(components);
             NameColumn = new DataGridViewTextBoxColumn();
             ShapeColumn = new DataGridViewImageColumn();
             Round1Label = new DataGridViewTextBoxColumn();
@@ -47,6 +48,7 @@
             Round3Label = new DataGridViewTextBoxColumn();
             Round4Label = new DataGridViewTextBoxColumn();
             Round5Label = new DataGridViewTextBoxColumn();
+            timer1 = new System.Windows.Forms.Timer(components);
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel2.SuspendLayout();
@@ -55,6 +57,8 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(jumpLabel);
+            panel1.Controls.Add(jumpBar);
             panel1.Controls.Add(pictureBox1);
             panel1.Location = new Point(10, 9);
             panel1.Margin = new Padding(0);
@@ -62,6 +66,25 @@
             panel1.Size = new Size(900, 600);
             panel1.TabIndex = 1;
             panel1.Paint += panel1_Paint;
+            // 
+            // jumpLabel
+            // 
+            jumpLabel.AutoSize = true;
+            jumpLabel.BackColor = Color.White;
+            jumpLabel.Location = new Point(668, 554);
+            jumpLabel.Name = "jumpLabel";
+            jumpLabel.Size = new Size(39, 20);
+            jumpLabel.TabIndex = 4;
+            jumpLabel.Text = "점프";
+            // 
+            // jumpBar
+            // 
+            jumpBar.BackColor = SystemColors.ControlDark;
+            jumpBar.Location = new Point(750, 550);
+            jumpBar.Maximum = 200;
+            jumpBar.Name = "jumpBar";
+            jumpBar.Size = new Size(130, 30);
+            jumpBar.TabIndex = 3;
             // 
             // pictureBox1
             // 
@@ -103,16 +126,10 @@
             ScoreBoard.TabIndex = 12;
             ScoreBoard.SelectionChanged += ScoreBoard_SelectionChanged;
             // 
-            // timer1
-            // 
-            timer1.Enabled = true;
-            timer1.Interval = 50;
-            timer1.Tick += timer1_Tick;
-            // 
             // NameColumn
             // 
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            NameColumn.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            NameColumn.DefaultCellStyle = dataGridViewCellStyle1;
             NameColumn.HeaderText = "Name";
             NameColumn.MinimumWidth = 6;
             NameColumn.Name = "NameColumn";
@@ -131,8 +148,8 @@
             // 
             // Round1Label
             // 
-            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            Round1Label.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            Round1Label.DefaultCellStyle = dataGridViewCellStyle2;
             Round1Label.HeaderText = "Round1";
             Round1Label.MinimumWidth = 6;
             Round1Label.Name = "Round1Label";
@@ -142,8 +159,8 @@
             // 
             // Round2Label
             // 
-            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            Round2Label.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            Round2Label.DefaultCellStyle = dataGridViewCellStyle3;
             Round2Label.HeaderText = "Round2";
             Round2Label.MinimumWidth = 6;
             Round2Label.Name = "Round2Label";
@@ -153,8 +170,8 @@
             // 
             // Round3Label
             // 
-            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            Round3Label.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            Round3Label.DefaultCellStyle = dataGridViewCellStyle4;
             Round3Label.HeaderText = "Round3";
             Round3Label.MinimumWidth = 6;
             Round3Label.Name = "Round3Label";
@@ -164,8 +181,8 @@
             // 
             // Round4Label
             // 
-            dataGridViewCellStyle11.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            Round4Label.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            Round4Label.DefaultCellStyle = dataGridViewCellStyle5;
             Round4Label.HeaderText = "Round4";
             Round4Label.MinimumWidth = 6;
             Round4Label.Name = "Round4Label";
@@ -175,14 +192,20 @@
             // 
             // Round5Label
             // 
-            dataGridViewCellStyle12.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            Round5Label.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            Round5Label.DefaultCellStyle = dataGridViewCellStyle6;
             Round5Label.HeaderText = "Round5";
             Round5Label.MinimumWidth = 6;
             Round5Label.Name = "Round5Label";
             Round5Label.ReadOnly = true;
             Round5Label.Resizable = DataGridViewTriState.False;
             Round5Label.Width = 125;
+            // 
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Interval = 50;
+            timer1.Tick += timer1_Tick;
             // 
             // InGameScene
             // 
@@ -217,5 +240,7 @@
         private DataGridViewTextBoxColumn Round3Label;
         private DataGridViewTextBoxColumn Round4Label;
         private DataGridViewTextBoxColumn Round5Label;
+        private ProgressBar jumpBar;
+        private Label jumpLabel;
     }
 }
