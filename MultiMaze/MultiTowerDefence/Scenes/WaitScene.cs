@@ -24,7 +24,7 @@ namespace MazeClient
         GameManager Manager;
         ServerManager serverManager;
         private bool _isHost = false;
-        private bool _isPlayerReady = false; 
+        private bool _isPlayerReady = false;
         private int _playerCode = 0; // 플레이어 번호는 1번부터 
         private PictureBox[] _playerPictureBoxList = new PictureBox[4];
         WaitSceneArgs args = new WaitSceneArgs();
@@ -55,12 +55,27 @@ namespace MazeClient
             _playerPictureBoxList[2] = PicPlayer3;
             _playerPictureBoxList[3] = PicPlayer4;
 
-            roundLabel.Text = Manager.nowRound.ToString() + " 라운드 대기";
+            // 당신 텍스트 부여
+            Player1.Invalidate();
+            Player2.Invalidate();
+            Player3.Invalidate();
+            Player4.Invalidate();
 
+            roundLabel.Text = Manager.nowRound.ToString() + " 라운드 대기";
             SendToServerArgs();
         }
 
         #region Form 이벤트
+        private void Player_Paint(object sender, PaintEventArgs e)
+        {
+            Label PlayerLabel = sender as Label; 
+            int index = PlayerLabel.Name[6] - 48; 
+            if (index == _playerCode)
+            {
+                PlayerLabel.Text = $"Player{index.ToString()} (당신)";
+            }
+            
+        }
         private async void BtnStart_Click(object sender, EventArgs e)
         {
             //isAllPlayerReady 관련 상호작용 추가하기
@@ -70,13 +85,13 @@ namespace MazeClient
                 for (int i = 0; i < 4; i++)
                 {
                     if (args.playerArray[i] == 0) continue;
-                    if(args.playerArray[i] == 1 )
+                    if (args.playerArray[i] == 1)
                     {
                         startTrigger = false;
                         break;
                     }
                 }
-                if(startTrigger)
+                if (startTrigger)
                 {
                     MessageBox.Show("게임이 시작됩니다.");
                     StartGame();
@@ -178,9 +193,9 @@ namespace MazeClient
             }
             SolidBrush br = new SolidBrush(Manager.map.PlayerColorList[index]);
             e.Graphics.FillEllipse(br, pic.Width / 4, pic.Height / 4, pic.Width / 2, pic.Height / 2);
-            if(index + 1 == args.hostPlayerNum)
+            if (index + 1 == args.hostPlayerNum)
             {
-                e.Graphics.DrawString("HOST", font,Brushes.Black,new PointF(0,0));
+                e.Graphics.DrawString("HOST", font, Brushes.Black, new PointF(0, 0));
             }
         }
 
@@ -309,7 +324,7 @@ namespace MazeClient
             Manager.map.startPoint = corners[3 - type]; // 3- type이 끝점과 마주보는 점
 
             bool[] playerlocated = new bool[4];
-            Array.Fill<bool>(playerlocated,false);
+            Array.Fill<bool>(playerlocated, false);
             List<Point> startPosArr = new List<Point>();
             startPosArr.Add(corners[3 - type]);
             for (int i = 0; i < 4; i++)
@@ -327,7 +342,7 @@ namespace MazeClient
             LoadingScene.StopLoading();
             await Task.Delay(10);
             // 신 전환
-            Manager.scene.ChangeGameState(this,Define.GameState.InGameScene);
+            Manager.scene.ChangeGameState(this, Define.GameState.InGameScene);
         }
 
         private async void ReceiveArgs(byte[] buffer)
@@ -384,5 +399,6 @@ namespace MazeClient
         {
 
         }
+
     }
 }

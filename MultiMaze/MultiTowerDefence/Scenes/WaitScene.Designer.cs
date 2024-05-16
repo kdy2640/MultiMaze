@@ -112,6 +112,7 @@ namespace MazeClient
             Player1.Size = new Size(58, 20);
             Player1.TabIndex = 6;
             Player1.Text = "Player1";
+            Player1.Paint += Player_Paint;
             // 
             // Player2
             // 
@@ -122,6 +123,7 @@ namespace MazeClient
             Player2.Size = new Size(58, 20);
             Player2.TabIndex = 6;
             Player2.Text = "Player2";
+            Player2.Paint += Player_Paint;
             // 
             // Player4
             // 
@@ -132,6 +134,7 @@ namespace MazeClient
             Player4.Size = new Size(58, 20);
             Player4.TabIndex = 6;
             Player4.Text = "Player4";
+            Player4.Paint += Player_Paint;
             // 
             // PicPlayer1
             // 
@@ -153,6 +156,7 @@ namespace MazeClient
             Player3.Size = new Size(58, 20);
             Player3.TabIndex = 6;
             Player3.Text = "Player3";
+            Player3.Paint += Player_Paint;
             // 
             // PicPlayer4
             // 

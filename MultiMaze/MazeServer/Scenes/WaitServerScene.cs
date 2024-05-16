@@ -74,11 +74,12 @@ namespace MazeServer.Scenes
         {
             int seed = new Random().Next();
             manager.map.seed = seed;
-            setMazeBeforeGameStart(seed );
+            setMazeBeforeGameStart(seed);
             byte[] sendbuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((int)seed));
             ServerEvent serverEvent = new ServerEvent(Define.GameState.WaitScene, 2);
             manager.client.SendToAllPlayers(sendbuffer, serverEvent);
             manager.ServerScene.SetLog($"{manager.nowRound} 라운드 시작");
+            manager.client.isGameStart = true;
         }
         /// <summary> 
         /// </summary>
@@ -112,6 +113,11 @@ namespace MazeServer.Scenes
                 int typeIndex = rand.Next(3);
                 manager.map.PlayerStartPosList[i] = startPosArr[typeIndex];
                 manager.map.PlayerPosList[i] = startPosArr[typeIndex];
+
+                if (args.playerArray[i] == 2)
+                {
+                    args.playerArray[i] =  1;
+                }
             } 
             manager.SeedList[manager.nowRound - 1] = seed;
         }
