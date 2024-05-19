@@ -62,7 +62,6 @@ namespace MazeClient
         {
             Form form = new AsyncTestScene();
             form.ShowDialog();
-            Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
         }
     }
 }

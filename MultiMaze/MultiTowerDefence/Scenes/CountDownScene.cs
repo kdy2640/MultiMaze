@@ -17,10 +17,12 @@ namespace MazeClient.Scenes
         public CountDownScene()
         {
             InitializeComponent();
+            this.ControlBox = false;
         }
 
         public static void StartCountDown(Form sender)
         {
+            countdownScene = new CountDownScene();
             Parent = sender as Form;
             foreach (Control c in Parent.Controls)
             {

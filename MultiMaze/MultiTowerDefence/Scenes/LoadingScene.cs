@@ -19,7 +19,8 @@ namespace MazeClient.Scenes
         private static Form Parent = new Form();
         private LoadingScene()
         {
-            InitializeComponent(); 
+            InitializeComponent();
+            this.ControlBox = false;
         } 
         public static void StartLoading(Form sender)
         {

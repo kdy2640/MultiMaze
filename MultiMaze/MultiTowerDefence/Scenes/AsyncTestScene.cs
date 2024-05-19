@@ -32,7 +32,7 @@ namespace MazeClient.Scenes
         private async void button1_Click(object sender, EventArgs e)
         {
             CountDownScene.StartCountDown(this);
-            await Task.Delay(5000); // 로딩 시간 조정 
+            await Task.Delay(7250); // 로딩 시간 조정 
             //작업
             CountDownScene.StopCountDown();
             MessageBox.Show("Done!");
