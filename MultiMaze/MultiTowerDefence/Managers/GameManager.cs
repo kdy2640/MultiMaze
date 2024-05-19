@@ -29,6 +29,7 @@ namespace MazeClient
         /// 각 라운드마다 AI의 경로를 저장합니다.
         /// </summary>
         public List<Point> AiPath;
+        public int winnerTime = 0;
 
         public const int MAX_PLAYER_NUM = 4;
         /// <summary>

@@ -188,8 +188,9 @@ namespace MazeClient
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Exception Occur: {ex.Message}");
-           
+                OnServerDisconnected();
+
+
             }
         }
 
@@ -222,7 +223,7 @@ namespace MazeClient
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Exception Occur: {ex.Message}");
+                OnServerDisconnected(); 
 
             }
         }
@@ -281,10 +282,15 @@ namespace MazeClient
 
 
         // 서버 연결 끊기
-        public void CloseServer()
-        {
-
+        public void LeaveServer()
+        { 
+            ServerSocket.Close(); 
         }
+        private void OnServerDisconnected()
+        {
+            MessageBox.Show($"서버와의 연결이 끊어졌습니다. ");
+        }
+
 
         private void AddHeaderToBuffer(byte[] buffer, int gameStatus, int serverEventType, out byte[] resultBuffer)
         {

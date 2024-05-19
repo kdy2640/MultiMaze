@@ -60,6 +60,7 @@ namespace MazeClient
                 MessageBox.Show("서버 연결 실패");
                 return;
             }
+            Manager.nowRound = 0;
             Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
 
         }

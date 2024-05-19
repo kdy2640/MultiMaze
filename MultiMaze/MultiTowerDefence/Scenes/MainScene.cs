@@ -47,9 +47,8 @@ namespace MazeClient
         {
             GetRoomInfoScene modal = new GetRoomInfoScene();
             if (modal.ShowDialog() == DialogResult.OK)
-            {
-                getRoomArgs();
-
+            { 
+                getRoomArgs(); 
             }
         }
 
@@ -66,7 +65,6 @@ namespace MazeClient
         {
             Form form = new AsyncTestScene();
             form.ShowDialog();
-            Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
         }
 
         public void MainSceneCallBackFunction(byte[] buffer, ServerEvent serverEvent)
@@ -105,8 +103,9 @@ namespace MazeClient
             args.ai = (RoomSettingArgs.AIAlgorithm)ai;
             args.mapSize = (RoomSettingArgs.MapSize)size;
 
-            Manager.map.RoomArgs = args;
-             
+            Manager.map.RoomArgs = args; 
+            Manager.nowRound = 0;
+            
             await Task.Delay(10);
 
             Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);

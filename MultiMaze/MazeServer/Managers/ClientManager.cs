@@ -13,11 +13,11 @@ namespace MazeServer
     {
         public int max_Player_Num = ServerGameManager.MAX_PLAYER_NUM;
         const int HEADER_BYTE = 6;
-         
-        //읽기전용
+          
         public int Now_Player_Num = 0;
         public Player[] PlayerArray = new Player[4];
         public int HostPlayerNum = 1;
+        public bool isGameStart = false;
 
         ServerGameManager Manager;
         public ReceiveCallback callbackFunctions;
@@ -45,10 +45,10 @@ namespace MazeServer
             serverSocket.Bind(endPoint);
             serverSocket.Listen(max_Player_Num);
 
-            while(true )
+            while (isGameStart == false)
             {
                 Socket clientSocket = await serverSocket.AcceptAsync(); 
-                if(Now_Player_Num >= max_Player_Num)
+                if((Now_Player_Num >= max_Player_Num) || (isGameStart == true))
                 {
                     continue;   
                 }
@@ -96,6 +96,10 @@ namespace MazeServer
             }
             disconnectedRecallFunction.Invoke(playercode);
             Now_Player_Num--;
+            if(Now_Player_Num == 0 && isGameStart)
+            {
+                Manager.ServerScene.shutDownServerBtn.PerformClick();
+            }
         }
         #endregion
 
@@ -135,7 +139,6 @@ namespace MazeServer
                 // 비동기 송신
                 int bytesSent = await clientSocket.SendAsync(headerSegment, SocketFlags.None);
 
-                Manager.ServerScene.SetLog($"{playerNumber}번 플레이어에게 데이터 전송 완료 비트 수 : {bytesSent} ");
             }
             catch (Exception ex)
             {
