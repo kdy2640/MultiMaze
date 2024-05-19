@@ -10,7 +10,7 @@ namespace MazeClient.Share
     {
         public enum AIAlgorithm
         {
-            BFS,DFS,Astart
+            BFS,DFS,Astar
         }
         public enum MapSize
         {

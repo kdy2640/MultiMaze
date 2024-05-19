@@ -11,6 +11,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MazeClient.Share;
 using System.Diagnostics;
+using static MazeClient.Share.RoomSettingArgs;
+using static System.Resources.ResXFileRef;
+using System.Runtime.InteropServices;
+using System.Security.Policy;
 
 namespace MazeClient
 {
@@ -23,6 +27,7 @@ namespace MazeClient
 
             //매니저 할당
             Manager = GameManager.Instance;
+            Manager.server.callbackFunctions.SettingSceneCallBack += SettingSceneCallBackFunction;
             textBox1.Text = GetLocalIPAddress();
         }
 
@@ -47,11 +52,10 @@ namespace MazeClient
         private async void makeRoomBtn_Click(object sender, EventArgs e)
         {
             // 서버 프로그램 실행
-            if(!Manager.server.StartServer()) MessageBox.Show("서버 실행 실패");
-
+            if (!Manager.server.StartServer()) MessageBox.Show("서버 실행 실패");
 
             bool connectResult = await Manager.server.ConnectServer("127.0.0.1", 20000);
-            if(connectResult == false)
+            if (connectResult == false)
             {
                 MessageBox.Show("서버 연결 실패");
                 return;
@@ -66,5 +70,77 @@ namespace MazeClient
             Manager.scene.ChangeGameState(this, Define.GameState.MainScene);
         }
 
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        public void SettingSceneCallBackFunction(byte[] buffer, ServerEvent serverEvent)
+        {
+            //GameStatus 확인
+            if (serverEvent.GameStatus != Define.GameState.SettingScene) return;
+
+            switch (serverEvent.EventType)
+            {
+                case 0:
+                    //receive 할게 없음
+                    Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
+                    //createRoom(buffer);
+                    //receiveRoomArgs(buffer);
+                    break;
+                case 1: // None
+                    break;
+            }
+        }
+        private void SendCreateRoom()
+        {
+            short round = (short)(gameCount1.Checked ? 1 :
+                                  gameCount3.Checked ? 3 : 
+                                  5);
+            short algorithm = (short)(computerBFS.Checked ? AIAlgorithm.BFS :
+                              computerDFS.Checked ? AIAlgorithm.DFS :
+                              AIAlgorithm.Astar);
+            short mapSize = (short)(size30.Checked ? MapSize.Small :
+                                    size50.Checked ? MapSize.Medium :
+                                    MapSize.Big);
+
+            // 클라이언트 room 설정 update
+            RoomSettingArgs args = new RoomSettingArgs();
+            args.Round = round;
+            args.ai = (RoomSettingArgs.AIAlgorithm)algorithm;
+            args.mapSize = (RoomSettingArgs.MapSize)mapSize;
+            Manager.map.RoomArgs = args;
+
+            byte[] roundBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(round));
+            byte[] algorithmBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(algorithm));
+            byte[] mapSizeBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(mapSize));
+            byte[] buffer = new byte[roundBuffer.Length + algorithmBuffer.Length + mapSizeBuffer.Length];
+            // 합체
+            Array.Copy(roundBuffer, 0, buffer, 0, roundBuffer.Length);
+            Array.Copy(algorithmBuffer, 0, buffer, 2, algorithmBuffer.Length);
+            Array.Copy(mapSizeBuffer, 0, buffer, 4, mapSizeBuffer.Length);
+
+            SettingSceneServerEvent serverEvent = new SettingSceneServerEvent(SettingSceneServerEvent.SettingSceneServerEventType.SendCreateRoom);
+            Manager.server.SendToServerAsync(buffer, serverEvent);
+        }
+    }
+}
+public class SettingSceneServerEvent : ServerEvent
+{
+    public enum SettingSceneServerEventType
+    {
+        SendCreateRoom, None
+    }
+
+
+    public SettingSceneServerEvent() : base()
+    {
+        EventType = (int)SettingSceneServerEventType.None;
+        GameStatus = Define.GameState.SettingScene;
+    }
+    public SettingSceneServerEvent(SettingSceneServerEventType inGameSceneServerEventType) : base()
+    {
+        EventType = (int)inGameSceneServerEventType;
+        GameStatus = Define.GameState.SettingScene;
     }
 }
