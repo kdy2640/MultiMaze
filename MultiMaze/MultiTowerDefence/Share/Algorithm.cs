@@ -172,12 +172,13 @@ namespace MazeClient.Share
 
         explore.Push(start);
         visitedPoints.Add(start);
-        parentMap[start.X, start.Y] = new Point(-1, -1);  // 초기 시작점에 대한 부모는 없음을 표시
+        parentMap[start.X, start.Y] = new Point(0, 0);  // 초기 시작점에 대한 부모는 없음을 표시
 
         while (explore.Count > 0)
         {
-            Point current = explore.Peek();
+            Point current = explore.Pop();
             visitedOrder.Add(current);
+            visitedPoints.Add(current);
 
             if (current.Equals(end))
                 return visitedOrder;
@@ -187,21 +188,29 @@ namespace MazeClient.Share
             {
                 if (IsPath(adjacent) && !visitedPoints.Contains(adjacent))
                 {
-                    explore.Push(adjacent);
-                    visitedPoints.Add(adjacent);
+                    explore.Push(adjacent); 
                     parentMap[adjacent.X, adjacent.Y] = current;
                     deadEnd = false;
-                    break;
                 }
             }
 
             if (deadEnd)
             {
-                explore.Pop();
-                if (explore.Count > 0)
+                Point newPoint = explore.Peek();
+                Point intersectPoint = parentMap[newPoint.X, newPoint.Y];
+                Point nowPoint = current;
+                while(true)
                 {
-                    visitedOrder.Add(explore.Peek());
+                    Point prevPoint = parentMap[nowPoint.X, nowPoint.Y];
+                    if (prevPoint == intersectPoint)
+                    {
+                        visitedPoints.Add(prevPoint);
+                        break;
+                    }
+                    visitedOrder.Add(prevPoint);
+                    nowPoint = prevPoint; 
                 }
+
             }
         }
 
