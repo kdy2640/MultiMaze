@@ -28,25 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
+            shutDownServerBtn = new Button();
+            logTextBox = new RichTextBox();
             SuspendLayout();
             // 
-            // button1
+            // shutDownServerBtn
             // 
-            button1.Location = new Point(646, 345);
-            button1.Name = "button1";
-            button1.Size = new Size(94, 29);
-            button1.TabIndex = 0;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            shutDownServerBtn.Location = new Point(646, 345);
+            shutDownServerBtn.Name = "shutDownServerBtn";
+            shutDownServerBtn.Size = new Size(94, 29);
+            shutDownServerBtn.TabIndex = 0;
+            shutDownServerBtn.Text = "서버 종료";
+            shutDownServerBtn.UseVisualStyleBackColor = true;
+            shutDownServerBtn.Click += button1_Click;
+            // 
+            // logTextBox
+            // 
+            logTextBox.Location = new Point(65, 44);
+            logTextBox.Name = "logTextBox";
+            logTextBox.Size = new Size(352, 237);
+            logTextBox.TabIndex = 1;
+            logTextBox.Text = "";
             // 
             // ServerScene
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(button1);
+            Controls.Add(logTextBox);
+            Controls.Add(shutDownServerBtn);
             Name = "ServerScene";
             Text = "ServerScene";
             Load += ServerTempScene_Load;
@@ -55,6 +65,7 @@
 
         #endregion
 
-        private Button button1;
+        public Button shutDownServerBtn;
+        private RichTextBox logTextBox;
     }
 }

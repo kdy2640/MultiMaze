@@ -22,6 +22,7 @@ namespace MazeServer
             InitializeComponent();
             Manager = ServerGameManager.Instance;
 
+            Manager.ServerScene = this;
             Manager.client.WaitForPlayer();
             ServerInitializer();
         }
@@ -37,10 +38,14 @@ namespace MazeServer
             gameOverScene = new GameOverServerScene();
         }
 
-
-        private void button1_Click(object sender, EventArgs e)
+        public void SetLog(string log)
         {
+            logTextBox.AppendText(log + "\n");
+        }
 
+        public void button1_Click(object sender, EventArgs e)
+        {
+            Close();
         }
 
         private void ServerTempScene_Load(object sender, EventArgs e)

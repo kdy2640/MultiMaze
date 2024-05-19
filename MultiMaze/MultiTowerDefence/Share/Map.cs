@@ -21,8 +21,7 @@ namespace MazeClient.Share
         public int mapSize = 100;
         public Point startPoint = new Point();
         public Point endPoint = new Point();
-        public int seed = 50;
-        public int playerCount = 3;
+        public int seed = 50; 
 
         public List<Point> PlayerStartPosList = new List<Point>();
         public List<Point> PlayerPosList = new List<Point>();   
@@ -37,13 +36,13 @@ namespace MazeClient.Share
                 PlayerPosList.Add(new Point(i+1, i+1));
                 PlayerColorList.Add(Color.Red);
             }
-            MapInitialize();
         }
         /// <summary>
         /// 초기값은 있으나 MapArgs를 다 초기화 한 후 실행해야 정상작동합니다.
         /// </summary>
-        public void MapInitialize()
+        public void MapInitialize(RoomSettingArgs args)
         {
+            this.RoomArgs = args;
             //맵 크기
             switch(RoomArgs.mapSize)
             {
@@ -58,11 +57,8 @@ namespace MazeClient.Share
                     break;
             }
             map = new bool[mapSize, mapSize];
-            //startPoint = 시드 이용해 제작 현재 클라이언트 플레이어의 시작위치
-            //endPoint =  시드 이용해 제작 끝점은 공통
-            endPoint = new Point(mapSize-3,mapSize-3);
-            seed = RoomArgs.seed;
-            playerCount = RoomArgs.PlayerCount;
+            //AI 시작, 끝
+            endPoint = new Point(mapSize-3,mapSize-3); 
             //미로 생성
             GenerateMaze(mapSize,mapSize,seed);
         }
