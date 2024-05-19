@@ -309,7 +309,7 @@ namespace MazeClient
         {
             LoadingScene.StartLoading(this);
             //맵 생성
-            Manager.map.MapInitialize(new RoomSettingArgs());
+            Manager.map.MapInitialize(Manager.map.RoomArgs);
             int size = Manager.map.mapSize;
             Manager.map.GenerateMaze(size, size, seed);
             Random rand = new Random(seed);

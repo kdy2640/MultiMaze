@@ -47,11 +47,11 @@ namespace MazeClient.Share
             switch(RoomArgs.mapSize)
             {
                 case RoomSettingArgs.MapSize.Small:
-                    break;
                     mapSize = 40;
-                case RoomSettingArgs.MapSize.Medium:
                     break;
+                case RoomSettingArgs.MapSize.Medium:
                     mapSize = 70;
+                    break;
                 case RoomSettingArgs.MapSize.Big:
                     mapSize = 100;
                     break;
