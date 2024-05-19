@@ -36,22 +36,23 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Image = Properties.Resources.loading_7528_256;
-            pictureBox1.Location = new Point(182, 41);
-            pictureBox1.Margin = new Padding(2, 2, 2, 2);
+            pictureBox1.Image = Properties.Resources.loading_7528_256_2;
+            pictureBox1.Location = new Point(10, 10);
+            pictureBox1.Margin = new Padding(0);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(207, 196);
+            pictureBox1.Size = new Size(310, 310);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
             // LoadingScene
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(560, 270);
+            BackColor = Color.Black;
+            ClientSize = new Size(330, 330);
             Controls.Add(pictureBox1);
-            Margin = new Padding(2, 2, 2, 2);
+            FormBorderStyle = FormBorderStyle.None;
             Name = "LoadingScene";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();

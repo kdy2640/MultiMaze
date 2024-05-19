@@ -29,6 +29,8 @@ namespace MazeClient.Scenes
                 c.Enabled = false;
             }
             countdownScene.Show();
+            countdownScene.Left = Parent.Left + Parent.Width/2 - countdownScene.Width/2;
+            countdownScene.Top = Parent.Top + Parent.Height/2 - countdownScene.Height/2;
         }
 
         public static void StopCountDown()
