@@ -37,23 +37,21 @@
             // pictureBox1
             // 
             pictureBox1.Image = Properties.Resources.loading_7528_256;
-            pictureBox1.Location = new Point(234, 55);
-            pictureBox1.Margin = new Padding(3, 2, 3, 2);
+            pictureBox1.Location = new Point(182, 41);
+            pictureBox1.Margin = new Padding(2, 2, 2, 2);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(266, 262);
+            pictureBox1.Size = new Size(207, 196);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
-            // timer1
-            //  
-            // 
             // LoadingScene
             // 
-            AutoScaleDimensions = new SizeF(9F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(720, 360);
+            ClientSize = new Size(560, 270);
             Controls.Add(pictureBox1);
-            Margin = new Padding(3, 2, 3, 2);
+            Margin = new Padding(2, 2, 2, 2);
             Name = "LoadingScene";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
