@@ -30,13 +30,15 @@
         {
             button = new Button();
             label1 = new Label();
+            button1 = new Button();
             SuspendLayout();
             // 
             // button
             // 
-            button.Location = new Point(245, 143);
+            button.Location = new Point(41, 87);
+            button.Margin = new Padding(2, 2, 2, 2);
             button.Name = "button";
-            button.Size = new Size(274, 129);
+            button.Size = new Size(192, 77);
             button.TabIndex = 0;
             button.Text = "비동기 테스트";
             button.UseVisualStyleBackColor = true;
@@ -45,20 +47,34 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(349, 341);
+            label1.Location = new Point(244, 205);
+            label1.Margin = new Padding(2, 0, 2, 0);
             label1.Name = "label1";
-            label1.Size = new Size(60, 25);
+            label1.Size = new Size(39, 15);
             label1.TabIndex = 1;
             label1.Text = "label1";
             // 
-            // asyncTest
+            // button1
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            button1.Location = new Point(312, 87);
+            button1.Margin = new Padding(2);
+            button1.Name = "button1";
+            button1.Size = new Size(192, 77);
+            button1.TabIndex = 2;
+            button1.Text = "카운트다운 테스트";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // AsyncTestScene
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(560, 270);
+            Controls.Add(button1);
             Controls.Add(label1);
             Controls.Add(button);
-            Name = "asyncTest";
+            Margin = new Padding(2, 2, 2, 2);
+            Name = "AsyncTestScene";
             Text = "Form1";
             ResumeLayout(false);
             PerformLayout();
@@ -68,5 +84,6 @@
 
         private Button button;
         private Label label1;
+        private Button button1;
     }
 }
