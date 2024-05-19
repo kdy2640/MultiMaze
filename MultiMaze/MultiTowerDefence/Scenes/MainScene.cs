@@ -68,10 +68,11 @@ namespace MazeClient
             form.ShowDialog();
             Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
         }
+
         public void MainSceneCallBackFunction(byte[] buffer, ServerEvent serverEvent)
         {
             //GameStatus 확인
-            if (serverEvent.GameStatus != Define.GameState.InGameScene) return;
+            if (serverEvent.GameStatus != Define.GameState.MainScene) return;
 
             switch (serverEvent.EventType)
             {
