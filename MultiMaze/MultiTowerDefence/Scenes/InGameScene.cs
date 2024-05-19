@@ -27,7 +27,7 @@ namespace MazeClient.Scenes
         List<PictureBox> PlayerList;  // 플레이어 PictureBox
         PictureBox EndPointPictureBox;
         //AI 관련
-        public Algorithm algorithm = new Astar();
+        public Algorithm algorithm;
         // Map 관련
         private bool[,] map = new bool[0, 0];
         private Point endPoint = new Point();
@@ -523,6 +523,18 @@ namespace MazeClient.Scenes
         }
         private void AIInitialize()
         {
+            switch(manager.map.RoomArgs.ai)
+            {
+                case RoomSettingArgs.AIAlgorithm.BFS:
+                    algorithm = new BFS();
+                    break;
+                case RoomSettingArgs.AIAlgorithm.DFS:
+                    algorithm = new DFS();
+                    break;
+                case RoomSettingArgs.AIAlgorithm.Astar:
+                    algorithm = new Astar();
+                    break;
+            }
             AiPath = algorithm.ToArray(manager.map.startPoint, manager.map.endPoint);
             manager.AiPath = AiPath;
         }
