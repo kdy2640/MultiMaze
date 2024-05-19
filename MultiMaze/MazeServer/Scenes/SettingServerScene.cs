@@ -20,7 +20,7 @@ namespace MazeServer.Scenes
         public void SettingSceneCallBackFunction(byte[] buffer, ServerEvent serverEvent, int playerCode)
         {
             //GameStatus 확인
-            if (serverEvent.GameStatus != Define.GameState.MainScene) return;
+            if (serverEvent.GameStatus != Define.GameState.SettingScene) return;
             switch (serverEvent.EventType)
             {
                 case 0:

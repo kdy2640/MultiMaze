@@ -72,7 +72,7 @@
             // 
             gameRound.Controls.Add(gameCount5);
             gameRound.Controls.Add(gameCount3);
-            gameRound.Controls.Add(gameCount1);            
+            gameRound.Controls.Add(gameCount1);
             gameRound.Location = new Point(127, 115);
             gameRound.Name = "gameRound";
             gameRound.Padding = new Padding(3, 2, 3, 2);
@@ -84,7 +84,7 @@
             // gameCount5
             // 
             gameCount5.AutoSize = true;
-            gameCount5.Location = new Point(384, 53);
+            gameCount5.Location = new Point(384, 42);
             gameCount5.Name = "gameCount5";
             gameCount5.Size = new Size(38, 24);
             gameCount5.TabIndex = 2;
@@ -131,11 +131,11 @@
             // computerAster
             // 
             computerAster.AutoSize = true;
-            computerAster.Location = new Point(384, 69);
+            computerAster.Location = new Point(384, 55);
             computerAster.Name = "computerAster";
-            computerAster.Size = new Size(79, 29);
+            computerAster.Size = new Size(64, 24);
             computerAster.TabIndex = 2;
-            computerAster.Text = "Aster";
+            computerAster.Text = "Astar";
             computerAster.UseVisualStyleBackColor = true;
             // 
             // computerDFS
@@ -209,9 +209,9 @@
             size70.AutoSize = true;
             size70.Location = new Point(384, 74);
             size70.Name = "size70";
-            size70.Size = new Size(97, 29);
+            size70.Size = new Size(94, 24);
             size70.TabIndex = 5;
-            size70.Text = "70 * 70";
+            size70.Text = "100 * 100";
             size70.UseVisualStyleBackColor = true;
             // 
             // size50
@@ -219,9 +219,9 @@
             size50.AutoSize = true;
             size50.Location = new Point(241, 74);
             size50.Name = "size50";
-            size50.Size = new Size(97, 29);
+            size50.Size = new Size(78, 24);
             size50.TabIndex = 4;
-            size50.Text = "50 * 50";
+            size50.Text = "70 * 70";
             size50.UseVisualStyleBackColor = true;
             // 
             // size30
@@ -230,10 +230,10 @@
             size30.Checked = true;
             size30.Location = new Point(78, 74);
             size30.Name = "size30";
-            size30.Size = new Size(97, 29);
+            size30.Size = new Size(78, 24);
             size30.TabIndex = 3;
             size30.TabStop = true;
-            size30.Text = "30 * 30";
+            size30.Text = "40 * 40";
             size30.UseVisualStyleBackColor = true;
             size30.CheckedChanged += radioButton1_CheckedChanged;
             // 

@@ -60,8 +60,7 @@ namespace MazeClient
                 MessageBox.Show("서버 연결 실패");
                 return;
             }
-            Manager.nowRound = 0;
-            Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
+            SendCreateRoom();
 
         }
 
@@ -83,10 +82,13 @@ namespace MazeClient
             switch (serverEvent.EventType)
             {
                 case 0:
-                    //receive 할게 없음
-                    Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
-                    //createRoom(buffer);
-                    //receiveRoomArgs(buffer);
+                    { 
+                        //receive 할게 없음
+                        Manager.nowRound = 0;
+                        Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
+                        //createRoom(buffer);
+                        //receiveRoomArgs(buffer);
+                    }
                     break;
                 case 1: // None
                     break;
