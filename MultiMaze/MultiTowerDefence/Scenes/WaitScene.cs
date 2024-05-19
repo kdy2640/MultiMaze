@@ -340,7 +340,12 @@ namespace MazeClient
                 Manager.map.PlayerPosList[i] = startPosArr[typeIndex];
             }
             LoadingScene.StopLoading();
-            await Task.Delay(10);
+            await Task.Delay(10); 
+
+            CountDownScene.StartCountDown(this);
+            await Task.Delay(7250); // 로딩 시간 조정 
+            //작업
+            CountDownScene.StopCountDown();
             // 신 전환
             Manager.scene.ChangeGameState(this, Define.GameState.InGameScene);
         }

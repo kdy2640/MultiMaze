@@ -71,7 +71,7 @@
             // 
             jumpLabel.AutoSize = true;
             jumpLabel.BackColor = Color.White;
-            jumpLabel.Location = new Point(668, 554);
+            jumpLabel.Location = new Point(657, 555);
             jumpLabel.Name = "jumpLabel";
             jumpLabel.Size = new Size(39, 20);
             jumpLabel.TabIndex = 4;
@@ -122,7 +122,7 @@
             ScoreBoard.RowHeadersWidth = 51;
             ScoreBoard.ShowCellToolTips = false;
             ScoreBoard.ShowRowErrors = false;
-            ScoreBoard.Size = new Size(894, 378);
+            ScoreBoard.Size = new Size(894, 283);
             ScoreBoard.TabIndex = 12;
             ScoreBoard.SelectionChanged += ScoreBoard_SelectionChanged;
             // 
@@ -211,7 +211,7 @@
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(914, 993);
+            ClientSize = new Size(914, 900);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Name = "InGameScene";
