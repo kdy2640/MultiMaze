@@ -15,6 +15,7 @@ using static MazeClient.Share.RoomSettingArgs;
 using static System.Resources.ResXFileRef;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
+using MazeClient.Scenes;
 
 namespace MazeClient
 {
@@ -51,10 +52,11 @@ namespace MazeClient
 
         private async void makeRoomBtn_Click(object sender, EventArgs e)
         {
+            LoadingScene.StartLoading(this);
             // 서버 프로그램 실행
             if (!Manager.server.StartServer()) MessageBox.Show("서버 실행 실패");
 
-            bool connectResult = await Manager.server.ConnectServer("127.0.0.1", 20000);
+            bool connectResult = await Manager.server.ConnectServer("127.0.0.1", -1);
             if (connectResult == false)
             {
                 MessageBox.Show("서버 연결 실패");
@@ -82,22 +84,24 @@ namespace MazeClient
             switch (serverEvent.EventType)
             {
                 case 0:
-                    { 
-                        //receive 할게 없음
-                        Manager.nowRound = 0;
-                        Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
-                        //createRoom(buffer);
-                        //receiveRoomArgs(buffer);
-                    }
+                    receiveServerIpPort();
                     break;
                 case 1: // None
                     break;
             }
         }
+
+        private async void receiveServerIpPort()
+        {
+            Manager.nowRound = 0;
+            await Task.Delay(10);
+            LoadingScene.StopLoading();
+            Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
+        }
         private void SendCreateRoom()
         {
             short round = (short)(gameCount1.Checked ? 1 :
-                                  gameCount3.Checked ? 3 : 
+                                  gameCount3.Checked ? 3 :
                                   5);
             short algorithm = (short)(computerBFS.Checked ? AIAlgorithm.BFS :
                               computerDFS.Checked ? AIAlgorithm.DFS :
@@ -124,6 +128,21 @@ namespace MazeClient
 
             SettingSceneServerEvent serverEvent = new SettingSceneServerEvent(SettingSceneServerEvent.SettingSceneServerEventType.SendCreateRoom);
             Manager.server.SendToServerAsync(buffer, serverEvent);
+        }
+
+        private void size50_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void computerAster_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void makeRoom_label_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

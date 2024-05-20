@@ -51,12 +51,13 @@
             // BackToMain
             // 
             BackToMain.Location = new Point(688, 404);
-            BackToMain.Margin = new Padding(4, 4, 4, 4);
+            BackToMain.Margin = new Padding(4);
             BackToMain.Name = "BackToMain";
             BackToMain.Size = new Size(96, 31);
             BackToMain.TabIndex = 9;
             BackToMain.Text = "나가기";
             BackToMain.UseVisualStyleBackColor = true;
+            BackToMain.Click += BackToMain_Click;
             // 
             // First
             // 
@@ -118,7 +119,7 @@
             // pictureBox1
             // 
             pictureBox1.Location = new Point(118, 124);
-            pictureBox1.Margin = new Padding(4, 4, 4, 4);
+            pictureBox1.Margin = new Padding(4);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(559, 259);
             pictureBox1.TabIndex = 16;

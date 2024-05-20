@@ -34,6 +34,7 @@ namespace MazeClient.Scenes
             this.Hide();
             formCount = 1; 
             Main.Show();
+            Main.ControlBox = false;
 
         }
         public static int formCount = 0;

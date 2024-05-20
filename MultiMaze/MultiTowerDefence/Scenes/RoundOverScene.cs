@@ -33,6 +33,20 @@ namespace MazeClient
             Manager.server.callbackFunctions.RoundOverSceneCallBack = null;
             Manager.server.callbackFunctions.RoundOverSceneCallBack += RoundOverSceneCallBackFunction;
             this.DoubleBuffered = true; // 로딩 잘 되게 합니다.
+
+            switch(Manager.map.RoomArgs.mapSize)
+            {
+                case RoomSettingArgs.MapSize.Small:
+                    cellSize = 10; 
+                    break;
+                case RoomSettingArgs.MapSize.Medium:
+                    cellSize = 6;
+                    break;
+                case RoomSettingArgs.MapSize.Big:
+                    cellSize = 4;
+                    break;
+            }
+
             getWinnerPath();
         }
 
@@ -54,7 +68,7 @@ namespace MazeClient
             }
 
             //경로 그리기
-            Pen pen = new Pen(Color.Red, 2);
+            Pen pen = new Pen(Color.Red, cellSize/2);
             if (path != null && path.Count > 1)
             {
                 for (int i = 1; i < count; i++)
@@ -159,7 +173,6 @@ namespace MazeClient
             path = newpath;
             Manager.path = path;
             map = Manager.map.map;
-            cellSize = 4;
             mazeHeight = map.GetLength(0);
             mazeWidth = map.GetLength(1);
             drawTimer.Start();

@@ -45,6 +45,7 @@ namespace MazeClient
             BtnColor = new Button();
             cld = new ColorDialog();
             inputTb = new TextBox();
+            hostLabel = new Label();
             ((System.ComponentModel.ISupportInitialize)PicPlayer2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)PicPlayer1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)PicPlayer4).BeginInit();
@@ -216,11 +217,21 @@ namespace MazeClient
             inputTb.TabIndex = 9;
             inputTb.KeyDown += inputTb_KeyDown;
             // 
+            // hostLabel
+            // 
+            hostLabel.AutoSize = true;
+            hostLabel.Location = new Point(21, 23);
+            hostLabel.Name = "hostLabel";
+            hostLabel.Size = new Size(86, 20);
+            hostLabel.TabIndex = 10;
+            hostLabel.Text = "Host의 IP : ";
+            // 
             // WaitScene
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(950, 627);
+            Controls.Add(hostLabel);
             Controls.Add(BtnColor);
             Controls.Add(inputTb);
             Controls.Add(BtnSend);
@@ -266,5 +277,6 @@ namespace MazeClient
         private Button BtnColor;
         private ColorDialog cld;
         private TextBox inputTb;
+        private Label hostLabel;
     }
 }

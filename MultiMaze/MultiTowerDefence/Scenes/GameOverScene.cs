@@ -1,4 +1,5 @@
-﻿using MazeClient.Share;
+﻿using MazeClient.Scenes;
+using MazeClient.Share;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +23,15 @@ namespace MazeClient
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Manager.scene.ChangeGameState(this, Define.GameState.MainScene);
+        }
+
+        private void BackToMain_Click(object sender, EventArgs e)
+        {
+            Manager.server.LeaveServer();
+            BaseScene temp = Manager.scene.baseScene;
+            GameManager.Refresh();
+            GameManager.Instance.scene.baseScene = temp;
             Manager.scene.ChangeGameState(this, Define.GameState.MainScene);
         }
     }

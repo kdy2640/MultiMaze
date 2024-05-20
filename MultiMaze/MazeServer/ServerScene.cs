@@ -3,6 +3,7 @@ using System.Net;
 using System.Text;
 using MazeClient.Share;
 using MazeServer.Scenes;
+using System;
 namespace MazeServer
 {
     public partial class ServerScene : Form
@@ -17,15 +18,19 @@ namespace MazeServer
         InGameServerScene inGameScene;
         RoundOverServerScene roundOverScene;
         GameOverServerScene gameOverScene;
+
         public ServerScene()
         {
             InitializeComponent();
             Manager = ServerGameManager.Instance;
 
             Manager.ServerScene = this;
-            Manager.client.WaitForPlayer();
-            ServerInitializer();
+
+            this.ControlBox = false;
+           Manager.client.WaitForPlayer();
+           ServerInitializer();
         }
+
 
         //delegate »ðÀÔ¿ë
         public void ServerInitializer()
@@ -36,6 +41,8 @@ namespace MazeServer
             inGameScene = new InGameServerScene();
             roundOverScene   = new RoundOverServerScene(); 
             gameOverScene = new GameOverServerScene();
+
+
         }
 
         public void SetLog(string log)

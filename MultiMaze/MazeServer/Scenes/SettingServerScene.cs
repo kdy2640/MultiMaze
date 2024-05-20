@@ -15,6 +15,7 @@ namespace MazeServer.Scenes
         public SettingServerScene()
         {
             manager = ServerGameManager.Instance;
+            manager.client.callbackFunctions.SettingSceneCallBack = null;
             manager.client.callbackFunctions.SettingSceneCallBack += SettingSceneCallBackFunction;
         }
         public void SettingSceneCallBackFunction(byte[] buffer, ServerEvent serverEvent, int playerCode)

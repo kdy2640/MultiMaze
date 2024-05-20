@@ -2,6 +2,7 @@
 using MazeClient.Scenes;
 using MazeClient.Share;
 using System;
+using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Net;
 
@@ -17,7 +18,13 @@ namespace MazeClient
             //Manager 할당
             Manager = GameManager.Instance;
             Manager.server.callbackFunctions.MainSceneCallBack += MainSceneCallBackFunction;
+            MultiMazeLabel.Text = "               ";
+            MultiMazeLabel.Invalidate();
 
+
+            buttonShadowPictureBox1.SendToBack();
+            buttonShadowPictureBox2.SendToBack();
+            buttonShadowPictureBox3.SendToBack();
             // 로딩, 연결은 비동기로
         }
 
@@ -35,7 +42,7 @@ namespace MazeClient
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            this.Close();
         }
 
         private void MainScene_Load(object sender, EventArgs e)
@@ -47,8 +54,8 @@ namespace MazeClient
         {
             GetRoomInfoScene modal = new GetRoomInfoScene();
             if (modal.ShowDialog() == DialogResult.OK)
-            { 
-                getRoomArgs(); 
+            {
+                getRoomArgs();
             }
         }
 
@@ -103,9 +110,9 @@ namespace MazeClient
             args.ai = (RoomSettingArgs.AIAlgorithm)ai;
             args.mapSize = (RoomSettingArgs.MapSize)size;
 
-            Manager.map.RoomArgs = args; 
+            Manager.map.RoomArgs = args;
             Manager.nowRound = 0;
-            
+
             await Task.Delay(10);
 
             Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
@@ -124,8 +131,26 @@ namespace MazeClient
             // 송신
             Manager.server.SendToServerAsync(Buffer, serverEvent);
         }
-        #endregion 
+        #endregion
+        public Color ShadowColor = Color.FromArgb(32,32,32);
+        public int ShadowOffset = 7;
+        private void MultiMazeLabel_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;  
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;  
 
+            Label lbl = sender as Label;
+            using (Brush shadowBrush = new SolidBrush(ShadowColor))
+            {
+                e.Graphics.DrawString("MultiMaze", lbl.Font, shadowBrush, new PointF(ShadowOffset, ShadowOffset));
+            }
+
+            // 실제 텍스트
+            using (Brush textBrush = new SolidBrush(Color.LightGray))
+            {
+                e.Graphics.DrawString("MultiMaze", lbl.Font, textBrush, new PointF(0, 0));
+            }
+        }
     }
 }
 // 서버쪽으로 송신 // 정보를 달라고

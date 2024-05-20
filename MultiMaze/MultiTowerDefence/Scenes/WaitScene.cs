@@ -60,7 +60,8 @@ namespace MazeClient
             Player2.Invalidate();
             Player3.Invalidate();
             Player4.Invalidate();
-
+            //IP전시
+            hostLabel.Text += Manager.server.ServerIP + ":" + Manager.server.ServerPort;
             roundLabel.Text = Manager.nowRound.ToString() + " 라운드 대기";
             SendToServerArgs();
         }
@@ -306,46 +307,15 @@ namespace MazeClient
         }
         Point[] corners = new Point[4];
         private async void GameInitialize(int seed)
-        {
-            LoadingScene.StartLoading(this);
-            //맵 생성
-            Manager.map.MapInitialize(Manager.map.RoomArgs);
-            int size = Manager.map.mapSize;
-            Manager.map.GenerateMaze(size, size, seed);
-            Random rand = new Random(seed);
-
-            // 시작, 끝 지점 생성
-            corners[0] = new Point(1, 1);
-            corners[1] = new Point(size - 3, 1);
-            corners[2] = new Point(1, size - 3);
-            corners[3] = new Point(size - 3, size - 3);
-            int type = rand.Next(4);
-            Manager.map.endPoint = corners[type];       // type이 끝점
-            Manager.map.startPoint = corners[3 - type]; // 3- type이 끝점과 마주보는 점
-
-            bool[] playerlocated = new bool[4];
-            Array.Fill<bool>(playerlocated, false);
-            List<Point> startPosArr = new List<Point>();
-            startPosArr.Add(corners[3 - type]);
-            for (int i = 0; i < 4; i++)
-            {
-                if (i == type || i == 3 - type) continue;
-                startPosArr.Add(new Point((corners[i].X + 3 * corners[3 - type].X) / 4, (corners[i].Y + 3 * corners[3 - type].Y) / 4));
-            }
-
-            for (int i = 0; i < 4; i++)
-            {
-                int typeIndex = rand.Next(3);
-                Manager.map.PlayerStartPosList[i] = startPosArr[typeIndex];
-                Manager.map.PlayerPosList[i] = startPosArr[typeIndex];
-            }
-            LoadingScene.StopLoading();
+        { 
+            Manager.map.GameInitialize(seed);
             await Task.Delay(10); 
 
-            CountDownScene.StartCountDown(this);
-            await Task.Delay(7250); // 로딩 시간 조정 
+           // CountDownScene.StartCountDown(this);
+           // await Task.Delay(7250); // 로딩 시간 조정 
+
             //작업
-            CountDownScene.StopCountDown();
+          //  CountDownScene.StopCountDown();
             // 신 전환
             Manager.scene.ChangeGameState(this, Define.GameState.InGameScene);
         }

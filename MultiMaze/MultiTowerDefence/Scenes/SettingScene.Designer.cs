@@ -53,16 +53,20 @@
             // makeRoom_label
             // 
             makeRoom_label.AutoSize = true;
-            makeRoom_label.Location = new Point(331, 22);
+            makeRoom_label.BackColor = Color.Gray;
+            makeRoom_label.Font = new Font("맑은 고딕", 24F, FontStyle.Bold, GraphicsUnit.Point, 129);
+            makeRoom_label.ForeColor = Color.LightGray;
+            makeRoom_label.Location = new Point(16, 29);
             makeRoom_label.Name = "makeRoom_label";
-            makeRoom_label.Size = new Size(89, 20);
+            makeRoom_label.Size = new Size(197, 54);
             makeRoom_label.TabIndex = 4;
-            makeRoom_label.Text = "게임 만들기";
+            makeRoom_label.Text = "게임 설정";
+            makeRoom_label.Paint += makeRoom_label_Paint;
             // 
             // roominfo_ip_label
             // 
             roominfo_ip_label.AutoSize = true;
-            roominfo_ip_label.Location = new Point(192, 79);
+            roominfo_ip_label.Location = new Point(533, 281);
             roominfo_ip_label.Name = "roominfo_ip_label";
             roominfo_ip_label.Size = new Size(66, 20);
             roominfo_ip_label.TabIndex = 5;
@@ -70,13 +74,15 @@
             // 
             // gameRound
             // 
+            gameRound.BackColor = Color.Gray;
             gameRound.Controls.Add(gameCount5);
             gameRound.Controls.Add(gameCount3);
             gameRound.Controls.Add(gameCount1);
-            gameRound.Location = new Point(127, 115);
+            gameRound.Location = new Point(16, 115);
+            gameRound.Margin = new Padding(0);
             gameRound.Name = "gameRound";
             gameRound.Padding = new Padding(3, 2, 3, 2);
-            gameRound.Size = new Size(479, 98);
+            gameRound.Size = new Size(480, 110);
             gameRound.TabIndex = 6;
             gameRound.TabStop = false;
             gameRound.Text = "게임 수";
@@ -84,7 +90,7 @@
             // gameCount5
             // 
             gameCount5.AutoSize = true;
-            gameCount5.Location = new Point(384, 42);
+            gameCount5.Location = new Point(350, 50);
             gameCount5.Name = "gameCount5";
             gameCount5.Size = new Size(38, 24);
             gameCount5.TabIndex = 2;
@@ -94,7 +100,7 @@
             // gameCount3
             // 
             gameCount3.AutoSize = true;
-            gameCount3.Location = new Point(217, 42);
+            gameCount3.Location = new Point(210, 50);
             gameCount3.Margin = new Padding(3, 2, 3, 2);
             gameCount3.Name = "gameCount3";
             gameCount3.Size = new Size(38, 24);
@@ -106,7 +112,7 @@
             // 
             gameCount1.AutoSize = true;
             gameCount1.Checked = true;
-            gameCount1.Location = new Point(70, 42);
+            gameCount1.Location = new Point(70, 50);
             gameCount1.Margin = new Padding(3, 2, 3, 2);
             gameCount1.Name = "gameCount1";
             gameCount1.Size = new Size(38, 24);
@@ -117,13 +123,14 @@
             // 
             // groupBox1
             // 
+            groupBox1.BackColor = Color.Gray;
             groupBox1.Controls.Add(computerAster);
             groupBox1.Controls.Add(computerDFS);
             groupBox1.Controls.Add(computerBFS);
-            groupBox1.Location = new Point(127, 241);
+            groupBox1.Location = new Point(16, 245);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(3, 2, 3, 2);
-            groupBox1.Size = new Size(479, 112);
+            groupBox1.Size = new Size(480, 110);
             groupBox1.TabIndex = 7;
             groupBox1.TabStop = false;
             groupBox1.Text = "알고리즘";
@@ -131,17 +138,18 @@
             // computerAster
             // 
             computerAster.AutoSize = true;
-            computerAster.Location = new Point(384, 55);
+            computerAster.Location = new Point(350, 50);
             computerAster.Name = "computerAster";
             computerAster.Size = new Size(64, 24);
             computerAster.TabIndex = 2;
             computerAster.Text = "Astar";
             computerAster.UseVisualStyleBackColor = true;
+            computerAster.CheckedChanged += computerAster_CheckedChanged;
             // 
             // computerDFS
             // 
             computerDFS.AutoSize = true;
-            computerDFS.Location = new Point(217, 55);
+            computerDFS.Location = new Point(210, 50);
             computerDFS.Margin = new Padding(3, 2, 3, 2);
             computerDFS.Name = "computerDFS";
             computerDFS.Size = new Size(56, 24);
@@ -153,7 +161,7 @@
             // 
             computerBFS.AutoSize = true;
             computerBFS.Checked = true;
-            computerBFS.Location = new Point(70, 55);
+            computerBFS.Location = new Point(70, 50);
             computerBFS.Margin = new Padding(3, 2, 3, 2);
             computerBFS.Name = "computerBFS";
             computerBFS.Size = new Size(54, 24);
@@ -164,7 +172,7 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(368, 78);
+            textBox1.Location = new Point(534, 304);
             textBox1.Name = "textBox1";
             textBox1.ReadOnly = true;
             textBox1.Size = new Size(135, 27);
@@ -172,10 +180,10 @@
             // 
             // makeRoomBtn
             // 
-            makeRoomBtn.Location = new Point(643, 214);
+            makeRoomBtn.Location = new Point(534, 344);
             makeRoomBtn.Margin = new Padding(3, 2, 3, 2);
             makeRoomBtn.Name = "makeRoomBtn";
-            makeRoomBtn.Size = new Size(101, 27);
+            makeRoomBtn.Size = new Size(178, 63);
             makeRoomBtn.TabIndex = 9;
             makeRoomBtn.Text = "만들기";
             makeRoomBtn.UseVisualStyleBackColor = true;
@@ -183,10 +191,10 @@
             // 
             // cancelMakeRoomBtn
             // 
-            cancelMakeRoomBtn.Location = new Point(643, 278);
+            cancelMakeRoomBtn.Location = new Point(534, 422);
             cancelMakeRoomBtn.Margin = new Padding(3, 2, 3, 2);
             cancelMakeRoomBtn.Name = "cancelMakeRoomBtn";
-            cancelMakeRoomBtn.Size = new Size(101, 27);
+            cancelMakeRoomBtn.Size = new Size(178, 61);
             cancelMakeRoomBtn.TabIndex = 10;
             cancelMakeRoomBtn.Text = "취소";
             cancelMakeRoomBtn.UseVisualStyleBackColor = true;
@@ -194,12 +202,13 @@
             // 
             // groupBox2
             // 
+            groupBox2.BackColor = Color.Gray;
             groupBox2.Controls.Add(size70);
             groupBox2.Controls.Add(size50);
             groupBox2.Controls.Add(size30);
-            groupBox2.Location = new Point(127, 387);
+            groupBox2.Location = new Point(16, 375);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(532, 150);
+            groupBox2.Size = new Size(480, 110);
             groupBox2.TabIndex = 3;
             groupBox2.TabStop = false;
             groupBox2.Text = "맵 크기";
@@ -207,7 +216,7 @@
             // size70
             // 
             size70.AutoSize = true;
-            size70.Location = new Point(384, 74);
+            size70.Location = new Point(350, 50);
             size70.Name = "size70";
             size70.Size = new Size(94, 24);
             size70.TabIndex = 5;
@@ -217,18 +226,19 @@
             // size50
             // 
             size50.AutoSize = true;
-            size50.Location = new Point(241, 74);
+            size50.Location = new Point(210, 50);
             size50.Name = "size50";
             size50.Size = new Size(78, 24);
             size50.TabIndex = 4;
             size50.Text = "70 * 70";
             size50.UseVisualStyleBackColor = true;
+            size50.CheckedChanged += size50_CheckedChanged;
             // 
             // size30
             // 
             size30.AutoSize = true;
             size30.Checked = true;
-            size30.Location = new Point(78, 74);
+            size30.Location = new Point(70, 50);
             size30.Name = "size30";
             size30.Size = new Size(78, 24);
             size30.TabIndex = 3;
@@ -241,7 +251,8 @@
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(889, 562);
+            BackColor = Color.DimGray;
+            ClientSize = new Size(722, 496);
             Controls.Add(groupBox2);
             Controls.Add(cancelMakeRoomBtn);
             Controls.Add(makeRoomBtn);
@@ -251,7 +262,7 @@
             Controls.Add(roominfo_ip_label);
             Controls.Add(makeRoom_label);
             Name = "SettingScene";
-            Text = "Form1";
+            Text = "MULTIMAZE";
             gameRound.ResumeLayout(false);
             gameRound.PerformLayout();
             groupBox1.ResumeLayout(false);

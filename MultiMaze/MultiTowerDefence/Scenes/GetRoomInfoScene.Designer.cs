@@ -39,33 +39,35 @@
             // hostLabel
             // 
             hostLabel.AutoSize = true;
-            hostLabel.Location = new Point(63, 77);
+            hostLabel.Location = new Point(57, 62);
             hostLabel.Name = "hostLabel";
-            hostLabel.Size = new Size(60, 25);
+            hostLabel.Size = new Size(48, 20);
             hostLabel.TabIndex = 0;
             hostLabel.Text = "Host :";
             // 
             // portLabel
             // 
             portLabel.AutoSize = true;
-            portLabel.Location = new Point(63, 147);
+            portLabel.Location = new Point(57, 118);
             portLabel.Name = "portLabel";
-            portLabel.Size = new Size(55, 25);
+            portLabel.Size = new Size(45, 20);
             portLabel.TabIndex = 1;
             portLabel.Text = "Port :";
             // 
             // hostTxtbox
             // 
-            hostTxtbox.Location = new Point(160, 77);
+            hostTxtbox.Location = new Point(144, 62);
+            hostTxtbox.Margin = new Padding(3, 2, 3, 2);
             hostTxtbox.Name = "hostTxtbox";
-            hostTxtbox.Size = new Size(150, 31);
+            hostTxtbox.Size = new Size(135, 27);
             hostTxtbox.TabIndex = 2;
             // 
             // enterRoomBtn
             // 
-            enterRoomBtn.Location = new Point(77, 227);
+            enterRoomBtn.Location = new Point(69, 182);
+            enterRoomBtn.Margin = new Padding(3, 2, 3, 2);
             enterRoomBtn.Name = "enterRoomBtn";
-            enterRoomBtn.Size = new Size(112, 34);
+            enterRoomBtn.Size = new Size(101, 27);
             enterRoomBtn.TabIndex = 4;
             enterRoomBtn.Text = "확인";
             enterRoomBtn.UseVisualStyleBackColor = true;
@@ -73,9 +75,10 @@
             // 
             // CancelBtn
             // 
-            CancelBtn.Location = new Point(253, 227);
+            CancelBtn.Location = new Point(228, 182);
+            CancelBtn.Margin = new Padding(3, 2, 3, 2);
             CancelBtn.Name = "CancelBtn";
-            CancelBtn.Size = new Size(112, 34);
+            CancelBtn.Size = new Size(101, 27);
             CancelBtn.TabIndex = 5;
             CancelBtn.Text = "취소";
             CancelBtn.UseVisualStyleBackColor = true;
@@ -83,25 +86,27 @@
             // 
             // portTxtbox
             // 
-            portTxtbox.Location = new Point(160, 147);
+            portTxtbox.Location = new Point(144, 118);
+            portTxtbox.Margin = new Padding(3, 2, 3, 2);
             portTxtbox.Mask = "99999";
             portTxtbox.Name = "portTxtbox";
-            portTxtbox.Size = new Size(150, 31);
+            portTxtbox.Size = new Size(135, 27);
             portTxtbox.TabIndex = 6;
             // 
             // GetRoomInfoScene
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(447, 308);
+            ClientSize = new Size(402, 246);
             Controls.Add(portTxtbox);
             Controls.Add(CancelBtn);
             Controls.Add(enterRoomBtn);
             Controls.Add(hostTxtbox);
             Controls.Add(portLabel);
             Controls.Add(hostLabel);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "GetRoomInfoScene";
-            Text = "Form1";
+            Text = "서버정보입력";
             ResumeLayout(false);
             PerformLayout();
         }

@@ -287,7 +287,7 @@ namespace MazeClient.Scenes
                     {
                         if (maze[i, j] == false) //벽을 검은색으로 출력
                         {
-                            g.FillRectangle(Brushes.Black, i * cellSize, j * cellSize, cellSize, cellSize);
+                            g.FillRectangle(Brushes.DimGray, i * cellSize, j * cellSize, cellSize, cellSize);
                         }
                         else //길을 흰색으로 출력
                         {
@@ -343,6 +343,7 @@ namespace MazeClient.Scenes
         //입력 이벤트핸들러
         bool noClip = false;
         bool isJump = false;
+        bool isCameraFixed = false;
         bool TickBooster = false;
         PictureBox player = new PictureBox();
         Brush playerBrush = Brushes.Wheat;
@@ -393,6 +394,11 @@ namespace MazeClient.Scenes
                         }
                         break;
                     }
+                case Keys.F:
+                {
+                    isCameraFixed = !isCameraFixed;
+                    break;
+                }
             }
             if (isJump)
             {
@@ -443,7 +449,10 @@ namespace MazeClient.Scenes
         //플레이어 위치 갱신 
         public async void RenderPlayer()
         {
-            CameraPos = PlayerPos;
+            if(isCameraFixed == false)
+            {
+                CameraPos = PlayerPos;
+            }
             // 카메라 먼저 움직임
             CameraPos.X = Math.Clamp(CameraPos.X, CameraLimit.X, manager.map.mapSize - CameraLimit.X);
             CameraPos.Y = Math.Clamp(CameraPos.Y, CameraLimit.Y, manager.map.mapSize - CameraLimit.Y);
