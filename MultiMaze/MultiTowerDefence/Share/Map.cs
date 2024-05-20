@@ -12,8 +12,9 @@ namespace MazeClient.Share
 {
     public class Map
     {
-        
+
         //Setting에서 입력하거나 Main에서 서버에게 받아오기
+        GameManager Manager;
         public RoomSettingArgs RoomArgs = new RoomSettingArgs();
 
         //MapInitializer 에서 RoomArgs를 보고 초기화하는 것들
@@ -63,7 +64,46 @@ namespace MazeClient.Share
             GenerateMaze(mapSize,mapSize,seed);
         }
 
+        /// <summary>
+        /// seed를 입력하여 seed에 맞는 게임시작 전 상태로 Map을 초기화합니다.
+        /// </summary>
+        public void GameInitialize(int seed)
+        {
+            //맵 생성
+            Point[] corners = new Point[4]; 
+            Manager = GameManager.Instance;
 
+            Manager.map.MapInitialize(Manager.map.RoomArgs);
+            int size = Manager.map.mapSize;
+            Manager.map.GenerateMaze(size, size, seed);
+            Random rand = new Random(seed);
+
+            // 시작, 끝 지점 생성
+            corners[0] = new Point(1, 1);
+            corners[1] = new Point(size - 3, 1);
+            corners[2] = new Point(1, size - 3);
+            corners[3] = new Point(size - 3, size - 3);
+            int type = rand.Next(4);
+            Manager.map.endPoint = corners[type];       // type이 끝점
+            Manager.map.startPoint = corners[3 - type]; // 3- type이 끝점과 마주보는 점
+
+            bool[] playerlocated = new bool[4];
+            Array.Fill<bool>(playerlocated, false);
+            List<Point> startPosArr = new List<Point>();
+            startPosArr.Add(corners[3 - type]);
+            for (int i = 0; i < 4; i++)
+            {
+                if (i == type || i == 3 - type) continue;
+                startPosArr.Add(new Point((corners[i].X + 3 * corners[3 - type].X) / 4, (corners[i].Y + 3 * corners[3 - type].Y) / 4));
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                int typeIndex = rand.Next(3);
+                Manager.map.PlayerStartPosList[i] = startPosArr[typeIndex];
+                Manager.map.PlayerPosList[i] = startPosArr[typeIndex];
+            }
+        }
         public bool[,] GenerateMaze(int width, int height,int seed)
         {
             // 2차원 배열을 모두 1(벽)으로 초기화
