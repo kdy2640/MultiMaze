@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
 using System.Net;
@@ -24,8 +25,8 @@ namespace MazeClient
         int mazeWidth;
 
         //맵 & 경로 출력 시작 좌표
-        int startX = 100;
-        int startY = 10;
+        int startX = 30;
+        int startY = 90;
         public RoundOverScene()
         {
             InitializeComponent();
@@ -34,10 +35,10 @@ namespace MazeClient
             Manager.server.callbackFunctions.RoundOverSceneCallBack += RoundOverSceneCallBackFunction;
             this.DoubleBuffered = true; // 로딩 잘 되게 합니다.
 
-            switch(Manager.map.RoomArgs.mapSize)
+            switch (Manager.map.RoomArgs.mapSize)
             {
                 case RoomSettingArgs.MapSize.Small:
-                    cellSize = 10; 
+                    cellSize = 10;
                     break;
                 case RoomSettingArgs.MapSize.Medium:
                     cellSize = 6;
@@ -46,6 +47,11 @@ namespace MazeClient
                     cellSize = 4;
                     break;
             }
+
+
+            shadowPictureBox1.Location = new Point(panel1.Location.X + 7, panel1.Location.Y + 7);
+            shadowPictureBox1.Size = panel1.Size;
+            shadowPictureBox1.SendToBack();
 
             getWinnerPath();
         }
@@ -68,7 +74,7 @@ namespace MazeClient
             }
 
             //경로 그리기
-            Pen pen = new Pen(Color.Red, cellSize/2);
+            Pen pen = new Pen(Color.Red, cellSize / 2);
             if (path != null && path.Count > 1)
             {
                 for (int i = 1; i < count; i++)
@@ -187,11 +193,12 @@ namespace MazeClient
                 Winner.Text += Manager.WinnerList[Manager.nowRound - 1].ToString() + "번 플레이어";
             }
             Time.Text += ((float)Manager.winnerTime / 20f).ToString() + " 초";
-            if(Manager.nowRound == Manager.map.RoomArgs.Round)
+            if (Manager.nowRound == Manager.map.RoomArgs.Round)
             {
                 nextRoundButton.Text = "최종결과 보러가기";
-            }else
-            { 
+            }
+            else
+            {
                 nextRoundButton.Text = "다음 라운드로 이동";
             }
             roundLabel.Text = Manager.nowRound.ToString() + " 라운드 종료";
@@ -205,7 +212,7 @@ namespace MazeClient
 
         private void nextRoundButton_Click(object sender, EventArgs e)
         {
-            if(Manager.nowRound == Manager.map.RoomArgs.Round)
+            if (Manager.nowRound == Manager.map.RoomArgs.Round)
             {
                 Manager.scene.ChangeGameState(this, Define.GameState.GameOverScene);
             }
@@ -214,6 +221,27 @@ namespace MazeClient
                 Manager.scene.ChangeGameState(this, Define.GameState.WaitScene);
             }
 
+        }
+        public Color ShadowColor = Color.FromArgb(32, 32, 32);
+        public int ShadowOffset = 2; 
+        private void roundLabel_Paint(object sender, PaintEventArgs e)
+        { 
+            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            Label lbl = sender as Label;
+            lbl.AutoSize = true;
+            lbl.Text = "           ";
+            using (Brush shadowBrush = new SolidBrush(ShadowColor))
+            {
+                e.Graphics.DrawString(Manager.nowRound.ToString() + " 라운드 종료", lbl.Font, shadowBrush, new PointF(ShadowOffset, ShadowOffset));
+            }
+
+            // 실제 텍스트
+            using (Brush textBrush = new SolidBrush(Color.LightGray))
+            {
+                e.Graphics.DrawString(Manager.nowRound.ToString() + " 라운드 종료", lbl.Font, textBrush, new PointF(0, 0));
+            }
         }
     }
 
