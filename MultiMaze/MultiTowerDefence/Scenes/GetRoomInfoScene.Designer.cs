@@ -34,20 +34,26 @@
             enterRoomBtn = new Button();
             CancelBtn = new Button();
             portTxtbox = new MaskedTextBox();
+            pictureBox1 = new PictureBox();
+            pictureBox2 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             // 
             // hostLabel
             // 
             hostLabel.AutoSize = true;
+            hostLabel.BackColor = Color.Silver;
             hostLabel.Location = new Point(57, 62);
             hostLabel.Name = "hostLabel";
-            hostLabel.Size = new Size(48, 20);
+            hostLabel.Size = new Size(71, 20);
             hostLabel.TabIndex = 0;
-            hostLabel.Text = "Host :";
+            hostLabel.Text = "Host Ip : ";
             // 
             // portLabel
             // 
             portLabel.AutoSize = true;
+            portLabel.BackColor = Color.Silver;
             portLabel.Location = new Point(57, 118);
             portLabel.Name = "portLabel";
             portLabel.Size = new Size(45, 20);
@@ -64,10 +70,11 @@
             // 
             // enterRoomBtn
             // 
-            enterRoomBtn.Location = new Point(69, 182);
-            enterRoomBtn.Margin = new Padding(3, 2, 3, 2);
+            enterRoomBtn.Font = new Font("맑은 고딕", 10.2F, FontStyle.Bold);
+            enterRoomBtn.Location = new Point(70, 170);
+            enterRoomBtn.Margin = new Padding(0);
             enterRoomBtn.Name = "enterRoomBtn";
-            enterRoomBtn.Size = new Size(101, 27);
+            enterRoomBtn.Size = new Size(100, 40);
             enterRoomBtn.TabIndex = 4;
             enterRoomBtn.Text = "확인";
             enterRoomBtn.UseVisualStyleBackColor = true;
@@ -75,10 +82,11 @@
             // 
             // CancelBtn
             // 
-            CancelBtn.Location = new Point(228, 182);
-            CancelBtn.Margin = new Padding(3, 2, 3, 2);
+            CancelBtn.Font = new Font("맑은 고딕", 10.2F, FontStyle.Bold);
+            CancelBtn.Location = new Point(230, 170);
+            CancelBtn.Margin = new Padding(0);
             CancelBtn.Name = "CancelBtn";
-            CancelBtn.Size = new Size(101, 27);
+            CancelBtn.Size = new Size(100, 40);
             CancelBtn.TabIndex = 5;
             CancelBtn.Text = "취소";
             CancelBtn.UseVisualStyleBackColor = true;
@@ -93,10 +101,29 @@
             portTxtbox.Size = new Size(135, 27);
             portTxtbox.TabIndex = 6;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.BackColor = Color.FromArgb(64, 64, 64);
+            pictureBox1.Location = new Point(77, 177);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(100, 40);
+            pictureBox1.TabIndex = 7;
+            pictureBox1.TabStop = false;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.BackColor = Color.FromArgb(64, 64, 64);
+            pictureBox2.Location = new Point(237, 177);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(100, 40);
+            pictureBox2.TabIndex = 8;
+            pictureBox2.TabStop = false;
+            // 
             // GetRoomInfoScene
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.DimGray;
             ClientSize = new Size(402, 246);
             Controls.Add(portTxtbox);
             Controls.Add(CancelBtn);
@@ -104,9 +131,13 @@
             Controls.Add(hostTxtbox);
             Controls.Add(portLabel);
             Controls.Add(hostLabel);
+            Controls.Add(pictureBox1);
+            Controls.Add(pictureBox2);
             Margin = new Padding(3, 2, 3, 2);
             Name = "GetRoomInfoScene";
             Text = "서버정보입력";
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -119,5 +150,7 @@
         private Button enterRoomBtn;
         private Button CancelBtn;
         private MaskedTextBox portTxtbox;
+        private PictureBox pictureBox1;
+        private PictureBox pictureBox2;
     }
 }
