@@ -30,6 +30,7 @@ namespace MazeClient
 
             //매니저 할당
             Manager = GameManager.Instance;
+            Manager.server.callbackFunctions.SettingSceneCallBack = null;
             Manager.server.callbackFunctions.SettingSceneCallBack += SettingSceneCallBackFunction;
             textBox1.Text = GetLocalIPAddress();
 

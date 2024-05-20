@@ -17,6 +17,7 @@ namespace MazeClient
             InitializeComponent();
             //Manager 할당
             Manager = GameManager.Instance;
+            Manager.server.callbackFunctions.MainSceneCallBack = null;
             Manager.server.callbackFunctions.MainSceneCallBack += MainSceneCallBackFunction;
             MultiMazeLabel.Text = "               ";
             MultiMazeLabel.Invalidate();
