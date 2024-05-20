@@ -16,6 +16,8 @@ using static System.Resources.ResXFileRef;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
 using MazeClient.Scenes;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 
 namespace MazeClient
 {
@@ -30,6 +32,18 @@ namespace MazeClient
             Manager = GameManager.Instance;
             Manager.server.callbackFunctions.SettingSceneCallBack += SettingSceneCallBackFunction;
             textBox1.Text = GetLocalIPAddress();
+
+            shadowPictureBox3.Location = new Point(gameRoundPanel.Location.X + 7, gameRoundPanel.Location.Y  + 7);
+            shadowPictureBox3.Size = gameRoundPanel.Size;
+            shadowPictureBox4.Location = new Point(algorithmPanel.Location.X + 7, algorithmPanel.Location.Y + 7);
+            shadowPictureBox4.Size = algorithmPanel.Size;
+            shadowPictureBox5.Location = new Point(mapPanel.Location.X + 7, mapPanel.Location.Y + 7);
+            shadowPictureBox5.Size = mapPanel.Size;
+
+            shadowPictureBox3.SendToBack();
+            shadowPictureBox4.SendToBack();
+            shadowPictureBox5.SendToBack();
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -140,7 +154,30 @@ namespace MazeClient
 
         }
 
+        public Color ShadowColor = Color.FromArgb(32, 32, 32);
+        public int ShadowOffset = 2;
         private void makeRoom_label_Paint(object sender, PaintEventArgs e)
+        {
+
+            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            Label lbl = sender as Label;
+            lbl.AutoSize = true;
+            lbl.Text = "           ";
+            using (Brush shadowBrush = new SolidBrush(ShadowColor))
+            {
+                e.Graphics.DrawString("게임설정", lbl.Font, shadowBrush, new PointF(ShadowOffset, ShadowOffset));
+            }
+
+            // 실제 텍스트
+            using (Brush textBrush = new SolidBrush(Color.LightGray))
+            {
+                e.Graphics.DrawString("게임설정", lbl.Font, textBrush, new PointF(0, 0));
+            }
+        }
+
+        private void SettingScene_Load(object sender, EventArgs e)
         {
 
         }

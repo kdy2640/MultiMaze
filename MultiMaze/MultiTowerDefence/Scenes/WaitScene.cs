@@ -2,6 +2,8 @@ using System;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.IO;
 using System.Net;
 using System.Numerics;
@@ -62,20 +64,24 @@ namespace MazeClient
             Player4.Invalidate();
             //IP전시
             hostLabel.Text += Manager.server.ServerIP + ":" + Manager.server.ServerPort;
-            roundLabel.Text = Manager.nowRound.ToString() + " 라운드 대기";
             SendToServerArgs();
+            //그림자
+
+            shadowPictureBox1.Location = new Point(playerPanel.Location.X + 7, playerPanel.Location.Y + 7);
+            shadowPictureBox1.Size = playerPanel.Size; 
+            shadowPictureBox1.SendToBack();
         }
 
         #region Form 이벤트
         private void Player_Paint(object sender, PaintEventArgs e)
         {
-            Label PlayerLabel = sender as Label; 
-            int index = PlayerLabel.Name[6] - 48; 
+            Label PlayerLabel = sender as Label;
+            int index = PlayerLabel.Name[6] - 48;
             if (index == _playerCode)
             {
                 PlayerLabel.Text = $"Player{index.ToString()} (당신)";
             }
-            
+
         }
         private async void BtnStart_Click(object sender, EventArgs e)
         {
@@ -307,15 +313,15 @@ namespace MazeClient
         }
         Point[] corners = new Point[4];
         private async void GameInitialize(int seed)
-        { 
+        {
             Manager.map.GameInitialize(seed);
-            await Task.Delay(10); 
+            await Task.Delay(10);
 
-           // CountDownScene.StartCountDown(this);
-           // await Task.Delay(7250); // 로딩 시간 조정 
+            // CountDownScene.StartCountDown(this);
+            // await Task.Delay(7250); // 로딩 시간 조정 
 
             //작업
-          //  CountDownScene.StopCountDown();
+            //  CountDownScene.StopCountDown();
             // 신 전환
             Manager.scene.ChangeGameState(this, Define.GameState.InGameScene);
         }
@@ -374,6 +380,27 @@ namespace MazeClient
         {
 
         }
+        public Color ShadowColor = Color.FromArgb(32, 32, 32);
+        public int ShadowOffset = 2;
 
+        private void wait_label_Paint(object sender, PaintEventArgs e)
+        { 
+            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            Label lbl = sender as Label;
+            lbl.AutoSize = true;
+            lbl.Text = "                  "; 
+            using (Brush shadowBrush = new SolidBrush(ShadowColor))
+            {
+                e.Graphics.DrawString(Manager.nowRound.ToString() + " 라운드 대기", lbl.Font, shadowBrush, new PointF(ShadowOffset, ShadowOffset));
+            }
+
+            // 실제 텍스트
+            using (Brush textBrush = new SolidBrush(Color.LightGray))
+            {
+                e.Graphics.DrawString(Manager.nowRound.ToString() + " 라운드 대기", lbl.Font, textBrush, new PointF(0, 0));
+            }
+        }
     }
 }
