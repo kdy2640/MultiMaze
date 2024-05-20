@@ -15,6 +15,7 @@ using System.Threading;
 using System.Diagnostics;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static MazeClient.WaitScene;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace MazeClient
 {
@@ -23,7 +24,9 @@ namespace MazeClient
         GameManager Manager;
         public Socket ServerSocket;
         public ReceiveCallback callbackFunctions;
-        string ServerIP = "127.0.0.1";
+
+        public string ServerIP = "127.0.0.1";
+        public int ServerPort = 20000;
 
         const int HEADER_BYTE = 6;
         //읽기전용
@@ -52,29 +55,67 @@ namespace MazeClient
         #region 서버 연결
 
 
+
+        private const int MinPort = 49152;
+        private const int MaxPort = 65535;
         // 서버 연결 시도
         public async Task<bool> ConnectServer(string ip, int port)
         {
             Manager = GameManager.Instance;
-            try
+            // 방생성시, 
+            if(port == -1)
             {
-                // 소켓 생성
-                ServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+                bool isBound = false;
+                ServerSocket = null;
+                int attemptCount = 0;
+                Random rand = new Random(20000);
+                ip = SettingScene.GetLocalIPAddress();
+                while (!isBound && attemptCount < 10)
+                {
+                    port = rand.Next(MinPort, MaxPort + 1); // 랜덤 포트 선택
+                    IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
 
-                await ServerSocket.ConnectAsync(endPoint);
+                    try
+                    {
+                        ServerSocket?.Close(); // 기존 소켓 닫기
+                        ServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); // 새 소켓 생성 
+                        isBound = true;
+                        await ServerSocket.ConnectAsync(endPoint);
+                        this.ServerPort = port;
+                        this.ServerIP = ip; 
+                    }
+                    catch (SocketException)
+                    {
+                        // 바인드 실패 
+                        attemptCount++;
+                    }
+                }
+                await Task.Delay(1000);
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"연결 실패: {ex.Message}");
-                return false;
+            else
+            { 
+                try
+                {
+                    // 소켓 생성
+                    ServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+
+                    await ServerSocket.ConnectAsync(endPoint);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"연결 실패: {ex.Message}");
+                    return false;
+                }
             }
 
             // 플레이어 번호 수신
             byte[] buffer = new byte[8];
             ArraySegment<byte> playerNumberBuffer = new ArraySegment<byte>(buffer);
             bool result = await ReceiveWithTimeOut(playerNumberBuffer);
-            if (result == false) return false;
+            if (result == false)
+            { return false; 
+            }
             // 플레이어 번호 할당
             short playerNumber = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(buffer, 0));
             Manager.PlayerCode = playerNumber;
@@ -328,7 +369,7 @@ namespace MazeClient
 
 
         public bool StartServer()
-        {
+        { 
             try
             {
                 //서버 프로그램 실행
@@ -337,7 +378,7 @@ namespace MazeClient
                 if (File.Exists("MazeServer.exe")) name = "MazeServer.exe";
                 if (File.Exists("..\\..\\..\\..\\MazeServer\\bin\\Release\\net8.0-windows\\MazeServer.exe"))
                 { name = "..\\..\\..\\..\\MazeServer\\bin\\Release\\net8.0-windows\\MazeServer.exe"; }
-                process.StartInfo.FileName = name;
+                process.StartInfo.FileName = name;   
                 process.Start();
             }
             catch

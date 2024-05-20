@@ -60,6 +60,9 @@ namespace MazeClient
             waitScene.Show();
             waitScene.Top = sender.Top;
             waitScene.Left = sender.Left;
+            waitScene.ControlBox = false;
+            waitScene.Text = "MULTIMAZE";
+            waitScene.FormBorderStyle = FormBorderStyle.FixedSingle;
             sender.Close();
         }
         public void Scene_FormClosing(object sender, FormClosingEventArgs e)
