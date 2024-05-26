@@ -59,10 +59,11 @@
             // 
             Winner.AutoSize = true;
             Winner.BackColor = Color.LightGray;
+            Winner.Font = new Font("맑은 고딕", 9F, FontStyle.Bold);
             Winner.Location = new Point(16, 21);
             Winner.Margin = new Padding(4, 0, 4, 0);
             Winner.Name = "Winner";
-            Winner.Size = new Size(52, 20);
+            Winner.Size = new Size(53, 20);
             Winner.TabIndex = 8;
             Winner.Text = "승자 : ";
             Winner.Click += label2_Click;
@@ -80,10 +81,11 @@
             // 
             Time.AutoSize = true;
             Time.BackColor = Color.LightGray;
+            Time.Font = new Font("맑은 고딕", 9F, FontStyle.Bold);
             Time.Location = new Point(16, 61);
             Time.Margin = new Padding(4, 0, 4, 0);
             Time.Name = "Time";
-            Time.Size = new Size(82, 20);
+            Time.Size = new Size(83, 20);
             Time.TabIndex = 10;
             Time.Text = "소요시간 : ";
             // 
@@ -120,9 +122,10 @@
             // 
             // nextRoundButton
             // 
+            nextRoundButton.Font = new Font("맑은 고딕", 12F, FontStyle.Bold, GraphicsUnit.Point, 129);
             nextRoundButton.Location = new Point(525, 527);
             nextRoundButton.Name = "nextRoundButton";
-            nextRoundButton.Size = new Size(160, 90);
+            nextRoundButton.Size = new Size(200, 90);
             nextRoundButton.TabIndex = 18;
             nextRoundButton.Text = "다음 라운드로 이동";
             nextRoundButton.UseVisualStyleBackColor = true;
@@ -143,7 +146,7 @@
             pictureBox3.BackColor = Color.FromArgb(64, 64, 64);
             pictureBox3.Location = new Point(532, 534);
             pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(160, 90);
+            pictureBox3.Size = new Size(200, 90);
             pictureBox3.TabIndex = 20;
             pictureBox3.TabStop = false;
             // 

@@ -85,6 +85,10 @@ namespace MazeClient
                 }
             }
 
+            //종료지점 그리기
+            Point end = Manager.map.endPoint;
+            g.FillEllipse(new SolidBrush(Color.Cyan), startX + end.X * cellSize, startY + end.Y * cellSize, cellSize, cellSize);
+
 
             count++;
             if (count == path.Count)

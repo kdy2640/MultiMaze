@@ -471,6 +471,10 @@ namespace MazeClient.Scenes
                 }
                 PlayerList[i].Left = ScreenStart.X + pictureBox1.Left + manager.map.PlayerPosList[i].X * cellSize;
                 PlayerList[i].Top = ScreenStart.Y + pictureBox1.Top + manager.map.PlayerPosList[i].Y * cellSize;
+                if (PlayerList[i].Top > 600)
+                {
+                    PlayerList[i].Left = 2000;
+                }
             }
 
             // 목표지점 렌더링

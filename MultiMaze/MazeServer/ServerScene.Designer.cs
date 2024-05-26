@@ -34,7 +34,7 @@
             // 
             // shutDownServerBtn
             // 
-            shutDownServerBtn.Location = new Point(646, 345);
+            shutDownServerBtn.Location = new Point(270, 276);
             shutDownServerBtn.Name = "shutDownServerBtn";
             shutDownServerBtn.Size = new Size(94, 29);
             shutDownServerBtn.TabIndex = 0;
@@ -44,7 +44,7 @@
             // 
             // logTextBox
             // 
-            logTextBox.Location = new Point(65, 44);
+            logTextBox.Location = new Point(12, 21);
             logTextBox.Name = "logTextBox";
             logTextBox.Size = new Size(352, 237);
             logTextBox.TabIndex = 1;
@@ -54,11 +54,11 @@
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(389, 322);
             Controls.Add(logTextBox);
             Controls.Add(shutDownServerBtn);
             Name = "ServerScene";
-            Text = "ServerScene";
+            Text = "서버로그";
             Load += ServerTempScene_Load;
             ResumeLayout(false);
         }
