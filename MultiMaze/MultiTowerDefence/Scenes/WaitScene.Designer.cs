@@ -66,17 +66,19 @@ namespace MazeClient
             // 
             // BtnStart
             // 
+            BtnStart.Font = new Font("맑은 고딕", 16.2F, FontStyle.Bold);
             BtnStart.Location = new Point(35, 460);
             BtnStart.Margin = new Padding(4);
             BtnStart.Name = "BtnStart";
             BtnStart.Size = new Size(210, 120);
             BtnStart.TabIndex = 3;
-            BtnStart.Text = "Start";
+            BtnStart.Text = "게임 시작";
             BtnStart.UseVisualStyleBackColor = true;
             BtnStart.Click += BtnStart_Click;
             // 
             // BtnReady
             // 
+            BtnReady.Font = new Font("맑은 고딕", 16.2F, FontStyle.Bold);
             BtnReady.Location = new Point(260, 460);
             BtnReady.Margin = new Padding(4);
             BtnReady.Name = "BtnReady";
@@ -88,6 +90,7 @@ namespace MazeClient
             // 
             // BtnLeave
             // 
+            BtnLeave.Font = new Font("맑은 고딕", 12F, FontStyle.Bold);
             BtnLeave.Location = new Point(655, 460);
             BtnLeave.Margin = new Padding(4);
             BtnLeave.Name = "BtnLeave";
@@ -111,10 +114,11 @@ namespace MazeClient
             // Player1
             // 
             Player1.AutoSize = true;
-            Player1.Location = new Point(37, 145);
+            Player1.Font = new Font("맑은 고딕", 9F, FontStyle.Bold);
+            Player1.Location = new Point(37, 141);
             Player1.Margin = new Padding(4, 0, 4, 0);
             Player1.Name = "Player1";
-            Player1.Size = new Size(58, 20);
+            Player1.Size = new Size(61, 20);
             Player1.TabIndex = 6;
             Player1.Text = "Player1";
             Player1.Paint += Player_Paint;
@@ -122,10 +126,11 @@ namespace MazeClient
             // Player2
             // 
             Player2.AutoSize = true;
-            Player2.Location = new Point(200, 145);
+            Player2.Font = new Font("맑은 고딕", 9F, FontStyle.Bold);
+            Player2.Location = new Point(200, 141);
             Player2.Margin = new Padding(4, 0, 4, 0);
             Player2.Name = "Player2";
-            Player2.Size = new Size(58, 20);
+            Player2.Size = new Size(61, 20);
             Player2.TabIndex = 6;
             Player2.Text = "Player2";
             Player2.Paint += Player_Paint;
@@ -133,10 +138,11 @@ namespace MazeClient
             // Player4
             // 
             Player4.AutoSize = true;
-            Player4.Location = new Point(200, 305);
+            Player4.Font = new Font("맑은 고딕", 9F, FontStyle.Bold);
+            Player4.Location = new Point(200, 301);
             Player4.Margin = new Padding(4, 0, 4, 0);
             Player4.Name = "Player4";
-            Player4.Size = new Size(58, 20);
+            Player4.Size = new Size(61, 20);
             Player4.TabIndex = 6;
             Player4.Text = "Player4";
             Player4.Paint += Player_Paint;
@@ -155,10 +161,11 @@ namespace MazeClient
             // Player3
             // 
             Player3.AutoSize = true;
-            Player3.Location = new Point(37, 305);
+            Player3.Font = new Font("맑은 고딕", 9F, FontStyle.Bold);
+            Player3.Location = new Point(37, 301);
             Player3.Margin = new Padding(4, 0, 4, 0);
             Player3.Name = "Player3";
-            Player3.Size = new Size(58, 20);
+            Player3.Size = new Size(61, 20);
             Player3.TabIndex = 6;
             Player3.Text = "Player3";
             Player3.Paint += Player_Paint;
@@ -197,6 +204,7 @@ namespace MazeClient
             // 
             // BtnSend
             // 
+            BtnSend.Font = new Font("맑은 고딕", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 129);
             BtnSend.Location = new Point(691, 416);
             BtnSend.Margin = new Padding(4);
             BtnSend.Name = "BtnSend";
@@ -208,6 +216,7 @@ namespace MazeClient
             // 
             // BtnColor
             // 
+            BtnColor.Font = new Font("맑은 고딕", 12F, FontStyle.Bold);
             BtnColor.Location = new Point(517, 459);
             BtnColor.Name = "BtnColor";
             BtnColor.Size = new Size(120, 120);

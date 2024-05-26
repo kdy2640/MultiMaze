@@ -191,17 +191,19 @@
             // 
             // makeRoomBtn
             // 
+            makeRoomBtn.Font = new Font("맑은 고딕", 12F, FontStyle.Bold, GraphicsUnit.Point, 129);
             makeRoomBtn.Location = new Point(557, 337);
             makeRoomBtn.Margin = new Padding(3, 2, 3, 2);
             makeRoomBtn.Name = "makeRoomBtn";
             makeRoomBtn.Size = new Size(180, 60);
             makeRoomBtn.TabIndex = 9;
-            makeRoomBtn.Text = "만들기";
+            makeRoomBtn.Text = "게임 생성";
             makeRoomBtn.UseVisualStyleBackColor = true;
             makeRoomBtn.Click += makeRoomBtn_Click;
             // 
             // cancelMakeRoomBtn
             // 
+            cancelMakeRoomBtn.Font = new Font("맑은 고딕", 12F, FontStyle.Bold, GraphicsUnit.Point, 129);
             cancelMakeRoomBtn.Location = new Point(557, 417);
             cancelMakeRoomBtn.Margin = new Padding(3, 2, 3, 2);
             cancelMakeRoomBtn.Name = "cancelMakeRoomBtn";
