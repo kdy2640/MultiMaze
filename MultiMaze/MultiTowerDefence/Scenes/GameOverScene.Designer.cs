@@ -32,9 +32,9 @@
             pictureBox3 = new PictureBox();
             roundLabel = new Label();
             panel1 = new Panel();
+            Third = new Label();
             First = new Label();
             Second = new Label();
-            Third = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -79,17 +79,27 @@
             panel1.Controls.Add(Third);
             panel1.Controls.Add(First);
             panel1.Controls.Add(Second);
-            panel1.Location = new Point(23, 363);
+            panel1.Location = new Point(23, 395);
             panel1.Margin = new Padding(2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(355, 105);
+            panel1.Size = new Size(355, 73);
             panel1.TabIndex = 23;
+            // 
+            // Third
+            // 
+            Third.AutoSize = true;
+            Third.BackColor = Color.LightGray;
+            Third.Location = new Point(12, 52);
+            Third.Name = "Third";
+            Third.Size = new Size(37, 15);
+            Third.TabIndex = 11;
+            Third.Text = "3등 : ";
             // 
             // First
             // 
             First.AutoSize = true;
             First.BackColor = Color.LightGray;
-            First.Location = new Point(12, 16);
+            First.Location = new Point(12, 6);
             First.Name = "First";
             First.Size = new Size(37, 15);
             First.TabIndex = 8;
@@ -99,21 +109,11 @@
             // 
             Second.AutoSize = true;
             Second.BackColor = Color.LightGray;
-            Second.Location = new Point(12, 46);
+            Second.Location = new Point(12, 29);
             Second.Name = "Second";
             Second.Size = new Size(37, 15);
             Second.TabIndex = 10;
             Second.Text = "2등 : ";
-            // 
-            // Third
-            // 
-            Third.AutoSize = true;
-            Third.BackColor = Color.LightGray;
-            Third.Location = new Point(12, 76);
-            Third.Name = "Third";
-            Third.Size = new Size(37, 15);
-            Third.TabIndex = 11;
-            Third.Text = "3등 : ";
             // 
             // GameOverScene
             // 
