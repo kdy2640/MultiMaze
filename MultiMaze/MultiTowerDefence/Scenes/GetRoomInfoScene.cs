@@ -20,6 +20,9 @@ namespace MazeClient.Scenes
             InitializeComponent();
             Manager = GameManager.Instance;
             this.ControlBox = false;
+            shadowPictureBox1.Location = new Point(panel1.Location.X + 7, panel1.Location.Y + 7);
+            shadowPictureBox1.Size = panel1.Size;
+            shadowPictureBox1.SendToBack();
         }
 
         private void CancelBtn_Click(object sender, EventArgs e)
@@ -41,13 +44,15 @@ namespace MazeClient.Scenes
 
             string messageString = string.Format("IP : {0}\nPORT: {1}", hostTxtbox.Text, portTxtbox.Text);
             //다른 아이피 사용
+            LoadingScene.StartLoading(this);
             bool serverResult = await Manager.server.ConnectServer(hostTxtbox.Text, int.Parse(portTxtbox.Text));
             if (serverResult)
             {
                 MessageBox.Show(messageString + "접속 완료!");
-                this.DialogResult = DialogResult.OK;
                 Manager.server.ServerIP = hostTxtbox.Text;
                 Manager.server.ServerPort = Convert.ToInt32(portTxtbox.Text);
+                LoadingScene.StopLoading();
+                this.DialogResult = DialogResult.OK;
             }
             else
             {

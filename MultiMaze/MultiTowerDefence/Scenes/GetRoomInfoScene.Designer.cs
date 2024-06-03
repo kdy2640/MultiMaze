@@ -37,9 +37,11 @@
             pictureBox1 = new PictureBox();
             pictureBox2 = new PictureBox();
             panel1 = new Panel();
+            shadowPictureBox1 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)shadowPictureBox1).BeginInit();
             SuspendLayout();
             // 
             // hostLabel
@@ -133,12 +135,22 @@
             panel1.Size = new Size(336, 126);
             panel1.TabIndex = 9;
             // 
+            // shadowPictureBox1
+            // 
+            shadowPictureBox1.BackColor = Color.FromArgb(64, 64, 64);
+            shadowPictureBox1.Location = new Point(225, 164);
+            shadowPictureBox1.Name = "shadowPictureBox1";
+            shadowPictureBox1.Size = new Size(160, 90);
+            shadowPictureBox1.TabIndex = 26;
+            shadowPictureBox1.TabStop = false;
+            // 
             // GetRoomInfoScene
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DimGray;
             ClientSize = new Size(383, 246);
+            Controls.Add(shadowPictureBox1);
             Controls.Add(CancelBtn);
             Controls.Add(enterRoomBtn);
             Controls.Add(pictureBox1);
@@ -151,6 +163,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)shadowPictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -165,5 +178,6 @@
         private PictureBox pictureBox1;
         private PictureBox pictureBox2;
         private Panel panel1;
+        private PictureBox shadowPictureBox1;
     }
 }

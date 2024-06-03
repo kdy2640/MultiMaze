@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -48,9 +50,13 @@ namespace MazeClient
                     cellSize = 4;
                     break;
             }
+            timer1.Start();
+
+            shadowPictureBox1.Location = new Point(panel1.Location.X + 7, panel1.Location.Y + 7);
+            shadowPictureBox1.Size = panel1.Size;
+            shadowPictureBox1.SendToBack();
 
             getWinnerPath();
-            CalculateFinalRanking();
         }
 
         int count = 0;
@@ -111,53 +117,10 @@ namespace MazeClient
         }
 
 
-        public void CalculateFinalRanking()
-        {
-            //AI는 0번, player는 player번호로 저장
-            Dictionary<int, int> playerScores = new Dictionary<int, int>();
 
-            // 최종점수 초기화
-            for (int i = 0; i <= GameManager.MAX_PLAYER_NUM; i++)
-            {
-                if (i == 0 || Manager.server.PlayerConnectArray[i - 1])
-                {
-                    playerScores[i] = 0;
-                }
-            }
 
-            //각 라운드별 승자에게 2점씩 부여
-            foreach (int winner in Manager.WinnerList)
-            {
-                if (playerScores.ContainsKey(winner))
-                {
-                    playerScores[winner] += 2;
-                }
-            }
-
-            // 랭킹 정렬
-            var rankedPlayers = playerScores.OrderByDescending(pair => pair.Value).ToList();
-
-            // 랭킹 출력
-            for (int i = 0; i < rankedPlayers.Count; i++)
-            {
-                string playerType = rankedPlayers[i].Key == 0 ? "AI" : $"{rankedPlayers[i].Key}번 플레이어";
-                switch (i)
-                {
-                    case 0:
-                        First.Text = "1등: " + playerType;
-                        break;
-                    case 1:
-                        Second.Text = "2등: " + playerType;
-                        break;
-                    case 2:
-                        Third.Text = "3등: " + playerType;
-                        break;
-                }
-            }
-        }
-
-            #region 서버 송신
-            private void getWinnerPath()
+        #region 서버 송신
+        private void getWinnerPath()
         {
             //서버한테 path달라고
             int playerCode = Manager.PlayerCode;
@@ -171,13 +134,15 @@ namespace MazeClient
         #endregion
 
         #region 서버 수신
+        int fastTime;
+        int fastPlayer;
         private async void receiveWinnerPath(byte[] buffer)
         {
             List<Point> newpath = new List<Point>();
 
             byte[] xBuffer = new byte[2];
             byte[] yBuffer = new byte[2];
-            int len = buffer.Length / 4;
+            int len = (buffer.Length - 24) / 4;
             for (int i = 0; i < len; i++)
             {
                 Array.Copy(buffer, 4 * i, xBuffer, 0, 2);
@@ -187,6 +152,51 @@ namespace MazeClient
                 int y = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(yBuffer, 0));
                 newpath.Add(new Point(x, y));
             }
+            byte[] fastTimeBuffer = new byte[4];
+            byte[] fastPlayerBuffer = new byte[4];
+            byte[] seedBuffer = new byte[4];
+            byte[] rankBuffer = new byte[12];
+            Array.Copy(buffer, len * 4, fastTimeBuffer, 0, 4);
+            Array.Copy(buffer, len * 4 + 4, fastPlayerBuffer, 0, 4);
+            Array.Copy(buffer, len * 4 + 8, seedBuffer, 0, 4);
+            Array.Copy(buffer, len * 4 + 12, rankBuffer, 0, 12);
+
+            int[] rankList = new int[3];
+            for (int i = 0; i < rankList.Length; i++)
+            {
+                byte[] tempBuffer = new byte[4];
+                Array.Copy(rankBuffer, 4 * i, tempBuffer, 0, 4);
+                rankList[i] = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(tempBuffer, 0));
+
+                for (int j = 0; j < Math.Log10(rankList[i]); j++)
+                {
+                    int playerCode = (rankList[i] / (int)Math.Pow(10, j) - 1) % 10;
+                    if (playerCode == 0)
+                    {
+                        if (i != 0) continue;
+                    }
+                    else if (Manager.server.PlayerConnectArray[playerCode - 1] == false) continue;
+                    string playerType = playerCode == 0 ? "AI" : $"{playerCode}번 플레이어";
+                    switch (i)
+                    {
+                        case 0:
+                            First.Text += " " + playerType;
+                            break;
+                        case 1:
+                            Second.Text += " " + playerType;
+                            break;
+                        case 2:
+                            Third.Text += " " + playerType;
+                            break;
+                    }
+                }
+            }
+            fastTime = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(fastTimeBuffer, 0));
+            fastPlayer = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(fastPlayerBuffer, 0));
+            int seed = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(seedBuffer, 0));
+            Manager.map.GameInitialize(seed);
+            fastTimeLabel.Text += ((float)fastTime / 20f).ToString() + " 초";
+            fastPlayerLabel.Text += fastPlayer.ToString();
 
             path = newpath;
             Manager.path = path;
@@ -208,6 +218,33 @@ namespace MazeClient
             GameManager.Refresh();
             GameManager.Instance.scene.baseScene = temp;
             Manager.scene.ChangeGameState(this, Define.GameState.MainScene);
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            this.Invalidate();
+        }
+
+        public Color ShadowColor = Color.FromArgb(32, 32, 32);
+        public int ShadowOffset = 2;
+        private void roundLabel_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            Label lbl = sender as Label;
+            lbl.AutoSize = true;
+            lbl.Text = "             ";
+            using (Brush shadowBrush = new SolidBrush(ShadowColor))
+            {
+                e.Graphics.DrawString("게임 종료", lbl.Font, shadowBrush, new PointF(ShadowOffset, ShadowOffset));
+            }
+
+            // 실제 텍스트
+            using (Brush textBrush = new SolidBrush(Color.LightGray))
+            {
+                e.Graphics.DrawString("게임 종료", lbl.Font, textBrush, new PointF(0, 0));
+            }
         }
     }
 

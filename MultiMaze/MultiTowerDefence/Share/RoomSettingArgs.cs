@@ -16,7 +16,7 @@ namespace MazeClient.Share
         {
             Small,Medium,Big
         } 
-        public int Round = 3;
+        public int Round = 1;
         public AIAlgorithm ai =  AIAlgorithm.BFS;
         public MapSize mapSize = MapSize.Medium; 
 

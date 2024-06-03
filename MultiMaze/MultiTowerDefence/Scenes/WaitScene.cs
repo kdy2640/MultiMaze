@@ -1,3 +1,4 @@
+using MazeClient.Scenes;
 using MazeClient.Share;
 using System;
 using System.Diagnostics;
@@ -317,6 +318,9 @@ namespace MazeClient
             Manager.map.GameInitialize(seed);
             await Task.Delay(10);
 
+            CountDownScene.StartCountDown(this);
+            await Task.Delay(7250); // 로딩 시간 조정  
+            CountDownScene.StopCountDown();
             Manager.scene.ChangeGameState(this, Define.GameState.InGameScene);
         }
 

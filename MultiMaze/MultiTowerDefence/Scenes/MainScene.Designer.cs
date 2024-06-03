@@ -31,7 +31,6 @@
             button2 = new Button();
             btn_enter = new Button();
             btm_makeroom = new Button();
-            button3 = new Button();
             MultiMazeLabel = new Label();
             pictureBox1 = new PictureBox();
             buttonShadowPictureBox1 = new PictureBox();
@@ -79,17 +78,6 @@
             btm_makeroom.Text = "방 만들기";
             btm_makeroom.UseVisualStyleBackColor = true;
             btm_makeroom.Click += btm_makeroom_Click;
-            // 
-            // button3
-            // 
-            button3.Location = new Point(909, 541);
-            button3.Margin = new Padding(3, 2, 3, 2);
-            button3.Name = "button3";
-            button3.Size = new Size(145, 27);
-            button3.TabIndex = 5;
-            button3.Text = "로딩창 테스트 ";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click_1;
             // 
             // MultiMazeLabel
             // 
@@ -147,7 +135,6 @@
             BackColor = Color.DimGray;
             ClientSize = new Size(984, 555);
             Controls.Add(MultiMazeLabel);
-            Controls.Add(button3);
             Controls.Add(btm_makeroom);
             Controls.Add(btn_enter);
             Controls.Add(button2);
@@ -172,7 +159,6 @@
         private Button button2;
         private Button btn_enter;
         private Button btm_makeroom;
-        private Button button3;
         private Label MultiMazeLabel;
         private PictureBox pictureBox1;
         private PictureBox buttonShadowPictureBox1;
