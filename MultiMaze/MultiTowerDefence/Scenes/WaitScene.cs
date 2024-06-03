@@ -1,48 +1,38 @@
-using System;
-using System.ComponentModel.Design;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Net;
-using System.Numerics;
-using System.Reflection;
-using System.Security.Policy;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Windows.Forms;
 using MazeClient.Scenes;
 using MazeClient.Share;
-using static System.Windows.Forms.AxHost;
-using static MazeClient.Scenes.InGameSceneServerEvent;
-using static MazeClient.WaitScene;
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
+using System.Net;
+using System.Text;
+using System.Windows.Forms;
+using static MazeClient.Share.Define;
 
 namespace MazeClient
 {
     public partial class WaitScene : Form
     {
         GameManager Manager;
-        ServerManager serverManager;
         private bool _isHost = false;
-        private bool _isPlayerReady = false; 
+        private bool _isPlayerReady = false;
         private int _playerCode = 0; // 플레이어 번호는 1번부터 
         private PictureBox[] _playerPictureBoxList = new PictureBox[4];
         WaitSceneArgs args = new WaitSceneArgs();
+
         public WaitScene()
         {
             InitializeComponent();
-            LoadPlayerColors();
             Initialize();
-        }
-
-        private void LoadPlayerColors()
-        {
         }
 
         private void Initialize()
         {
             Manager = GameManager.Instance;
+            Manager.nowRound++;
             _playerCode = Manager.PlayerCode;
+            Manager.server.callbackFunctions.WaitSceneCallBack = null;
             Manager.server.callbackFunctions.WaitSceneCallBack += WaitSceneCallBackFunction;
 
             args.playerArray[_playerCode - 1] = 1;
@@ -51,13 +41,35 @@ namespace MazeClient
             _playerPictureBoxList[0] = PicPlayer1;
             _playerPictureBoxList[1] = PicPlayer2;
             _playerPictureBoxList[2] = PicPlayer3;
-            _playerPictureBoxList[3] = PicPlayer4; 
+            _playerPictureBoxList[3] = PicPlayer4;
 
+            // 당신 텍스트 부여
+            Player1.Invalidate();
+            Player2.Invalidate();
+            Player3.Invalidate();
+            Player4.Invalidate();
+            //IP전시
+            hostLabel.Text += Manager.server.ServerIP + ":" + Manager.server.ServerPort;
             SendToServerArgs();
+            //그림자
+
+            shadowPictureBox1.Location = new Point(playerPanel.Location.X + 7, playerPanel.Location.Y + 7);
+            shadowPictureBox1.Size = playerPanel.Size;
+            shadowPictureBox1.SendToBack();
         }
 
         #region Form 이벤트
-        private async void BtnStart_Click(object sender, EventArgs e)
+        private void Player_Paint(object sender, PaintEventArgs e)
+        {
+            Label PlayerLabel = sender as Label;
+            int index = PlayerLabel.Name[6] - 48;
+            if (index == _playerCode)
+            {
+                PlayerLabel.Text = $"나 (당신)";
+            }
+        }
+
+        private void BtnStart_Click(object sender, EventArgs e)
         {
             //isAllPlayerReady 관련 상호작용 추가하기
             if (_isHost)
@@ -66,13 +78,13 @@ namespace MazeClient
                 for (int i = 0; i < 4; i++)
                 {
                     if (args.playerArray[i] == 0) continue;
-                    if(args.playerArray[i] == 1 )
+                    if (args.playerArray[i] == 1)
                     {
                         startTrigger = false;
                         break;
                     }
                 }
-                if(startTrigger)
+                if (startTrigger)
                 {
                     MessageBox.Show("게임이 시작됩니다.");
                     StartGame();
@@ -87,6 +99,7 @@ namespace MazeClient
                 MessageBox.Show("호스트만 게임을 시작할 수 있습니다.");
             }
         }
+
         private void BtnReady_Click(object sender, EventArgs e)
         {
             if (_isPlayerReady)
@@ -100,30 +113,20 @@ namespace MazeClient
             _isPlayerReady = !_isPlayerReady;
             BtnReady.Text = _isPlayerReady ? "준비완료" : "준비";
 
-
             SendToServerArgs();
         }
+
         private void BtnLeave_Click(object sender, EventArgs e)
         {
-            // 이상함 내가 나가는데 해야할건 나 나가요 메시지 보내주면 됨
-            //Player leavingPlayer = FindLeavingPlayer();
-            //if (leavingPlayer != null)
-            //{
-            //    gameroom.PlayerLeft(leavingPlayer);
-            //    MessageBox.Show("플레이어가 떠났습니다.");
-            //}
-            Manager.scene.ChangeGameState(this, Define.GameState.SettingScene);
+            Manager.server.LeaveServer();
+            Manager.scene.ChangeGameState(this, Define.GameState.MainScene);
         }
-        private async void BtnSend_Click(object sender, EventArgs e)
+
+        private void BtnSend_Click(object sender, EventArgs e)
         {
             SendMessage(_playerCode);
+        }
 
-        }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            // 안가짐
-            Manager.scene.ChangeGameState(this, Define.GameState.InGameScene);
-        }
         private void BtnColor_Click(object sender, EventArgs e)
         {
             if (cld.ShowDialog() == DialogResult.OK)
@@ -133,33 +136,47 @@ namespace MazeClient
                 _playerPictureBoxList[_playerCode - 1].Invalidate();
                 SendToServerArgs();
             }
-
         }
-        private async void SendMessage(int playerCode)
+
+        private void SendMessage(int playerCode)
         {
             string message = inputTb.Text.Trim();
             if (!string.IsNullOrEmpty(message))
             {
-                if (playerCode == _playerCode)
-                {
-                    RtbChat.AppendText($"나: {message}\n");
-                }
-                else
-                {
-                    RtbChat.AppendText($"플레이어{playerCode}: {message}\n");
-                }
+                string chatMessage = $"Player{playerCode}: {message}";
+                byte[] messageBuffer = Encoding.UTF8.GetBytes(chatMessage);
+
+                WaitSceneServerEvent chatEvent = new WaitSceneServerEvent(WaitSceneServerEvent.WaitSceneServerEventType.Chatting);
+
+                Manager.server.SendToServerAsync(messageBuffer, chatEvent);
 
                 inputTb.Text = "";
                 inputTb.Focus();
-                RtbChat.SelectionStart = RtbChat.Text.Length;
-                RtbChat.ScrollToCaret();
-
             }
         }
+
+        private void ReceiveChatMessage(byte[] buffer)
+        {
+            string message = Encoding.UTF8.GetString(buffer);
+
+            if (message.StartsWith($"Player{_playerCode}: "))
+            {
+                message = "나: " + message.Substring(message.IndexOf(": ") + 2);
+            }
+
+            RtbChat.Invoke(new Action(() =>
+            {
+                RtbChat.AppendText($"{message}\n");
+                RtbChat.SelectionStart = RtbChat.Text.Length;
+                RtbChat.ScrollToCaret();
+            }));
+        }
+
+
+
         Font font = new Font("Arial", 16);
         private void PicPlayer_Paint(object sender, PaintEventArgs e)
         {
-
             PictureBox pic = sender as PictureBox;
             int index = pic.Name[9] - 49;
             //접속 안함
@@ -180,9 +197,9 @@ namespace MazeClient
             }
             SolidBrush br = new SolidBrush(Manager.map.PlayerColorList[index]);
             e.Graphics.FillEllipse(br, pic.Width / 4, pic.Height / 4, pic.Width / 2, pic.Height / 2);
-            if(index + 1 == args.hostPlayerNum)
+            if (index + 1 == args.hostPlayerNum)
             {
-                e.Graphics.DrawString("HOST", font,Brushes.Black,new PointF(0,0));
+                e.Graphics.DrawString("HOST", font, Brushes.Black, new PointF(0, 0));
             }
         }
 
@@ -195,7 +212,6 @@ namespace MazeClient
         }
         #endregion
 
-
         #region 서버 파싱
 
         class WaitSceneArgs
@@ -207,6 +223,7 @@ namespace MazeClient
             public Color[] playerColorArray = new Color[4];
             public int hostPlayerNum = 1;
         }
+
         class WaitSceneServerEvent : ServerEvent
         {
             public enum playerState
@@ -227,17 +244,17 @@ namespace MazeClient
                 EventType = (int)waitSceneServerEventType;
                 GameStatus = Define.GameState.WaitScene;
             }
-
         }
 
         public void WaitSceneCallBackFunction(byte[] buffer, ServerEvent serverEvent)
         {
-            //GameStatus 확인
             if (serverEvent.GameStatus != Define.GameState.WaitScene) return;
+
             WaitSceneServerEvent.WaitSceneServerEventType eventType = (WaitSceneServerEvent.WaitSceneServerEventType)serverEvent.EventType;
             switch (eventType)
             {
                 case WaitSceneServerEvent.WaitSceneServerEventType.Chatting:
+                    ReceiveChatMessage(buffer);
                     break;
                 case WaitSceneServerEvent.WaitSceneServerEventType.Arguments:
                     ReceiveArgs(buffer);
@@ -249,19 +266,21 @@ namespace MazeClient
                     break;
             }
         }
+
+
         #endregion
         #region 서버 송신 함수
         private void SendToServerArgs()
         {
-
             Color color = Manager.map.PlayerColorList[_playerCode - 1];
             WaitSceneServerEvent.playerState state = WaitSceneServerEvent.playerState.NotReady;
             if (_isPlayerReady)
             {
                 state = WaitSceneServerEvent.playerState.Ready;
             }
-            byte[] buffer = new byte[5];
+            byte[] buffer = new byte[7];
             byte[] stateBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)state));
+            byte[] roundBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)Manager.nowRound));
             byte[] colorBuffer = new byte[3];
             colorBuffer[0] = color.R;
             colorBuffer[1] = color.G;
@@ -269,10 +288,12 @@ namespace MazeClient
 
             Array.Copy(colorBuffer, 0, buffer, 0, 3);
             Array.Copy(stateBuffer, 0, buffer, 3, 2);
+            Array.Copy(roundBuffer, 0, buffer, 5, 2);
 
             WaitSceneServerEvent serverEvent = new WaitSceneServerEvent(WaitSceneServerEvent.WaitSceneServerEventType.Arguments);
             Manager.server.SendToServerAsync(buffer, serverEvent);
         }
+
         private void StartGame()
         {
             byte[] buffer = new byte[4];
@@ -281,7 +302,9 @@ namespace MazeClient
             Manager.server.SendToServerAsync(buffer, serverEvent);
         }
         #endregion
+
         #region 서버 수신 함수
+
         private async void ReceiveSeed(byte[] buffer)
         {
             int seed = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(buffer));
@@ -289,46 +312,16 @@ namespace MazeClient
 
             GameInitialize(seed);
         }
-        Point[] corners = new Point[4];
+
         private async void GameInitialize(int seed)
         {
-            LoadingScene.StartLoading(this);
-            //맵 생성
-            Manager.map.MapInitialize(new RoomSettingArgs());
-            int size = Manager.map.mapSize;
-            Manager.map.GenerateMaze(size, size, seed);
-            Random rand = new Random(seed);
-
-            // 시작, 끝 지점 생성
-            corners[0] = new Point(1, 1);
-            corners[1] = new Point(size - 3, 1);
-            corners[2] = new Point(1, size - 3);
-            corners[3] = new Point(size - 3, size - 3);
-            int type = rand.Next(4);
-            Manager.map.endPoint = corners[type];       // type이 끝점
-            Manager.map.startPoint = corners[3 - type]; // 3- type이 끝점과 마주보는 점
-
-            bool[] playerlocated = new bool[4];
-            Array.Fill<bool>(playerlocated,false);
-            List<Point> startPosArr = new List<Point>();
-            startPosArr.Add(corners[3 - type]);
-            for (int i = 0; i < 4; i++)
-            {
-                if (i == type || i == 3 - type) continue;
-                startPosArr.Add(new Point((corners[i].X + 3 * corners[3 - type].X) / 4, (corners[i].Y + 3 * corners[3 - type].Y) / 4));
-            }
-
-            for (int i = 0; i < 4; i++)
-            {
-                int typeIndex = rand.Next(3);
-                Manager.map.PlayerStartPosList[i] = startPosArr[typeIndex];
-                Manager.map.PlayerPosList[i] = startPosArr[typeIndex];
-            }
-            LoadingScene.StopLoading();
+            Manager.map.GameInitialize(seed);
             await Task.Delay(10);
-            // 신 전환
-            Manager.nowRound = 1;
-            Manager.scene.ChangeGameState(this,Define.GameState.InGameScene);
+
+            CountDownScene.StartCountDown(this);
+            await Task.Delay(7250); // 로딩 시간 조정  
+            CountDownScene.StopCountDown();
+            Manager.scene.ChangeGameState(this, Define.GameState.InGameScene);
         }
 
         private async void ReceiveArgs(byte[] buffer)
@@ -346,14 +339,13 @@ namespace MazeClient
                 color = Color.FromArgb(colorBuffer[0], colorBuffer[1], colorBuffer[2]);
 
                 args.playerArray[i] = state;
-                // 플레이어 없으면 manager.server.playerConnectedArray 최신화
                 if (state == 0)
                 {
                     Manager.server.PlayerConnectArray[i] = false;
                 }
                 else
                 {
-                    Manager.server.PlayerConnectArray[i] = true; ;
+                    Manager.server.PlayerConnectArray[i] = true;
                 }
                 args.playerColorArray[i] = color;
                 Manager.map.PlayerColorList[i] = color;
@@ -365,6 +357,7 @@ namespace MazeClient
             args.hostPlayerNum = host;
             ApplyArgs();
         }
+
         private void ApplyArgs()
         {
             //색상 초기화
@@ -377,13 +370,34 @@ namespace MazeClient
             {
                 _isHost = true;
             }
-
         }
         #endregion
 
         private void WaitScene_Load(object sender, EventArgs e)
         {
 
+        }
+        public Color ShadowColor = Color.FromArgb(32, 32, 32);
+        public int ShadowOffset = 2;
+
+        private void wait_label_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            Label lbl = sender as Label;
+            lbl.AutoSize = true;
+            lbl.Text = "                  ";
+            using (Brush shadowBrush = new SolidBrush(ShadowColor))
+            {
+                e.Graphics.DrawString(Manager.nowRound.ToString() + " 라운드 대기", lbl.Font, shadowBrush, new PointF(ShadowOffset, ShadowOffset));
+            }
+
+            // 실제 텍스트
+            using (Brush textBrush = new SolidBrush(Color.LightGray))
+            {
+                e.Graphics.DrawString(Manager.nowRound.ToString() + " 라운드 대기", lbl.Font, textBrush, new PointF(0, 0));
+            }
         }
     }
 }

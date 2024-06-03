@@ -1,3 +1,5 @@
+using MazeClient.Scenes;
+
 namespace MazeClient
 {
     internal static class Program
@@ -12,7 +14,7 @@ namespace MazeClient
             // see https://aka.ms/applicationconfiguration.
             GameManager gameManager = GameManager.Instance;
             ApplicationConfiguration.Initialize();
-            Application.Run(new MainScene());
+            Application.Run(new BaseScene());
         }
     }
 }

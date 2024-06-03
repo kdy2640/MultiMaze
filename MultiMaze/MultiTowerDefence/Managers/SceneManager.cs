@@ -14,7 +14,7 @@ namespace MazeClient
     class SceneManager
     {
         GameManager Manager;
-
+        public BaseScene baseScene;
         public SceneManager()
         { 
         }
@@ -53,8 +53,25 @@ namespace MazeClient
             Manager.state = gameState;
             Form waitScene = GetSceneInstance(gameState);
             sender.Hide();
-            waitScene.ShowDialog();
+
+            waitScene.FormClosing += Scene_FormClosing;
+            BaseScene.formCount += 1;
+
+            waitScene.Show();
+            waitScene.Top = sender.Top;
+            waitScene.Left = sender.Left;
+            waitScene.ControlBox = false;
+            waitScene.Text = "MULTIMAZE";
+            waitScene.FormBorderStyle = FormBorderStyle.FixedSingle;
             sender.Close();
+        }
+        public void Scene_FormClosing(object sender, FormClosingEventArgs e)
+        { 
+            BaseScene.formCount -= 1;
+            baseScene.CountUpdate();
+        }
+        private void Scene_FormClosed(object sender, FormClosedEventArgs e)
+        {
         }
     }
 }

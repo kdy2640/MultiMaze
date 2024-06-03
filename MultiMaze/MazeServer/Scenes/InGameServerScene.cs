@@ -18,6 +18,7 @@ namespace MazeServer.Scenes
         public InGameServerScene()
         {
             manager = ServerGameManager.Instance;
+            manager.client.callbackFunctions.InGameSceneCallBack = null;
             manager.client.callbackFunctions.InGameSceneCallBack += InGameSceneCallBackFunction;
         }
         public void InGameSceneCallBackFunction(byte[] buffer, ServerEvent serverEvent,int playerCode)
@@ -66,11 +67,11 @@ namespace MazeServer.Scenes
             int playerCode = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(codeBuffer));
             if(playerCode == 0)
             {
-                manager.ServerScene.SetLog("게임이 종료되었습니다. AI가 승리하였습니다.");
+                manager.ServerScene.SetLog($"{manager.nowRound} 라운드 종료. AI가 승리하였습니다.");
             }else
             { 
-                manager.ServerScene.SetLog($"게임이 종료되었습니다. {playerCode}번 플레이어가 승리하였습니다.");
-            }
+                manager.ServerScene.SetLog($"{manager.nowRound} 라운드 종료.. {playerCode}번 플레이어가 승리하였습니다.");
+            } 
             // 승리유지
             manager.WinnerList[manager.nowRound - 1] = playerCode;
             manager.WinnerTimeList[manager.nowRound - 1] = time;

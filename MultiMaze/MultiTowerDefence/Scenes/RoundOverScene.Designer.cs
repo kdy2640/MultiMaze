@@ -34,14 +34,16 @@
             WinnerName = new Label();
             Time = new Label();
             TimeValue = new Label();
-            BackToMain = new Button();
-            Ready = new Button();
-            Start = new Button();
-            NextTime = new Label();
-            Countdown = new Label();
             timerCountdown = new System.Windows.Forms.Timer(components);
-            button1 = new Button();
             drawTimer = new System.Windows.Forms.Timer(components);
+            roundLabel = new Label();
+            nextRoundButton = new Button();
+            panel1 = new Panel();
+            pictureBox3 = new PictureBox();
+            shadowPictureBox1 = new PictureBox();
+            panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)shadowPictureBox1).BeginInit();
             SuspendLayout();
             // 
             // label1
@@ -56,10 +58,12 @@
             // Winner
             // 
             Winner.AutoSize = true;
-            Winner.Location = new Point(117, 428);
+            Winner.BackColor = Color.LightGray;
+            Winner.Font = new Font("맑은 고딕", 9F, FontStyle.Bold);
+            Winner.Location = new Point(16, 21);
             Winner.Margin = new Padding(4, 0, 4, 0);
             Winner.Name = "Winner";
-            Winner.Size = new Size(52, 20);
+            Winner.Size = new Size(53, 20);
             Winner.TabIndex = 8;
             Winner.Text = "승자 : ";
             Winner.Click += label2_Click;
@@ -67,7 +71,7 @@
             // WinnerName
             // 
             WinnerName.AutoSize = true;
-            WinnerName.Location = new Point(168, 428);
+            WinnerName.Location = new Point(169, 494);
             WinnerName.Margin = new Padding(4, 0, 4, 0);
             WinnerName.Name = "WinnerName";
             WinnerName.Size = new Size(0, 20);
@@ -76,111 +80,106 @@
             // Time
             // 
             Time.AutoSize = true;
-            Time.Location = new Point(117, 461);
+            Time.BackColor = Color.LightGray;
+            Time.Font = new Font("맑은 고딕", 9F, FontStyle.Bold);
+            Time.Location = new Point(16, 61);
             Time.Margin = new Padding(4, 0, 4, 0);
             Time.Name = "Time";
-            Time.Size = new Size(82, 20);
+            Time.Size = new Size(83, 20);
             Time.TabIndex = 10;
             Time.Text = "소요시간 : ";
             // 
             // TimeValue
             // 
             TimeValue.AutoSize = true;
-            TimeValue.Location = new Point(203, 461);
+            TimeValue.Location = new Point(204, 527);
             TimeValue.Margin = new Padding(4, 0, 4, 0);
             TimeValue.Name = "TimeValue";
             TimeValue.Size = new Size(0, 20);
             TimeValue.TabIndex = 11;
             // 
-            // BackToMain
-            // 
-            BackToMain.Location = new Point(687, 503);
-            BackToMain.Margin = new Padding(4);
-            BackToMain.Name = "BackToMain";
-            BackToMain.Size = new Size(96, 31);
-            BackToMain.TabIndex = 12;
-            BackToMain.Text = "나가기";
-            BackToMain.UseVisualStyleBackColor = true;
-            // 
-            // Ready
-            // 
-            Ready.Location = new Point(687, 461);
-            Ready.Margin = new Padding(4);
-            Ready.Name = "Ready";
-            Ready.Size = new Size(96, 31);
-            Ready.TabIndex = 13;
-            Ready.Text = "준비";
-            Ready.UseVisualStyleBackColor = true;
-            // 
-            // Start
-            // 
-            Start.Location = new Point(687, 423);
-            Start.Margin = new Padding(4);
-            Start.Name = "Start";
-            Start.Size = new Size(96, 31);
-            Start.TabIndex = 14;
-            Start.Text = "시작";
-            Start.UseVisualStyleBackColor = true;
-            Start.Click += Start_Click;
-            // 
-            // NextTime
-            // 
-            NextTime.AutoSize = true;
-            NextTime.Location = new Point(689, 388);
-            NextTime.Margin = new Padding(4, 0, 4, 0);
-            NextTime.Name = "NextTime";
-            NextTime.Size = new Size(57, 20);
-            NextTime.TabIndex = 15;
-            NextTime.Text = "카운트:";
-            // 
-            // Countdown
-            // 
-            Countdown.AutoSize = true;
-            Countdown.Location = new Point(756, 388);
-            Countdown.Margin = new Padding(4, 0, 4, 0);
-            Countdown.Name = "Countdown";
-            Countdown.Size = new Size(17, 20);
-            Countdown.TabIndex = 16;
-            Countdown.Text = "5";
-            // 
             // timerCountdown
             // 
             timerCountdown.Tick += timerCountdown_Tick;
-            // 
-            // button1
-            // 
-            button1.Location = new Point(662, 15);
-            button1.Name = "button1";
-            button1.Size = new Size(163, 29);
-            button1.TabIndex = 5;
-            button1.Text = "6번 화면 이동";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
             // 
             // drawTimer
             // 
             drawTimer.Interval = 10;
             drawTimer.Tick += drawTimer_Tick;
             // 
+            // roundLabel
+            // 
+            roundLabel.AutoSize = true;
+            roundLabel.BackColor = Color.Gray;
+            roundLabel.Font = new Font("맑은 고딕", 24F, FontStyle.Bold, GraphicsUnit.Point, 129);
+            roundLabel.ForeColor = Color.LightGray;
+            roundLabel.Location = new Point(30, 18);
+            roundLabel.Name = "roundLabel";
+            roundLabel.Size = new Size(237, 54);
+            roundLabel.TabIndex = 17;
+            roundLabel.Text = "라운드 종료";
+            roundLabel.Paint += roundLabel_Paint;
+            // 
+            // nextRoundButton
+            // 
+            nextRoundButton.Font = new Font("맑은 고딕", 12F, FontStyle.Bold, GraphicsUnit.Point, 129);
+            nextRoundButton.Location = new Point(525, 527);
+            nextRoundButton.Name = "nextRoundButton";
+            nextRoundButton.Size = new Size(200, 90);
+            nextRoundButton.TabIndex = 18;
+            nextRoundButton.Text = "다음 라운드로 이동";
+            nextRoundButton.UseVisualStyleBackColor = true;
+            nextRoundButton.Click += nextRoundButton_Click;
+            // 
+            // panel1
+            // 
+            panel1.BackColor = Color.Gray;
+            panel1.Controls.Add(Winner);
+            panel1.Controls.Add(Time);
+            panel1.Location = new Point(31, 527);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(456, 92);
+            panel1.TabIndex = 19;
+            // 
+            // pictureBox3
+            // 
+            pictureBox3.BackColor = Color.FromArgb(64, 64, 64);
+            pictureBox3.Location = new Point(532, 534);
+            pictureBox3.Name = "pictureBox3";
+            pictureBox3.Size = new Size(200, 90);
+            pictureBox3.TabIndex = 20;
+            pictureBox3.TabStop = false;
+            // 
+            // shadowPictureBox1
+            // 
+            shadowPictureBox1.BackColor = Color.FromArgb(64, 64, 64);
+            shadowPictureBox1.Location = new Point(532, 424);
+            shadowPictureBox1.Name = "shadowPictureBox1";
+            shadowPictureBox1.Size = new Size(160, 90);
+            shadowPictureBox1.TabIndex = 21;
+            shadowPictureBox1.TabStop = false;
+            // 
             // RoundOverScene
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(913, 569);
-            Controls.Add(Countdown);
-            Controls.Add(NextTime);
-            Controls.Add(Start);
-            Controls.Add(Ready);
-            Controls.Add(BackToMain);
+            BackColor = Color.DimGray;
+            ClientSize = new Size(758, 629);
+            Controls.Add(shadowPictureBox1);
+            Controls.Add(nextRoundButton);
+            Controls.Add(roundLabel);
             Controls.Add(TimeValue);
-            Controls.Add(Time);
             Controls.Add(WinnerName);
-            Controls.Add(Winner);
             Controls.Add(label1);
-            Controls.Add(button1);
+            Controls.Add(panel1);
+            Controls.Add(pictureBox3);
             Name = "RoundOverScene";
             Text = "RoundOver";
             Load += RoundOverScene_Load;
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)shadowPictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -192,13 +191,12 @@
         private Label WinnerName;
         private Label Time;
         private Label TimeValue;
-        private Button BackToMain;
-        private Button Ready;
-        private Button Start;
-        private Label NextTime;
-        private Label Countdown;
         private System.Windows.Forms.Timer timerCountdown;
-        private Button button1;
         private System.Windows.Forms.Timer drawTimer;
+        private Label roundLabel;
+        private Button nextRoundButton;
+        private Panel panel1;
+        private PictureBox pictureBox3;
+        private PictureBox shadowPictureBox1;
     }
 }

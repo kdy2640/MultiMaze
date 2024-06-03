@@ -28,141 +28,170 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
+            components = new System.ComponentModel.Container();
             BackToMain = new Button();
+            pictureBox3 = new PictureBox();
+            roundLabel = new Label();
+            panel1 = new Panel();
+            Third = new Label();
             First = new Label();
             Second = new Label();
-            Third = new Label();
-            FirstName = new Label();
-            SecondName = new Label();
-            ThirdName = new Label();
-            pictureBox1 = new PictureBox();
-            button1 = new Button();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            fastTimeLabel = new Label();
+            fastPlayerLabel = new Label();
+            timer1 = new System.Windows.Forms.Timer(components);
+            shadowPictureBox1 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
+            panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)shadowPictureBox1).BeginInit();
             SuspendLayout();
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(243, 46);
-            label1.Margin = new Padding(2, 0, 2, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(0, 15);
-            label1.TabIndex = 8;
             // 
             // BackToMain
             // 
-            BackToMain.Location = new Point(535, 303);
+            BackToMain.Font = new Font("맑은 고딕", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 129);
+            BackToMain.Location = new Point(525, 527);
             BackToMain.Name = "BackToMain";
-            BackToMain.Size = new Size(75, 23);
-            BackToMain.TabIndex = 9;
+            BackToMain.Size = new Size(159, 91);
+            BackToMain.TabIndex = 19;
             BackToMain.Text = "나가기";
             BackToMain.UseVisualStyleBackColor = true;
+            BackToMain.Click += BackToMain_Click;
             // 
-            // First
+            // pictureBox3
             // 
-            First.AutoSize = true;
-            First.Location = new Point(92, 15);
-            First.Name = "First";
-            First.Size = new Size(29, 15);
-            First.TabIndex = 10;
-            First.Text = "1등:";
+            pictureBox3.BackColor = Color.FromArgb(64, 64, 64);
+            pictureBox3.Location = new Point(532, 533);
+            pictureBox3.Name = "pictureBox3";
+            pictureBox3.Size = new Size(159, 91);
+            pictureBox3.TabIndex = 21;
+            pictureBox3.TabStop = false;
             // 
-            // Second
+            // roundLabel
             // 
-            Second.AutoSize = true;
-            Second.Location = new Point(92, 46);
-            Second.Name = "Second";
-            Second.Size = new Size(29, 15);
-            Second.TabIndex = 11;
-            Second.Text = "2등:";
+            roundLabel.AutoSize = true;
+            roundLabel.BackColor = Color.Gray;
+            roundLabel.Font = new Font("맑은 고딕", 24F, FontStyle.Bold, GraphicsUnit.Point, 129);
+            roundLabel.ForeColor = Color.LightGray;
+            roundLabel.Location = new Point(30, 19);
+            roundLabel.Name = "roundLabel";
+            roundLabel.Size = new Size(197, 54);
+            roundLabel.TabIndex = 22;
+            roundLabel.Text = "게임 종료";
+            roundLabel.Paint += roundLabel_Paint;
+            // 
+            // panel1
+            // 
+            panel1.BackColor = Color.Gray;
+            panel1.Controls.Add(Third);
+            panel1.Controls.Add(First);
+            panel1.Controls.Add(Second);
+            panel1.Location = new Point(30, 527);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(456, 97);
+            panel1.TabIndex = 23;
             // 
             // Third
             // 
             Third.AutoSize = true;
-            Third.Location = new Point(92, 75);
+            Third.BackColor = Color.LightGray;
+            Third.Location = new Point(15, 69);
+            Third.Margin = new Padding(4, 0, 4, 0);
             Third.Name = "Third";
-            Third.Size = new Size(29, 15);
-            Third.TabIndex = 12;
-            Third.Text = "3등:";
+            Third.Size = new Size(45, 20);
+            Third.TabIndex = 11;
+            Third.Text = "3등 : ";
             // 
-            // FirstName
+            // First
             // 
-            FirstName.AutoSize = true;
-            FirstName.Location = new Point(127, 15);
-            FirstName.Name = "FirstName";
-            FirstName.Size = new Size(0, 15);
-            FirstName.TabIndex = 13;
+            First.AutoSize = true;
+            First.BackColor = Color.LightGray;
+            First.Location = new Point(15, 8);
+            First.Margin = new Padding(4, 0, 4, 0);
+            First.Name = "First";
+            First.Size = new Size(45, 20);
+            First.TabIndex = 8;
+            First.Text = "1등 : ";
             // 
-            // SecondName
+            // Second
             // 
-            SecondName.AutoSize = true;
-            SecondName.Location = new Point(127, 46);
-            SecondName.Name = "SecondName";
-            SecondName.Size = new Size(0, 15);
-            SecondName.TabIndex = 14;
+            Second.AutoSize = true;
+            Second.BackColor = Color.LightGray;
+            Second.Location = new Point(15, 39);
+            Second.Margin = new Padding(4, 0, 4, 0);
+            Second.Name = "Second";
+            Second.Size = new Size(45, 20);
+            Second.TabIndex = 10;
+            Second.Text = "2등 : ";
             // 
-            // ThirdName
+            // fastTimeLabel
             // 
-            ThirdName.AutoSize = true;
-            ThirdName.Location = new Point(127, 75);
-            ThirdName.Name = "ThirdName";
-            ThirdName.Size = new Size(0, 15);
-            ThirdName.TabIndex = 15;
+            fastTimeLabel.AutoSize = true;
+            fastTimeLabel.BackColor = Color.LightGray;
+            fastTimeLabel.Location = new Point(245, 53);
+            fastTimeLabel.Margin = new Padding(4, 0, 4, 0);
+            fastTimeLabel.Name = "fastTimeLabel";
+            fastTimeLabel.Size = new Size(122, 20);
+            fastTimeLabel.TabIndex = 12;
+            fastTimeLabel.Text = "최단 탈출 시간 : ";
             // 
-            // pictureBox1
+            // fastPlayerLabel
             // 
-            pictureBox1.Location = new Point(92, 93);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(435, 194);
-            pictureBox1.TabIndex = 16;
-            pictureBox1.TabStop = false;
+            fastPlayerLabel.AutoSize = true;
+            fastPlayerLabel.BackColor = Color.LightGray;
+            fastPlayerLabel.Location = new Point(245, 19);
+            fastPlayerLabel.Margin = new Padding(4, 0, 4, 0);
+            fastPlayerLabel.Name = "fastPlayerLabel";
+            fastPlayerLabel.Size = new Size(152, 20);
+            fastPlayerLabel.TabIndex = 24;
+            fastPlayerLabel.Text = "최단 탈출 플레이어 : ";
             // 
-            // button1
+            // timer1
             // 
-            button1.Location = new Point(484, 11);
-            button1.Margin = new Padding(2);
-            button1.Name = "button1";
-            button1.Size = new Size(127, 22);
-            button1.TabIndex = 7;
-            button1.Text = "1번 화면 이동";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            timer1.Interval = 10;
+            timer1.Tick += timer1_Tick;
+            // 
+            // shadowPictureBox1
+            // 
+            shadowPictureBox1.BackColor = Color.FromArgb(64, 64, 64);
+            shadowPictureBox1.Location = new Point(487, 421);
+            shadowPictureBox1.Name = "shadowPictureBox1";
+            shadowPictureBox1.Size = new Size(160, 90);
+            shadowPictureBox1.TabIndex = 25;
+            shadowPictureBox1.TabStop = false;
             // 
             // GameOverScene
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(622, 338);
-            Controls.Add(pictureBox1);
-            Controls.Add(ThirdName);
-            Controls.Add(SecondName);
-            Controls.Add(FirstName);
-            Controls.Add(Third);
-            Controls.Add(Second);
-            Controls.Add(First);
+            BackColor = Color.DimGray;
+            ClientSize = new Size(759, 629);
+            Controls.Add(shadowPictureBox1);
+            Controls.Add(fastPlayerLabel);
+            Controls.Add(fastTimeLabel);
+            Controls.Add(panel1);
+            Controls.Add(roundLabel);
             Controls.Add(BackToMain);
-            Controls.Add(label1);
-            Controls.Add(button1);
-            Margin = new Padding(2);
+            Controls.Add(pictureBox3);
             Name = "GameOverScene";
             Text = "GameOver";
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)shadowPictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private Label label1;
         private Button BackToMain;
+        private PictureBox pictureBox3;
+        private Label roundLabel;
+        private Panel panel1;
+        private Label Third;
         private Label First;
         private Label Second;
-        private Label Third;
-        private Label FirstName;
-        private Label SecondName;
-        private Label ThirdName;
-        private PictureBox pictureBox1;
-        private Button button1;
+        private Label fastTimeLabel;
+        private Label fastPlayerLabel;
+        private System.Windows.Forms.Timer timer1;
+        private PictureBox shadowPictureBox1;
     }
 }

@@ -1,23 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-
+using MazeClient;
 using MazeClient.Share;
 namespace MazeServer
 {
     public class ClientManager
     {
+        public string ip;
+        public int port;
+
         public int max_Player_Num = ServerGameManager.MAX_PLAYER_NUM;
         const int HEADER_BYTE = 6;
-         
-        //읽기전용
+ 
         public int Now_Player_Num = 0;
         public Player[] PlayerArray = new Player[4];
         public int HostPlayerNum = 1;
+        public bool isGameStart = false;
+        
+
 
         ServerGameManager Manager;
         public ReceiveCallback callbackFunctions;
@@ -35,20 +42,45 @@ namespace MazeServer
         }
 
 
+        private const int MinPort = 49152;
+        private const int MaxPort = 65535;
         #region 플레이어 대기
         public async Task WaitForPlayer()
         {
-            Manager = ServerGameManager.Instance; 
-            Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), 20000);
-
-            serverSocket.Bind(endPoint);
-            serverSocket.Listen(max_Player_Num);
-
-            while(true )
+            Manager = ServerGameManager.Instance;
+            Random rand = new Random(20000);
+            bool isBound = false;
+            Socket serverSocket = null;
+            int attemptCount = 0;
+            ip = SettingScene.GetLocalIPAddress();
+            while (!isBound && attemptCount < 10)
             {
-                Socket clientSocket = await serverSocket.AcceptAsync(); 
-                if(Now_Player_Num >= max_Player_Num)
+                int port = rand.Next(MinPort, MaxPort + 1); // 랜덤 포트 선택
+                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), port);
+
+                try
+                {
+                    serverSocket?.Close(); // 기존 소켓 닫기
+                    serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); // 새 소켓 생성
+                    serverSocket.Bind(endPoint); // 바인드 시도
+                    serverSocket.Listen(max_Player_Num);
+                    isBound = true;
+                    this.port = port;
+                    Manager.ServerScene.SetLog($"EndPoint는 {ip}:{port} 입니다."); 
+                }
+                catch (SocketException)
+                {
+                    // 바인드 실패 
+                    attemptCount++;
+                }
+            }
+
+
+            while (isGameStart == false)
+            {
+                Socket clientSocket = await serverSocket.AcceptAsync();
+                Manager.ServerScene.SetLog($"플레이어와 연결중.");
+                if ((Now_Player_Num >= max_Player_Num) || (isGameStart == true))
                 {
                     continue;   
                 }
@@ -96,6 +128,10 @@ namespace MazeServer
             }
             disconnectedRecallFunction.Invoke(playercode);
             Now_Player_Num--;
+            if(Now_Player_Num == 0 && isGameStart)
+            {
+                Manager.ServerScene.shutDownServerBtn.PerformClick();
+            }
         }
         #endregion
 
@@ -135,7 +171,6 @@ namespace MazeServer
                 // 비동기 송신
                 int bytesSent = await clientSocket.SendAsync(headerSegment, SocketFlags.None);
 
-                Manager.ServerScene.SetLog($"{playerNumber}번 플레이어에게 데이터 전송 완료 비트 수 : {bytesSent} ");
             }
             catch (Exception ex)
             {

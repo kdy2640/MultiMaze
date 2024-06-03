@@ -54,6 +54,10 @@ namespace MazeClient
                 return instance;
             }
         }
+        public static void Refresh()
+        {
+            instance = new GameManager();
+        }
 
 
 
