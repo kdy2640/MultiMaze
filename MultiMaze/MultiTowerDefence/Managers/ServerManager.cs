@@ -376,8 +376,10 @@ namespace MazeClient
                 Process process = new Process();
                 string name="";
                 if (File.Exists("MazeServer.exe")) name = "MazeServer.exe";
-                if (File.Exists("..\\..\\..\\..\\MazeServer\\bin\\Release\\net8.0-windows\\MazeServer.exe"))
+                else if (File.Exists("..\\..\\..\\..\\MazeServer\\bin\\Release\\net8.0-windows\\MazeServer.exe"))
                 { name = "..\\..\\..\\..\\MazeServer\\bin\\Release\\net8.0-windows\\MazeServer.exe"; }
+                else if (File.Exists("..\\..\\..\\..\\MazeServer\\bin\\Debug\\net8.0-windows\\MazeServer.exe"))
+                { name = "..\\..\\..\\..\\MazeServer\\bin\\Debug\\net8.0-windows\\MazeServer.exe"; }
                 process.StartInfo.FileName = name;   
                 process.Start();
             }
